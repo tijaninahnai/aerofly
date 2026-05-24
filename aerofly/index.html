@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1.0,maximum-scale=1.0,user-scalable=no">
+<title>AeroFly</title>
+<link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;500;600;700;800&family=Roboto:wght@400;500;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="css/global.css">
+<style>
+.hub-hero{min-height:100vh;background:var(--td);display:flex;flex-direction:column;align-items:center;justify-content:center;padding:2rem;position:relative;overflow:hidden}
+.hub-hero::before{content:'';position:absolute;inset:0;background:radial-gradient(ellipse at 20% 50%,rgba(91,106,240,.18),transparent 60%),radial-gradient(ellipse at 80% 30%,rgba(236,72,153,.12),transparent 55%)}
+.hub-logo{font-family:'Outfit',sans-serif;font-size:3rem;font-weight:800;background:var(--gg);-webkit-background-clip:text;-webkit-text-fill-color:transparent;margin-bottom:.5rem;position:relative;z-index:1}
+.hub-tagline{color:rgba(255,255,255,.45);font-size:1rem;margin-bottom:3rem;position:relative;z-index:1}
+.hub-cards{display:flex;gap:1.5rem;flex-wrap:wrap;justify-content:center;position:relative;z-index:1;max-width:900px}
+.hub-card{background:rgba(255,255,255,.06);border:1px solid rgba(255,255,255,.1);border-radius:24px;padding:2.5rem 2rem;width:260px;text-align:center;cursor:pointer;transition:all .3s;text-decoration:none;backdrop-filter:blur(8px)}
+.hub-card:hover{background:rgba(255,255,255,.1);border-color:rgba(255,255,255,.2);transform:translateY(-4px)}
+.hub-card-icon{font-size:2.8rem;margin-bottom:1rem;display:block}
+.hub-card-name{font-family:'Outfit',sans-serif;font-size:1.2rem;font-weight:700;color:#fff;margin-bottom:.5rem}
+.hub-card-sub{font-size:.82rem;color:rgba(255,255,255,.45)}
+.hub-card.coming{opacity:.5;cursor:default}
+.hub-card.coming:hover{transform:none;background:rgba(255,255,255,.06)}
+</style>
+</head>
+<body>
+<div class="hub-hero">
+  <div class="hub-logo"><i class="fa-solid fa-sparkles" style="font-size:2rem;margin-right:.4rem"></i>AeroFly</div>
+  <div class="hub-tagline">Your premium travel companion</div>
+  <div class="hub-cards">
+    <a href="pages/flights.html" class="hub-card">
+      <span class="hub-card-icon">✈️</span>
+      <div class="hub-card-name">Flights</div>
+      <div class="hub-card-sub">Search, compare and book flights with seat selection</div>
+    </a>
+    <a href="pages/hotels.html" class="hub-card">
+      <span class="hub-card-icon">🏨</span>
+      <div class="hub-card-name">Hotels</div>
+      <div class="hub-card-sub">Find your perfect stay with reviews and room comparison</div>
+    </a>
+    <a href="#" class="hub-card coming">
+      <span class="hub-card-icon">🗺️</span>
+      <div class="hub-card-name">Experiences</div>
+      <div class="hub-card-sub">Coming soon — tours, activities and local gems</div>
+    </a>
+  </div>
+</div>
+</body>
+</html>
