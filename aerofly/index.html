@@ -3,46 +3,369 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width,initial-scale=1.0,maximum-scale=1.0,user-scalable=no">
-<title>AeroFly</title>
+<title>AeroFly — Travel Made Simple</title>
 <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
-<link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;500;600;700;800&family=Roboto:wght@400;500;700&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800&family=Roboto:wght@400;500;700&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="css/global.css">
 <style>
-.hub-hero{min-height:100vh;background:var(--td);display:flex;flex-direction:column;align-items:center;justify-content:center;padding:2rem;position:relative;overflow:hidden}
-.hub-hero::before{content:'';position:absolute;inset:0;background:radial-gradient(ellipse at 20% 50%,rgba(91,106,240,.18),transparent 60%),radial-gradient(ellipse at 80% 30%,rgba(236,72,153,.12),transparent 55%)}
-.hub-logo{font-family:'Outfit',sans-serif;font-size:3rem;font-weight:800;background:var(--gg);-webkit-background-clip:text;-webkit-text-fill-color:transparent;margin-bottom:.5rem;position:relative;z-index:1}
-.hub-tagline{color:rgba(255,255,255,.45);font-size:1rem;margin-bottom:3rem;position:relative;z-index:1}
-.hub-cards{display:flex;gap:1.5rem;flex-wrap:wrap;justify-content:center;position:relative;z-index:1;max-width:900px}
-.hub-card{background:rgba(255,255,255,.06);border:1px solid rgba(255,255,255,.1);border-radius:24px;padding:2.5rem 2rem;width:260px;text-align:center;cursor:pointer;transition:all .3s;text-decoration:none;backdrop-filter:blur(8px)}
-.hub-card:hover{background:rgba(255,255,255,.1);border-color:rgba(255,255,255,.2);transform:translateY(-4px)}
-.hub-card-icon{font-size:2.8rem;margin-bottom:1rem;display:block}
-.hub-card-name{font-family:'Outfit',sans-serif;font-size:1.2rem;font-weight:700;color:#fff;margin-bottom:.5rem}
-.hub-card-sub{font-size:.82rem;color:rgba(255,255,255,.45)}
-.hub-card.coming{opacity:.5;cursor:default}
-.hub-card.coming:hover{transform:none;background:rgba(255,255,255,.06)}
+/* ── INDEX ONLY ───────────────────────────────────────────────── */
+:root{
+  --c1:#4285F4;--c2:#9B72CB;--c3:#D96570;
+  --gg:linear-gradient(135deg,#4285F4 0%,#9B72CB 50%,#D96570 100%);
+  --bg:#F8F9FA;--td:#0F172A;--tg:#64748B;--wh:#FFFFFF;--bc:#E2E8F0;
+  --sh:0 4px 20px rgba(15,23,42,.06);--glow:0 12px 30px rgba(155,114,203,.2);
+  --ff-d:'Outfit',sans-serif;--ff-b:'Roboto',sans-serif;
+  --ease-b:cubic-bezier(.34,1.56,.64,1);
+}
+*,*::before,*::after{margin:0;padding:0;box-sizing:border-box}
+body{font-family:var(--ff-b);background:var(--td);color:var(--wh);overflow-x:hidden;min-height:100vh}
+
+/* NAV */
+nav{position:fixed;top:0;left:0;right:0;z-index:100;padding:.9rem 5%;display:flex;justify-content:space-between;align-items:center;background:rgba(15,23,42,.7);backdrop-filter:blur(18px);border-bottom:1px solid rgba(255,255,255,.07)}
+.logo{font-family:var(--ff-d);font-size:1.35rem;font-weight:800;letter-spacing:-.02em;background:var(--gg);-webkit-background-clip:text;-webkit-text-fill-color:transparent;display:flex;align-items:center;gap:.4rem}
+.nav-links{display:flex;align-items:center;gap:2rem}
+.nav-links a{font-family:var(--ff-d);font-size:.88rem;font-weight:500;color:rgba(255,255,255,.55);text-decoration:none;transition:color .2s}
+.nav-links a:hover,.nav-links a.active{color:#fff}
+.nav-right{display:flex;align-items:center;gap:.75rem}
+.nav-btn{font-family:var(--ff-d);font-size:.82rem;font-weight:600;padding:.42rem 1rem;border-radius:50px;cursor:pointer;transition:all .2s;text-decoration:none}
+.nav-btn.ghost{background:transparent;border:1.5px solid rgba(255,255,255,.25);color:rgba(255,255,255,.7)}
+.nav-btn.ghost:hover{border-color:rgba(255,255,255,.6);color:#fff}
+.nav-btn.solid{background:var(--gg);border:none;color:#fff}
+.nav-btn.solid:hover{filter:brightness(1.08)}
+.hamburger{display:none;flex-direction:column;gap:5px;cursor:pointer;padding:8px;border-radius:8px}
+.hamburger span{display:block;width:22px;height:2px;background:#fff;border-radius:2px;transition:all .3s}
+
+/* HERO */
+.hero{min-height:100vh;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:6rem 5% 4rem;position:relative;overflow:hidden}
+.hero-bg{position:absolute;inset:0;background:radial-gradient(ellipse at 15% 60%,rgba(66,133,244,.22) 0%,transparent 55%),radial-gradient(ellipse at 85% 25%,rgba(217,101,112,.18) 0%,transparent 50%),radial-gradient(ellipse at 50% 90%,rgba(155,114,203,.15) 0%,transparent 55%),linear-gradient(180deg,#0F172A 0%,#1E293B 60%,#0F172A 100%)}
+/* animated stars */
+.stars{position:absolute;inset:0;overflow:hidden;pointer-events:none}
+.star{position:absolute;border-radius:50%;background:#fff;animation:twinkle linear infinite}
+@keyframes twinkle{0%,100%{opacity:.15}50%{opacity:.7}}
+
+.hero-inner{position:relative;z-index:1;width:100%;max-width:900px;text-align:center}
+.hero-eyebrow{display:inline-flex;align-items:center;gap:.5rem;background:rgba(155,114,203,.15);border:1px solid rgba(155,114,203,.3);border-radius:50px;padding:.32rem .9rem;font-size:.75rem;font-weight:600;color:rgba(255,255,255,.7);margin-bottom:1.5rem;font-family:var(--ff-d)}
+.hero-eyebrow i{color:var(--c2);font-size:.7rem}
+h1{font-family:var(--ff-d);font-size:clamp(2.2rem,6vw,4rem);font-weight:700;line-height:1.1;letter-spacing:-.02em;margin-bottom:1rem}
+h1 span{background:var(--gg);-webkit-background-clip:text;-webkit-text-fill-color:transparent}
+.hero-sub{font-size:1rem;color:rgba(255,255,255,.45);max-width:520px;margin:0 auto 2.5rem;line-height:1.65;font-weight:300}
+
+/* SEARCH CARD */
+.search-card{background:rgba(255,255,255,.05);backdrop-filter:blur(20px);border:1px solid rgba(255,255,255,.1);border-radius:28px;padding:1.6rem;width:100%;max-width:860px;box-shadow:0 24px 60px rgba(0,0,0,.4)}
+
+/* TABS */
+.tabs{display:flex;gap:.3rem;margin-bottom:1.4rem;background:rgba(0,0,0,.2);border-radius:14px;padding:.3rem}
+.tab-btn{flex:1;display:flex;align-items:center;justify-content:center;gap:.5rem;padding:.65rem 1rem;border-radius:10px;border:none;background:transparent;color:rgba(255,255,255,.45);font-family:var(--ff-d);font-size:.85rem;font-weight:600;cursor:pointer;transition:all .25s;white-space:nowrap}
+.tab-btn i{font-size:.8rem}
+.tab-btn:hover{color:rgba(255,255,255,.75);background:rgba(255,255,255,.05)}
+.tab-btn.active{background:var(--gg);color:#fff;box-shadow:0 4px 14px rgba(155,114,203,.35)}
+
+/* SEARCH FORM PANELS */
+.search-panel{display:none;animation:fadeUp .25s ease}
+.search-panel.active{display:block}
+@keyframes fadeUp{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:translateY(0)}}
+
+.input-row{display:flex;gap:.5rem;flex-wrap:wrap}
+.input-group{flex:1;min-width:140px;display:flex;flex-direction:column;gap:.28rem;position:relative}
+.input-group label{font-size:.6rem;font-weight:700;text-transform:uppercase;letter-spacing:.07em;color:rgba(255,255,255,.45);font-family:var(--ff-d)}
+.input-group input,.input-group select{background:rgba(255,255,255,.08);border:1.5px solid rgba(255,255,255,.12);border-radius:12px;padding:.72rem 1rem;font-size:.9rem;color:#fff;font-family:var(--ff-b);outline:none;transition:all .2s;width:100%}
+.input-group input::placeholder{color:rgba(255,255,255,.3)}
+.input-group input:focus,.input-group select:focus{border-color:rgba(155,114,203,.6);background:rgba(255,255,255,.12);box-shadow:0 0 0 3px rgba(155,114,203,.15)}
+.input-group select option{background:#1E293B;color:#fff}
+.input-icon{position:absolute;right:.75rem;bottom:.75rem;color:rgba(255,255,255,.25);font-size:.8rem;pointer-events:none}
+
+/* trip type + class pills (flights only) */
+.trip-row{display:flex;gap:.4rem;margin-bottom:.9rem;flex-wrap:wrap;align-items:center}
+.trip-pill{border:1.5px solid rgba(255,255,255,.15);border-radius:50px;padding:.28rem .75rem;font-size:.74rem;font-weight:600;color:rgba(255,255,255,.45);background:transparent;cursor:pointer;transition:all .2s;font-family:var(--ff-d)}
+.trip-pill:hover{border-color:rgba(255,255,255,.4);color:rgba(255,255,255,.8)}
+.trip-pill.active{background:rgba(155,114,203,.25);border-color:rgba(155,114,203,.5);color:#fff}
+.trip-divider{width:1px;height:16px;background:rgba(255,255,255,.12);margin:0 .2rem}
+
+/* SWAP BUTTON */
+.swap-btn{width:34px;height:34px;border-radius:50%;background:rgba(155,114,203,.2);border:1.5px solid rgba(155,114,203,.35);color:var(--c2);display:flex;align-items:center;justify-content:center;cursor:pointer;transition:all .2s;flex-shrink:0;align-self:flex-end;margin-bottom:.1rem}
+.swap-btn:hover{background:rgba(155,114,203,.35);transform:rotate(180deg)}
+
+/* SEARCH BUTTON */
+.search-btn{width:100%;margin-top:1rem;padding:.9rem;background:var(--gg);color:#fff;border:none;border-radius:14px;font-family:var(--ff-d);font-size:1rem;font-weight:700;cursor:pointer;display:flex;align-items:center;justify-content:center;gap:.6rem;transition:all .2s;box-shadow:0 6px 20px rgba(155,114,203,.3)}
+.search-btn:hover{filter:brightness(1.06);transform:translateY(-1px);box-shadow:0 10px 28px rgba(155,114,203,.4)}
+.search-btn i{font-size:.9rem}
+
+/* TRUST BAR */
+.trust-bar{display:flex;gap:2.5rem;justify-content:center;flex-wrap:wrap;margin-top:2rem;position:relative;z-index:1}
+.trust-item{display:flex;align-items:center;gap:.5rem;font-size:.78rem;color:rgba(255,255,255,.4);font-weight:500}
+.trust-item i{color:rgba(155,114,203,.7);font-size:.82rem}
+
+/* MOBILE NAV DROPDOWN */
+.mobile-nav{position:fixed;top:64px;left:0;right:0;background:rgba(15,23,42,.97);backdrop-filter:blur(16px);border-bottom:1px solid rgba(255,255,255,.08);padding:.5rem 5%;display:flex;flex-direction:column;z-index:99;opacity:0;transform:translateY(-10px);pointer-events:none;transition:all .3s var(--ease-b)}
+.mobile-nav.open{opacity:1;transform:translateY(0);pointer-events:all}
+.mobile-nav a{padding:.85rem 0;font-family:var(--ff-d);font-size:.9rem;font-weight:500;color:rgba(255,255,255,.55);text-decoration:none;border-bottom:1px solid rgba(255,255,255,.06);transition:color .2s}
+.mobile-nav a:last-child{border-bottom:none}
+.mobile-nav a:hover{color:#fff}
+
+/* RESPONSIVE */
+@media(max-width:768px){
+  .nav-links,.nav-right{display:none}
+  .hamburger{display:flex}
+  .hero{padding:5rem 4% 3rem}
+  .input-row{flex-direction:column;gap:.6rem}
+  .swap-btn{display:none}
+  .tabs{gap:.2rem}
+  .tab-btn{padding:.55rem .5rem;font-size:.78rem}
+  .tab-btn span{display:none}
+  .tab-btn i{font-size:1rem}
+  .trust-bar{gap:1.2rem}
+}
+@media(max-width:480px){
+  .search-card{border-radius:20px;padding:1.2rem}
+  h1{font-size:2rem}
+}
 </style>
 </head>
 <body>
-<div class="hub-hero">
-  <div class="hub-logo"><i class="fa-solid fa-sparkles" style="font-size:2rem;margin-right:.4rem"></i>AeroFly</div>
-  <div class="hub-tagline">Your premium travel companion</div>
-  <div class="hub-cards">
-    <a href="pages/flights.html" class="hub-card">
-      <span class="hub-card-icon">✈️</span>
-      <div class="hub-card-name">Flights</div>
-      <div class="hub-card-sub">Search, compare and book flights with seat selection</div>
-    </a>
-    <a href="pages/hotels.html" class="hub-card">
-      <span class="hub-card-icon">🏨</span>
-      <div class="hub-card-name">Hotels</div>
-      <div class="hub-card-sub">Find your perfect stay with reviews and room comparison</div>
-    </a>
-    <a href="#" class="hub-card coming">
-      <span class="hub-card-icon">🗺️</span>
-      <div class="hub-card-name">Experiences</div>
-      <div class="hub-card-sub">Coming soon — tours, activities and local gems</div>
-    </a>
+
+<!-- NAV -->
+<nav>
+  <a class="logo" href="index.html"><i class="fa-solid fa-sparkles"></i>AeroFly</a>
+  <div class="nav-links">
+    <a href="pages/flights.html">Flights</a>
+    <a href="pages/hotels.html">Hotels</a>
+    <a href="#">Experiences</a>
+    <a href="#">Deals</a>
+  </div>
+  <div class="nav-right">
+    <a class="nav-btn ghost" href="#">Log in</a>
+    <a class="nav-btn solid" href="#">Sign up</a>
+  </div>
+  <div class="hamburger" id="ham" onclick="toggleMobileNav()">
+    <span></span><span></span><span></span>
+  </div>
+</nav>
+
+<!-- MOBILE NAV -->
+<div class="mobile-nav" id="mobileNav">
+  <a href="pages/flights.html"><i class="fa-solid fa-plane-departure" style="margin-right:.6rem;color:#9B72CB"></i>Flights</a>
+  <a href="pages/hotels.html"><i class="fa-solid fa-building" style="margin-right:.6rem;color:#9B72CB"></i>Hotels</a>
+  <a href="#"><i class="fa-solid fa-map-location-dot" style="margin-right:.6rem;color:#9B72CB"></i>Experiences</a>
+  <a href="#"><i class="fa-solid fa-tag" style="margin-right:.6rem;color:#9B72CB"></i>Deals</a>
+</div>
+
+<!-- HERO -->
+<div class="hero">
+  <div class="hero-bg"></div>
+  <div class="stars" id="stars"></div>
+
+  <div class="hero-inner">
+    <div class="hero-eyebrow"><i class="fa-solid fa-star"></i> Premium travel, simplified</div>
+    <h1>Travel the world<br>your <span>own way</span></h1>
+    <p class="hero-sub">Flights, hotels and experiences — search, compare and book in seconds.</p>
+
+    <!-- SEARCH CARD -->
+    <div class="search-card">
+      <!-- TABS -->
+      <div class="tabs">
+        <button class="tab-btn active" onclick="switchTab('flights',this)">
+          <i class="fa-solid fa-plane-departure"></i><span>Flights</span>
+        </button>
+        <button class="tab-btn" onclick="switchTab('hotels',this)">
+          <i class="fa-solid fa-building"></i><span>Hotels</span>
+        </button>
+        <button class="tab-btn" onclick="switchTab('experiences',this)">
+          <i class="fa-solid fa-map-location-dot"></i><span>Experiences</span>
+        </button>
+      </div>
+
+      <!-- FLIGHTS PANEL -->
+      <div class="search-panel active" id="panel-flights">
+        <div class="trip-row">
+          <div class="trip-pill active" onclick="setTrip(this,'round')">Round trip</div>
+          <div class="trip-pill" onclick="setTrip(this,'oneway')">One way</div>
+          <div class="trip-pill" onclick="setTrip(this,'multi')">Multi-city</div>
+          <div class="trip-divider"></div>
+          <div class="trip-pill active" onclick="setClass(this)" style="margin-left:.2rem">Economy</div>
+          <div class="trip-pill" onclick="setClass(this)">Premium</div>
+          <div class="trip-pill" onclick="setClass(this)">First</div>
+        </div>
+        <div class="input-row">
+          <div class="input-group" style="flex:1.4">
+            <label><i class="fa-solid fa-plane-departure" style="margin-right:.3rem"></i>From</label>
+            <input type="text" id="f-from" placeholder="City or airport" value="Brussels (BRU)">
+          </div>
+          <button class="swap-btn" onclick="swapFlightCities()" title="Swap"><i class="fa-solid fa-arrow-right-arrow-left"></i></button>
+          <div class="input-group" style="flex:1.4">
+            <label><i class="fa-solid fa-plane-arrival" style="margin-right:.3rem"></i>To</label>
+            <input type="text" id="f-to" placeholder="City or airport">
+          </div>
+          <div class="input-group">
+            <label><i class="fa-regular fa-calendar" style="margin-right:.3rem"></i>Depart</label>
+            <input type="date" id="f-depart">
+          </div>
+          <div class="input-group" id="return-group">
+            <label><i class="fa-regular fa-calendar" style="margin-right:.3rem"></i>Return</label>
+            <input type="date" id="f-return">
+          </div>
+          <div class="input-group" style="min-width:120px;max-width:160px">
+            <label><i class="fa-solid fa-user" style="margin-right:.3rem"></i>Travelers</label>
+            <input type="text" id="f-travelers" value="1 Adult" readonly onclick="this.blur()" style="cursor:pointer">
+          </div>
+        </div>
+        <button class="search-btn" onclick="searchFlights()">
+          <i class="fa-solid fa-magnifying-glass"></i> Search Flights
+        </button>
+      </div>
+
+      <!-- HOTELS PANEL -->
+      <div class="search-panel" id="panel-hotels">
+        <div class="input-row">
+          <div class="input-group" style="flex:2">
+            <label><i class="fa-solid fa-location-dot" style="margin-right:.3rem"></i>Destination</label>
+            <input type="text" id="h-dest" placeholder="City, hotel or area">
+          </div>
+          <div class="input-group">
+            <label><i class="fa-regular fa-calendar" style="margin-right:.3rem"></i>Check-in</label>
+            <input type="date" id="h-checkin">
+          </div>
+          <div class="input-group">
+            <label><i class="fa-regular fa-calendar" style="margin-right:.3rem"></i>Check-out</label>
+            <input type="date" id="h-checkout">
+          </div>
+          <div class="input-group" style="min-width:130px;max-width:160px">
+            <label><i class="fa-solid fa-user" style="margin-right:.3rem"></i>Guests</label>
+            <input type="text" id="h-guests" value="2 guests · 1 room" readonly style="cursor:pointer">
+          </div>
+        </div>
+        <button class="search-btn" onclick="searchHotels()">
+          <i class="fa-solid fa-magnifying-glass"></i> Search Hotels
+        </button>
+      </div>
+
+      <!-- EXPERIENCES PANEL -->
+      <div class="search-panel" id="panel-experiences">
+        <div class="input-row">
+          <div class="input-group" style="flex:2">
+            <label><i class="fa-solid fa-location-dot" style="margin-right:.3rem"></i>Where to?</label>
+            <input type="text" id="e-dest" placeholder="City or region">
+          </div>
+          <div class="input-group">
+            <label><i class="fa-regular fa-calendar" style="margin-right:.3rem"></i>Date</label>
+            <input type="date" id="e-date">
+          </div>
+          <div class="input-group" style="min-width:130px;max-width:160px">
+            <label><i class="fa-solid fa-layer-group" style="margin-right:.3rem"></i>Category</label>
+            <select id="e-cat">
+              <option>All types</option>
+              <option>Culture & Art</option>
+              <option>Food & Drink</option>
+              <option>Adventure</option>
+              <option>Nature</option>
+              <option>Nightlife</option>
+            </select>
+          </div>
+        </div>
+        <button class="search-btn" style="opacity:.6;cursor:default">
+          <i class="fa-solid fa-clock"></i> Coming Soon
+        </button>
+      </div>
+    </div>
+
+    <!-- TRUST BAR -->
+    <div class="trust-bar">
+      <div class="trust-item"><i class="fa-solid fa-shield-halved"></i> Secure booking</div>
+      <div class="trust-item"><i class="fa-solid fa-bolt"></i> Instant confirmation</div>
+      <div class="trust-item"><i class="fa-solid fa-rotate-left"></i> Free cancellation options</div>
+      <div class="trust-item"><i class="fa-solid fa-headset"></i> 24/7 support</div>
+    </div>
   </div>
 </div>
+
+<script>
+// STARS
+(function(){
+  const el=document.getElementById('stars');
+  for(let i=0;i<80;i++){
+    const s=document.createElement('div');
+    s.className='star';
+    const sz=Math.random()*2+.5;
+    s.style.cssText=`width:${sz}px;height:${sz}px;top:${Math.random()*100}%;left:${Math.random()*100}%;animation-duration:${2+Math.random()*4}s;animation-delay:${Math.random()*4}s`;
+    el.appendChild(s);
+  }
+})();
+
+// TABS
+function switchTab(tab,btn){
+  document.querySelectorAll('.tab-btn').forEach(b=>b.classList.remove('active'));
+  document.querySelectorAll('.search-panel').forEach(p=>p.classList.remove('active'));
+  btn.classList.add('active');
+  document.getElementById('panel-'+tab).classList.add('active');
+}
+
+// TRIP TYPE
+function setTrip(el,type){
+  // Only affect the first group (trip type pills, not class pills)
+  const tripPills=[...document.querySelectorAll('.trip-row .trip-pill')].slice(0,3);
+  tripPills.forEach(p=>p.classList.remove('active'));
+  el.classList.add('active');
+  // Show/hide return date
+  document.getElementById('return-group').style.display=(type==='oneway')?'none':'';
+}
+
+// CLASS SELECT
+function setClass(el){
+  const classPills=[...document.querySelectorAll('.trip-row .trip-pill')].slice(3);
+  classPills.forEach(p=>p.classList.remove('active'));
+  el.classList.add('active');
+}
+
+// SWAP
+function swapFlightCities(){
+  const a=document.getElementById('f-from'),b=document.getElementById('f-to');
+  [a.value,b.value]=[b.value,a.value];
+}
+
+// DEFAULT DATES
+(function(){
+  const pad=n=>String(n).padStart(2,'0');
+  const d=new Date(),d2=new Date();
+  d.setDate(d.getDate()+14); d2.setDate(d2.getDate()+21);
+  const fmt=dt=>`${dt.getFullYear()}-${pad(dt.getMonth()+1)}-${pad(dt.getDate())}`;
+  document.getElementById('f-depart').value=fmt(d);
+  document.getElementById('f-return').value=fmt(d2);
+  document.getElementById('h-checkin').value=fmt(d);
+  document.getElementById('h-checkout').value=fmt(d2);
+  document.getElementById('e-date').value=fmt(d);
+})();
+
+// SEARCH → navigate to page with query params
+function searchFlights(){
+  const from=document.getElementById('f-from').value.trim();
+  const to=document.getElementById('f-to').value.trim();
+  const dep=document.getElementById('f-depart').value;
+  const ret=document.getElementById('f-return').value;
+  if(!to){document.getElementById('f-to').focus();return;}
+  const params=new URLSearchParams({from,to,dep,ret});
+  window.location.href=`pages/flights.html?${params}`;
+}
+
+function searchHotels(){
+  const dest=document.getElementById('h-dest').value.trim();
+  const cin=document.getElementById('h-checkin').value;
+  const cout=document.getElementById('h-checkout').value;
+  if(!dest){document.getElementById('h-dest').focus();return;}
+  const params=new URLSearchParams({dest,cin,cout});
+  window.location.href=`pages/hotels.html?${params}`;
+}
+
+// MOBILE NAV
+function toggleMobileNav(){
+  document.getElementById('mobileNav').classList.toggle('open');
+  const spans=document.querySelectorAll('.hamburger span');
+  const open=document.getElementById('mobileNav').classList.contains('open');
+  if(open){spans[0].style.transform='translateY(7px) rotate(45deg)';spans[1].style.opacity='0';spans[2].style.transform='translateY(-7px) rotate(-45deg)';}
+  else{spans.forEach(s=>{s.style.transform='';s.style.opacity='';})}
+}
+document.addEventListener('click',e=>{
+  if(!e.target.closest('#ham')&&!e.target.closest('#mobileNav'))
+    document.getElementById('mobileNav').classList.remove('open');
+});
+</script>
 </body>
 </html>
