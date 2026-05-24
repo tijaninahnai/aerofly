@@ -5,127 +5,133 @@
 <meta name="viewport" content="width=device-width,initial-scale=1.0,maximum-scale=1.0,user-scalable=no">
 <title>AeroFly — Travel Made Simple</title>
 <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
-<link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800&family=Roboto:wght@400;500;700&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="css/global.css">
+<link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet">
 <style>
-/* ── INDEX ONLY ───────────────────────────────────────────────── */
 :root{
   --c1:#4285F4;--c2:#9B72CB;--c3:#D96570;
   --gg:linear-gradient(135deg,#4285F4 0%,#9B72CB 50%,#D96570 100%);
-  --bg:#F8F9FA;--td:#0F172A;--tg:#64748B;--wh:#FFFFFF;--bc:#E2E8F0;
-  --sh:0 4px 20px rgba(15,23,42,.06);--glow:0 12px 30px rgba(155,114,203,.2);
-  --ff-d:'Outfit',sans-serif;--ff-b:'Roboto',sans-serif;
+  --ink:#0F172A;--ink2:#1E293B;--tg:#64748B;--bc:#E2E8F0;--bg:#F8F9FA;--wh:#fff;
+  --ff-d:'Outfit',sans-serif;--ff-b:'DM Sans',sans-serif;
   --ease-b:cubic-bezier(.34,1.56,.64,1);
 }
 *,*::before,*::after{margin:0;padding:0;box-sizing:border-box}
-body{font-family:var(--ff-b);background:var(--td);color:var(--wh);overflow-x:hidden;min-height:100vh}
+html,body{height:100%}
+body{font-family:var(--ff-b);background:var(--ink);color:#fff;overflow-x:hidden;min-height:100vh;-webkit-font-smoothing:antialiased}
 
 /* NAV */
-nav{position:fixed;top:0;left:0;right:0;z-index:100;padding:.9rem 5%;display:flex;justify-content:space-between;align-items:center;background:rgba(15,23,42,.7);backdrop-filter:blur(18px);border-bottom:1px solid rgba(255,255,255,.07)}
-.logo{font-family:var(--ff-d);font-size:1.35rem;font-weight:800;letter-spacing:-.02em;background:var(--gg);-webkit-background-clip:text;-webkit-text-fill-color:transparent;display:flex;align-items:center;gap:.4rem}
-.nav-links{display:flex;align-items:center;gap:2rem}
-.nav-links a{font-family:var(--ff-d);font-size:.88rem;font-weight:500;color:rgba(255,255,255,.55);text-decoration:none;transition:color .2s}
-.nav-links a:hover,.nav-links a.active{color:#fff}
-.nav-right{display:flex;align-items:center;gap:.75rem}
-.nav-btn{font-family:var(--ff-d);font-size:.82rem;font-weight:600;padding:.42rem 1rem;border-radius:50px;cursor:pointer;transition:all .2s;text-decoration:none}
-.nav-btn.ghost{background:transparent;border:1.5px solid rgba(255,255,255,.25);color:rgba(255,255,255,.7)}
-.nav-btn.ghost:hover{border-color:rgba(255,255,255,.6);color:#fff}
-.nav-btn.solid{background:var(--gg);border:none;color:#fff}
+nav{position:fixed;top:0;left:0;right:0;z-index:100;padding:.85rem 5%;display:flex;justify-content:space-between;align-items:center;background:rgba(15,23,42,.75);backdrop-filter:blur(20px);border-bottom:1px solid rgba(255,255,255,.07)}
+.logo{font-family:var(--ff-d);font-size:1.35rem;font-weight:800;background:var(--gg);-webkit-background-clip:text;-webkit-text-fill-color:transparent;display:flex;align-items:center;gap:.4rem;text-decoration:none}
+.nav-links{display:flex;align-items:center;gap:1.8rem}
+.nav-links a{font-family:var(--ff-d);font-size:.86rem;font-weight:500;color:rgba(255,255,255,.5);text-decoration:none;transition:color .2s}
+.nav-links a:hover{color:#fff}
+.nav-right{display:flex;gap:.6rem;align-items:center}
+.nav-btn{font-family:var(--ff-d);font-size:.82rem;font-weight:600;padding:.4rem 1rem;border-radius:50px;cursor:pointer;transition:all .2s;text-decoration:none;border:none}
+.nav-btn.ghost{background:transparent;border:1.5px solid rgba(255,255,255,.22);color:rgba(255,255,255,.65)}
+.nav-btn.ghost:hover{border-color:rgba(255,255,255,.55);color:#fff}
+.nav-btn.solid{background:var(--gg);color:#fff}
 .nav-btn.solid:hover{filter:brightness(1.08)}
-.hamburger{display:none;flex-direction:column;gap:5px;cursor:pointer;padding:8px;border-radius:8px}
-.hamburger span{display:block;width:22px;height:2px;background:#fff;border-radius:2px;transition:all .3s}
+.hamburger{display:none;flex-direction:column;gap:5px;cursor:pointer;padding:7px;border-radius:8px;background:none;border:none}
+.hamburger span{display:block;width:21px;height:2px;background:#fff;border-radius:2px;transition:all .3s}
+
+/* MOBILE MENU */
+.mobile-menu{position:fixed;top:60px;left:0;right:0;background:rgba(15,23,42,.97);backdrop-filter:blur(16px);border-bottom:1px solid rgba(255,255,255,.08);display:flex;flex-direction:column;z-index:99;padding:0 5%;opacity:0;transform:translateY(-8px);pointer-events:none;transition:all .28s var(--ease-b)}
+.mobile-menu.open{opacity:1;transform:translateY(0);pointer-events:all}
+.mobile-menu a{padding:.85rem 0;font-family:var(--ff-d);font-size:.9rem;font-weight:500;color:rgba(255,255,255,.55);text-decoration:none;border-bottom:1px solid rgba(255,255,255,.06);display:flex;align-items:center;gap:.7rem;transition:color .2s}
+.mobile-menu a:last-child{border-bottom:none}
+.mobile-menu a:hover{color:#fff}
+.mobile-menu a i{color:var(--c2);font-size:.85rem;width:16px;text-align:center}
 
 /* HERO */
-.hero{min-height:100vh;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:6rem 5% 4rem;position:relative;overflow:hidden}
-.hero-bg{position:absolute;inset:0;background:radial-gradient(ellipse at 15% 60%,rgba(66,133,244,.22) 0%,transparent 55%),radial-gradient(ellipse at 85% 25%,rgba(217,101,112,.18) 0%,transparent 50%),radial-gradient(ellipse at 50% 90%,rgba(155,114,203,.15) 0%,transparent 55%),linear-gradient(180deg,#0F172A 0%,#1E293B 60%,#0F172A 100%)}
-/* animated stars */
-.stars{position:absolute;inset:0;overflow:hidden;pointer-events:none}
+.hero{min-height:100vh;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:7rem 5% 4rem;position:relative;overflow:hidden}
+.hero-bg{position:absolute;inset:0;background:
+  radial-gradient(ellipse at 15% 60%,rgba(66,133,244,.2) 0%,transparent 52%),
+  radial-gradient(ellipse at 85% 25%,rgba(217,101,112,.16) 0%,transparent 48%),
+  radial-gradient(ellipse at 50% 95%,rgba(155,114,203,.14) 0%,transparent 50%),
+  linear-gradient(180deg,#0F172A 0%,#1E293B 55%,#0F172A 100%)}
+.stars{position:absolute;inset:0;pointer-events:none;overflow:hidden}
 .star{position:absolute;border-radius:50%;background:#fff;animation:twinkle linear infinite}
-@keyframes twinkle{0%,100%{opacity:.15}50%{opacity:.7}}
+@keyframes twinkle{0%,100%{opacity:.12}50%{opacity:.75}}
 
-.hero-inner{position:relative;z-index:1;width:100%;max-width:900px;text-align:center}
-.hero-eyebrow{display:inline-flex;align-items:center;gap:.5rem;background:rgba(155,114,203,.15);border:1px solid rgba(155,114,203,.3);border-radius:50px;padding:.32rem .9rem;font-size:.75rem;font-weight:600;color:rgba(255,255,255,.7);margin-bottom:1.5rem;font-family:var(--ff-d)}
-.hero-eyebrow i{color:var(--c2);font-size:.7rem}
-h1{font-family:var(--ff-d);font-size:clamp(2.2rem,6vw,4rem);font-weight:700;line-height:1.1;letter-spacing:-.02em;margin-bottom:1rem}
-h1 span{background:var(--gg);-webkit-background-clip:text;-webkit-text-fill-color:transparent}
-.hero-sub{font-size:1rem;color:rgba(255,255,255,.45);max-width:520px;margin:0 auto 2.5rem;line-height:1.65;font-weight:300}
+.hero-inner{position:relative;z-index:1;width:100%;max-width:840px;text-align:center}
+.eyebrow{display:inline-flex;align-items:center;gap:.45rem;background:rgba(155,114,203,.14);border:1px solid rgba(155,114,203,.3);border-radius:50px;padding:.3rem .85rem;font-size:.73rem;font-weight:600;color:rgba(255,255,255,.68);margin-bottom:1.4rem;font-family:var(--ff-d)}
+h1{font-family:var(--ff-d);font-size:clamp(2rem,6vw,3.8rem);font-weight:700;line-height:1.1;letter-spacing:-.025em;margin-bottom:.9rem}
+h1 .grad{background:var(--gg);-webkit-background-clip:text;-webkit-text-fill-color:transparent}
+.sub{font-size:.98rem;color:rgba(255,255,255,.42);max-width:480px;margin:0 auto 2.4rem;line-height:1.65;font-weight:300}
 
 /* SEARCH CARD */
-.search-card{background:rgba(255,255,255,.05);backdrop-filter:blur(20px);border:1px solid rgba(255,255,255,.1);border-radius:28px;padding:1.6rem;width:100%;max-width:860px;box-shadow:0 24px 60px rgba(0,0,0,.4)}
+.search-card{background:rgba(255,255,255,.06);backdrop-filter:blur(24px);-webkit-backdrop-filter:blur(24px);border:1px solid rgba(255,255,255,.11);border-radius:26px;padding:1.5rem;width:100%;max-width:820px;box-shadow:0 24px 60px rgba(0,0,0,.4)}
 
 /* TABS */
-.tabs{display:flex;gap:.3rem;margin-bottom:1.4rem;background:rgba(0,0,0,.2);border-radius:14px;padding:.3rem}
-.tab-btn{flex:1;display:flex;align-items:center;justify-content:center;gap:.5rem;padding:.65rem 1rem;border-radius:10px;border:none;background:transparent;color:rgba(255,255,255,.45);font-family:var(--ff-d);font-size:.85rem;font-weight:600;cursor:pointer;transition:all .25s;white-space:nowrap}
-.tab-btn i{font-size:.8rem}
-.tab-btn:hover{color:rgba(255,255,255,.75);background:rgba(255,255,255,.05)}
-.tab-btn.active{background:var(--gg);color:#fff;box-shadow:0 4px 14px rgba(155,114,203,.35)}
+.tabs{display:flex;gap:.28rem;margin-bottom:1.35rem;background:rgba(0,0,0,.22);border-radius:12px;padding:.28rem}
+.tab{flex:1;display:flex;align-items:center;justify-content:center;gap:.45rem;padding:.6rem .8rem;border-radius:9px;border:none;background:transparent;color:rgba(255,255,255,.42);font-family:var(--ff-d);font-size:.84rem;font-weight:600;cursor:pointer;transition:all .22s;white-space:nowrap}
+.tab i{font-size:.78rem}
+.tab:hover{color:rgba(255,255,255,.72);background:rgba(255,255,255,.05)}
+.tab.active{background:var(--gg);color:#fff;box-shadow:0 4px 16px rgba(155,114,203,.32)}
 
-/* SEARCH FORM PANELS */
-.search-panel{display:none;animation:fadeUp .25s ease}
-.search-panel.active{display:block}
-@keyframes fadeUp{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:translateY(0)}}
+/* PANELS */
+.panel{display:none;animation:fadeUp .22s ease}
+.panel.active{display:block}
+@keyframes fadeUp{from{opacity:0;transform:translateY(7px)}to{opacity:1;transform:translateY(0)}}
 
-.input-row{display:flex;gap:.5rem;flex-wrap:wrap}
-.input-group{flex:1;min-width:140px;display:flex;flex-direction:column;gap:.28rem;position:relative}
-.input-group label{font-size:.6rem;font-weight:700;text-transform:uppercase;letter-spacing:.07em;color:rgba(255,255,255,.45);font-family:var(--ff-d)}
-.input-group input,.input-group select{background:rgba(255,255,255,.08);border:1.5px solid rgba(255,255,255,.12);border-radius:12px;padding:.72rem 1rem;font-size:.9rem;color:#fff;font-family:var(--ff-b);outline:none;transition:all .2s;width:100%}
-.input-group input::placeholder{color:rgba(255,255,255,.3)}
-.input-group input:focus,.input-group select:focus{border-color:rgba(155,114,203,.6);background:rgba(255,255,255,.12);box-shadow:0 0 0 3px rgba(155,114,203,.15)}
-.input-group select option{background:#1E293B;color:#fff}
-.input-icon{position:absolute;right:.75rem;bottom:.75rem;color:rgba(255,255,255,.25);font-size:.8rem;pointer-events:none}
+/* INPUT ROW */
+.input-row{display:flex;gap:.45rem;flex-wrap:wrap;align-items:flex-end}
+.ig{display:flex;flex-direction:column;gap:.26rem;flex:1;min-width:130px;position:relative}
+.ig label{font-size:.58rem;font-weight:700;text-transform:uppercase;letter-spacing:.07em;color:rgba(255,255,255,.4);font-family:var(--ff-d)}
+.ig input,.ig select{background:rgba(255,255,255,.09);border:1.5px solid rgba(255,255,255,.13);border-radius:11px;padding:.7rem .95rem;font-size:.88rem;color:#fff;font-family:var(--ff-b);outline:none;transition:all .2s;width:100%;-webkit-text-fill-color:#fff}
+.ig input::placeholder{color:rgba(255,255,255,.28)}
+.ig input:focus,.ig select:focus{border-color:rgba(155,114,203,.65);background:rgba(255,255,255,.13);box-shadow:0 0 0 3px rgba(155,114,203,.14)}
+.ig select option{background:#1E293B;color:#fff}
+/* date input color fix */
+.ig input[type=date]{color-scheme:dark}
 
-/* trip type + class pills (flights only) */
-.trip-row{display:flex;gap:.4rem;margin-bottom:.9rem;flex-wrap:wrap;align-items:center}
-.trip-pill{border:1.5px solid rgba(255,255,255,.15);border-radius:50px;padding:.28rem .75rem;font-size:.74rem;font-weight:600;color:rgba(255,255,255,.45);background:transparent;cursor:pointer;transition:all .2s;font-family:var(--ff-d)}
-.trip-pill:hover{border-color:rgba(255,255,255,.4);color:rgba(255,255,255,.8)}
-.trip-pill.active{background:rgba(155,114,203,.25);border-color:rgba(155,114,203,.5);color:#fff}
-.trip-divider{width:1px;height:16px;background:rgba(255,255,255,.12);margin:0 .2rem}
+/* trip type pills */
+.trip-row{display:flex;gap:.35rem;margin-bottom:.85rem;flex-wrap:wrap;align-items:center}
+.tpill{border:1.5px solid rgba(255,255,255,.14);border-radius:50px;padding:.26rem .7rem;font-size:.72rem;font-weight:600;color:rgba(255,255,255,.42);background:transparent;cursor:pointer;transition:all .18s;font-family:var(--ff-d)}
+.tpill:hover{border-color:rgba(255,255,255,.38);color:rgba(255,255,255,.78)}
+.tpill.active{background:rgba(155,114,203,.24);border-color:rgba(155,114,203,.5);color:#fff}
+.tdivider{width:1px;height:15px;background:rgba(255,255,255,.11);margin:0 .15rem}
 
-/* SWAP BUTTON */
-.swap-btn{width:34px;height:34px;border-radius:50%;background:rgba(155,114,203,.2);border:1.5px solid rgba(155,114,203,.35);color:var(--c2);display:flex;align-items:center;justify-content:center;cursor:pointer;transition:all .2s;flex-shrink:0;align-self:flex-end;margin-bottom:.1rem}
-.swap-btn:hover{background:rgba(155,114,203,.35);transform:rotate(180deg)}
+/* swap */
+.swap{width:33px;height:33px;border-radius:50%;background:rgba(155,114,203,.2);border:1.5px solid rgba(155,114,203,.35);color:var(--c2);display:flex;align-items:center;justify-content:center;cursor:pointer;transition:all .2s;flex-shrink:0;margin-bottom:1px}
+.swap:hover{background:rgba(155,114,203,.35);transform:rotate(180deg)}
 
-/* SEARCH BUTTON */
-.search-btn{width:100%;margin-top:1rem;padding:.9rem;background:var(--gg);color:#fff;border:none;border-radius:14px;font-family:var(--ff-d);font-size:1rem;font-weight:700;cursor:pointer;display:flex;align-items:center;justify-content:center;gap:.6rem;transition:all .2s;box-shadow:0 6px 20px rgba(155,114,203,.3)}
-.search-btn:hover{filter:brightness(1.06);transform:translateY(-1px);box-shadow:0 10px 28px rgba(155,114,203,.4)}
-.search-btn i{font-size:.9rem}
+/* SEARCH BTN */
+.sbtn{width:100%;margin-top:.95rem;padding:.88rem;background:var(--gg);color:#fff;border:none;border-radius:13px;font-family:var(--ff-d);font-size:.98rem;font-weight:700;cursor:pointer;display:flex;align-items:center;justify-content:center;gap:.55rem;transition:all .2s;box-shadow:0 6px 22px rgba(155,114,203,.28)}
+.sbtn:hover{filter:brightness(1.06);transform:translateY(-1px);box-shadow:0 10px 30px rgba(155,114,203,.38)}
+.sbtn.disabled{opacity:.55;cursor:not-allowed;transform:none;filter:none}
 
-/* TRUST BAR */
-.trust-bar{display:flex;gap:2.5rem;justify-content:center;flex-wrap:wrap;margin-top:2rem;position:relative;z-index:1}
-.trust-item{display:flex;align-items:center;gap:.5rem;font-size:.78rem;color:rgba(255,255,255,.4);font-weight:500}
-.trust-item i{color:rgba(155,114,203,.7);font-size:.82rem}
-
-/* MOBILE NAV DROPDOWN */
-.mobile-nav{position:fixed;top:64px;left:0;right:0;background:rgba(15,23,42,.97);backdrop-filter:blur(16px);border-bottom:1px solid rgba(255,255,255,.08);padding:.5rem 5%;display:flex;flex-direction:column;z-index:99;opacity:0;transform:translateY(-10px);pointer-events:none;transition:all .3s var(--ease-b)}
-.mobile-nav.open{opacity:1;transform:translateY(0);pointer-events:all}
-.mobile-nav a{padding:.85rem 0;font-family:var(--ff-d);font-size:.9rem;font-weight:500;color:rgba(255,255,255,.55);text-decoration:none;border-bottom:1px solid rgba(255,255,255,.06);transition:color .2s}
-.mobile-nav a:last-child{border-bottom:none}
-.mobile-nav a:hover{color:#fff}
+/* TRUST */
+.trust{display:flex;gap:2rem;justify-content:center;flex-wrap:wrap;margin-top:1.8rem;position:relative;z-index:1}
+.trust-item{display:flex;align-items:center;gap:.45rem;font-size:.76rem;color:rgba(255,255,255,.35);font-weight:400}
+.trust-item i{color:rgba(155,114,203,.65);font-size:.78rem}
 
 /* RESPONSIVE */
 @media(max-width:768px){
   .nav-links,.nav-right{display:none}
   .hamburger{display:flex}
-  .hero{padding:5rem 4% 3rem}
-  .input-row{flex-direction:column;gap:.6rem}
-  .swap-btn{display:none}
-  .tabs{gap:.2rem}
-  .tab-btn{padding:.55rem .5rem;font-size:.78rem}
-  .tab-btn span{display:none}
-  .tab-btn i{font-size:1rem}
-  .trust-bar{gap:1.2rem}
+  .hero{padding:5.5rem 4% 3rem}
+  .input-row{flex-direction:column;gap:.5rem}
+  .swap{display:none}
+  .tab span{display:none}
+  .tab i{font-size:.95rem}
+  .tabs{gap:.18rem;padding:.22rem}
+  .trust{gap:1rem}
 }
 @media(max-width:480px){
-  .search-card{border-radius:20px;padding:1.2rem}
-  h1{font-size:2rem}
+  .search-card{padding:1.1rem;border-radius:20px}
+  h1{font-size:1.9rem}
+  .trust-item:nth-child(n+3){display:none}
 }
 </style>
 </head>
 <body>
 
+<!-- STARS -->
+<div class="stars" id="stars"></div>
+
 <!-- NAV -->
 <nav>
-  <a class="logo" href="index.html"><i class="fa-solid fa-sparkles"></i>AeroFly</a>
+  <a class="logo" href="index.html"><i class="fa-solid fa-sparkles" style="font-size:.95rem"></i>AeroFly</a>
   <div class="nav-links">
     <a href="pages/flights.html">Flights</a>
     <a href="pages/hotels.html">Hotels</a>
@@ -136,235 +142,251 @@ h1 span{background:var(--gg);-webkit-background-clip:text;-webkit-text-fill-colo
     <a class="nav-btn ghost" href="#">Log in</a>
     <a class="nav-btn solid" href="#">Sign up</a>
   </div>
-  <div class="hamburger" id="ham" onclick="toggleMobileNav()">
+  <button class="hamburger" id="ham" onclick="toggleMenu()">
     <span></span><span></span><span></span>
-  </div>
+  </button>
 </nav>
 
-<!-- MOBILE NAV -->
-<div class="mobile-nav" id="mobileNav">
-  <a href="pages/flights.html"><i class="fa-solid fa-plane-departure" style="margin-right:.6rem;color:#9B72CB"></i>Flights</a>
-  <a href="pages/hotels.html"><i class="fa-solid fa-building" style="margin-right:.6rem;color:#9B72CB"></i>Hotels</a>
-  <a href="#"><i class="fa-solid fa-map-location-dot" style="margin-right:.6rem;color:#9B72CB"></i>Experiences</a>
-  <a href="#"><i class="fa-solid fa-tag" style="margin-right:.6rem;color:#9B72CB"></i>Deals</a>
+<!-- MOBILE MENU -->
+<div class="mobile-menu" id="mobileMenu">
+  <a href="pages/flights.html"><i class="fa-solid fa-plane-departure"></i>Flights</a>
+  <a href="pages/hotels.html"><i class="fa-solid fa-building"></i>Hotels</a>
+  <a href="#"><i class="fa-solid fa-map-location-dot"></i>Experiences</a>
+  <a href="#"><i class="fa-solid fa-tag"></i>Deals</a>
 </div>
 
 <!-- HERO -->
 <div class="hero">
   <div class="hero-bg"></div>
-  <div class="stars" id="stars"></div>
 
   <div class="hero-inner">
-    <div class="hero-eyebrow"><i class="fa-solid fa-star"></i> Premium travel, simplified</div>
-    <h1>Travel the world<br>your <span>own way</span></h1>
-    <p class="hero-sub">Flights, hotels and experiences — search, compare and book in seconds.</p>
+    <div class="eyebrow"><i class="fa-solid fa-star" style="font-size:.65rem;color:var(--c2)"></i>Premium travel, simplified</div>
+    <h1>Travel the world<br>your <span class="grad">own way</span></h1>
+    <p class="sub">Flights, hotels and experiences — search, compare and book in seconds.</p>
 
     <!-- SEARCH CARD -->
     <div class="search-card">
+
       <!-- TABS -->
       <div class="tabs">
-        <button class="tab-btn active" onclick="switchTab('flights',this)">
+        <button class="tab active" onclick="switchTab('flights',this)">
           <i class="fa-solid fa-plane-departure"></i><span>Flights</span>
         </button>
-        <button class="tab-btn" onclick="switchTab('hotels',this)">
+        <button class="tab" onclick="switchTab('hotels',this)">
           <i class="fa-solid fa-building"></i><span>Hotels</span>
         </button>
-        <button class="tab-btn" onclick="switchTab('experiences',this)">
+        <button class="tab" onclick="switchTab('experiences',this)">
           <i class="fa-solid fa-map-location-dot"></i><span>Experiences</span>
         </button>
       </div>
 
-      <!-- FLIGHTS PANEL -->
-      <div class="search-panel active" id="panel-flights">
+      <!-- FLIGHTS -->
+      <div class="panel active" id="panel-flights">
         <div class="trip-row">
-          <div class="trip-pill active" onclick="setTrip(this,'round')">Round trip</div>
-          <div class="trip-pill" onclick="setTrip(this,'oneway')">One way</div>
-          <div class="trip-pill" onclick="setTrip(this,'multi')">Multi-city</div>
-          <div class="trip-divider"></div>
-          <div class="trip-pill active" onclick="setClass(this)" style="margin-left:.2rem">Economy</div>
-          <div class="trip-pill" onclick="setClass(this)">Premium</div>
-          <div class="trip-pill" onclick="setClass(this)">First</div>
+          <div class="tpill active" onclick="setTrip(this,'round')">Round trip</div>
+          <div class="tpill" onclick="setTrip(this,'oneway')">One way</div>
+          <div class="tpill" onclick="setTrip(this,'multi')">Multi-city</div>
+          <div class="tdivider"></div>
+          <div class="tpill active" id="cls-eco" onclick="setClass(this)">Economy</div>
+          <div class="tpill" id="cls-prem" onclick="setClass(this)">Premium</div>
+          <div class="tpill" id="cls-first" onclick="setClass(this)">First</div>
         </div>
         <div class="input-row">
-          <div class="input-group" style="flex:1.4">
-            <label><i class="fa-solid fa-plane-departure" style="margin-right:.3rem"></i>From</label>
+          <div class="ig" style="flex:1.5">
+            <label><i class="fa-solid fa-plane-departure" style="margin-right:.28rem"></i>From</label>
             <input type="text" id="f-from" placeholder="City or airport" value="Brussels (BRU)">
           </div>
-          <button class="swap-btn" onclick="swapFlightCities()" title="Swap"><i class="fa-solid fa-arrow-right-arrow-left"></i></button>
-          <div class="input-group" style="flex:1.4">
-            <label><i class="fa-solid fa-plane-arrival" style="margin-right:.3rem"></i>To</label>
+          <button class="swap" onclick="swapCities()" title="Swap cities">
+            <i class="fa-solid fa-right-left" style="font-size:.75rem"></i>
+          </button>
+          <div class="ig" style="flex:1.5">
+            <label><i class="fa-solid fa-plane-arrival" style="margin-right:.28rem"></i>To</label>
             <input type="text" id="f-to" placeholder="City or airport">
           </div>
-          <div class="input-group">
-            <label><i class="fa-regular fa-calendar" style="margin-right:.3rem"></i>Depart</label>
+          <div class="ig">
+            <label><i class="fa-regular fa-calendar" style="margin-right:.28rem"></i>Depart</label>
             <input type="date" id="f-depart">
           </div>
-          <div class="input-group" id="return-group">
-            <label><i class="fa-regular fa-calendar" style="margin-right:.3rem"></i>Return</label>
+          <div class="ig" id="return-grp">
+            <label><i class="fa-regular fa-calendar" style="margin-right:.28rem"></i>Return</label>
             <input type="date" id="f-return">
           </div>
-          <div class="input-group" style="min-width:120px;max-width:160px">
-            <label><i class="fa-solid fa-user" style="margin-right:.3rem"></i>Travelers</label>
-            <input type="text" id="f-travelers" value="1 Adult" readonly onclick="this.blur()" style="cursor:pointer">
+          <div class="ig" style="min-width:110px;max-width:150px">
+            <label><i class="fa-solid fa-user" style="margin-right:.28rem"></i>Travelers</label>
+            <input type="text" id="f-pax" value="1 Adult" readonly style="cursor:pointer" onclick="this.blur()">
           </div>
         </div>
-        <button class="search-btn" onclick="searchFlights()">
-          <i class="fa-solid fa-magnifying-glass"></i> Search Flights
+        <button class="sbtn" onclick="goFlights()">
+          <i class="fa-solid fa-magnifying-glass"></i>Search Flights
         </button>
       </div>
 
-      <!-- HOTELS PANEL -->
-      <div class="search-panel" id="panel-hotels">
+      <!-- HOTELS -->
+      <div class="panel" id="panel-hotels">
         <div class="input-row">
-          <div class="input-group" style="flex:2">
-            <label><i class="fa-solid fa-location-dot" style="margin-right:.3rem"></i>Destination</label>
+          <div class="ig" style="flex:2">
+            <label><i class="fa-solid fa-location-dot" style="margin-right:.28rem"></i>Destination</label>
             <input type="text" id="h-dest" placeholder="City, hotel or area">
           </div>
-          <div class="input-group">
-            <label><i class="fa-regular fa-calendar" style="margin-right:.3rem"></i>Check-in</label>
-            <input type="date" id="h-checkin">
+          <div class="ig">
+            <label><i class="fa-regular fa-calendar" style="margin-right:.28rem"></i>Check-in</label>
+            <input type="date" id="h-in">
           </div>
-          <div class="input-group">
-            <label><i class="fa-regular fa-calendar" style="margin-right:.3rem"></i>Check-out</label>
-            <input type="date" id="h-checkout">
+          <div class="ig">
+            <label><i class="fa-regular fa-calendar" style="margin-right:.28rem"></i>Check-out</label>
+            <input type="date" id="h-out">
           </div>
-          <div class="input-group" style="min-width:130px;max-width:160px">
-            <label><i class="fa-solid fa-user" style="margin-right:.3rem"></i>Guests</label>
+          <div class="ig" style="min-width:120px;max-width:158px">
+            <label><i class="fa-solid fa-user-group" style="margin-right:.28rem"></i>Guests</label>
             <input type="text" id="h-guests" value="2 guests · 1 room" readonly style="cursor:pointer">
           </div>
         </div>
-        <button class="search-btn" onclick="searchHotels()">
-          <i class="fa-solid fa-magnifying-glass"></i> Search Hotels
+        <button class="sbtn" onclick="goHotels()">
+          <i class="fa-solid fa-magnifying-glass"></i>Search Hotels
         </button>
       </div>
 
-      <!-- EXPERIENCES PANEL -->
-      <div class="search-panel" id="panel-experiences">
+      <!-- EXPERIENCES -->
+      <div class="panel" id="panel-experiences">
         <div class="input-row">
-          <div class="input-group" style="flex:2">
-            <label><i class="fa-solid fa-location-dot" style="margin-right:.3rem"></i>Where to?</label>
+          <div class="ig" style="flex:2">
+            <label><i class="fa-solid fa-location-dot" style="margin-right:.28rem"></i>Where to?</label>
             <input type="text" id="e-dest" placeholder="City or region">
           </div>
-          <div class="input-group">
-            <label><i class="fa-regular fa-calendar" style="margin-right:.3rem"></i>Date</label>
+          <div class="ig">
+            <label><i class="fa-regular fa-calendar" style="margin-right:.28rem"></i>Date</label>
             <input type="date" id="e-date">
           </div>
-          <div class="input-group" style="min-width:130px;max-width:160px">
-            <label><i class="fa-solid fa-layer-group" style="margin-right:.3rem"></i>Category</label>
+          <div class="ig" style="min-width:130px;max-width:160px">
+            <label><i class="fa-solid fa-layer-group" style="margin-right:.28rem"></i>Category</label>
             <select id="e-cat">
               <option>All types</option>
-              <option>Culture & Art</option>
-              <option>Food & Drink</option>
+              <option>Culture &amp; Art</option>
+              <option>Food &amp; Drink</option>
               <option>Adventure</option>
               <option>Nature</option>
               <option>Nightlife</option>
             </select>
           </div>
         </div>
-        <button class="search-btn" style="opacity:.6;cursor:default">
-          <i class="fa-solid fa-clock"></i> Coming Soon
+        <button class="sbtn disabled" disabled>
+          <i class="fa-solid fa-clock"></i>Coming Soon
         </button>
       </div>
-    </div>
+
+    </div><!-- end search-card -->
 
     <!-- TRUST BAR -->
-    <div class="trust-bar">
-      <div class="trust-item"><i class="fa-solid fa-shield-halved"></i> Secure booking</div>
-      <div class="trust-item"><i class="fa-solid fa-bolt"></i> Instant confirmation</div>
-      <div class="trust-item"><i class="fa-solid fa-rotate-left"></i> Free cancellation options</div>
-      <div class="trust-item"><i class="fa-solid fa-headset"></i> 24/7 support</div>
+    <div class="trust">
+      <div class="trust-item"><i class="fa-solid fa-shield-halved"></i>Secure booking</div>
+      <div class="trust-item"><i class="fa-solid fa-bolt"></i>Instant confirmation</div>
+      <div class="trust-item"><i class="fa-solid fa-rotate-left"></i>Free cancellation</div>
+      <div class="trust-item"><i class="fa-solid fa-headset"></i>24/7 support</div>
     </div>
+
   </div>
 </div>
 
 <script>
 // STARS
 (function(){
-  const el=document.getElementById('stars');
-  for(let i=0;i<80;i++){
-    const s=document.createElement('div');
-    s.className='star';
-    const sz=Math.random()*2+.5;
-    s.style.cssText=`width:${sz}px;height:${sz}px;top:${Math.random()*100}%;left:${Math.random()*100}%;animation-duration:${2+Math.random()*4}s;animation-delay:${Math.random()*4}s`;
+  const el = document.getElementById('stars');
+  for (let i = 0; i < 90; i++) {
+    const s = document.createElement('div');
+    s.className = 'star';
+    const sz = Math.random() * 2 + .5;
+    s.style.cssText = `width:${sz}px;height:${sz}px;top:${Math.random()*100}%;left:${Math.random()*100}%;animation-duration:${2+Math.random()*5}s;animation-delay:${Math.random()*5}s`;
     el.appendChild(s);
   }
 })();
 
+// DEFAULT DATES
+(function(){
+  const pad = n => String(n).padStart(2,'0');
+  const fmt = d => `${d.getFullYear()}-${pad(d.getMonth()+1)}-${pad(d.getDate())}`;
+  const d1 = new Date(), d2 = new Date(), d3 = new Date();
+  d1.setDate(d1.getDate()+14); d2.setDate(d2.getDate()+21); d3.setDate(d3.getDate()+14);
+  document.getElementById('f-depart').value = fmt(d1);
+  document.getElementById('f-return').value = fmt(d2);
+  document.getElementById('h-in').value = fmt(d1);
+  document.getElementById('h-out').value = fmt(d2);
+  document.getElementById('e-date').value = fmt(d3);
+})();
+
 // TABS
-function switchTab(tab,btn){
-  document.querySelectorAll('.tab-btn').forEach(b=>b.classList.remove('active'));
-  document.querySelectorAll('.search-panel').forEach(p=>p.classList.remove('active'));
+function switchTab(name, btn) {
+  document.querySelectorAll('.tab').forEach(b => b.classList.remove('active'));
+  document.querySelectorAll('.panel').forEach(p => p.classList.remove('active'));
   btn.classList.add('active');
-  document.getElementById('panel-'+tab).classList.add('active');
+  document.getElementById('panel-' + name).classList.add('active');
 }
 
 // TRIP TYPE
-function setTrip(el,type){
-  // Only affect the first group (trip type pills, not class pills)
-  const tripPills=[...document.querySelectorAll('.trip-row .trip-pill')].slice(0,3);
-  tripPills.forEach(p=>p.classList.remove('active'));
+let tripType = 'round';
+function setTrip(el, type) {
+  tripType = type;
+  document.querySelectorAll('.trip-row .tpill').forEach((p,i) => { if(i<3) p.classList.remove('active'); });
   el.classList.add('active');
-  // Show/hide return date
-  document.getElementById('return-group').style.display=(type==='oneway')?'none':'';
+  document.getElementById('return-grp').style.display = type === 'oneway' ? 'none' : '';
 }
 
-// CLASS SELECT
-function setClass(el){
-  const classPills=[...document.querySelectorAll('.trip-row .trip-pill')].slice(3);
-  classPills.forEach(p=>p.classList.remove('active'));
+// CLASS
+function setClass(el) {
+  ['cls-eco','cls-prem','cls-first'].forEach(id => document.getElementById(id)?.classList.remove('active'));
   el.classList.add('active');
 }
 
 // SWAP
-function swapFlightCities(){
-  const a=document.getElementById('f-from'),b=document.getElementById('f-to');
-  [a.value,b.value]=[b.value,a.value];
+function swapCities() {
+  const a = document.getElementById('f-from'), b = document.getElementById('f-to');
+  [a.value, b.value] = [b.value, a.value];
 }
 
-// DEFAULT DATES
-(function(){
-  const pad=n=>String(n).padStart(2,'0');
-  const d=new Date(),d2=new Date();
-  d.setDate(d.getDate()+14); d2.setDate(d2.getDate()+21);
-  const fmt=dt=>`${dt.getFullYear()}-${pad(dt.getMonth()+1)}-${pad(dt.getDate())}`;
-  document.getElementById('f-depart').value=fmt(d);
-  document.getElementById('f-return').value=fmt(d2);
-  document.getElementById('h-checkin').value=fmt(d);
-  document.getElementById('h-checkout').value=fmt(d2);
-  document.getElementById('e-date').value=fmt(d);
-})();
-
-// SEARCH → navigate to page with query params
-function searchFlights(){
-  const from=document.getElementById('f-from').value.trim();
-  const to=document.getElementById('f-to').value.trim();
-  const dep=document.getElementById('f-depart').value;
-  const ret=document.getElementById('f-return').value;
-  if(!to){document.getElementById('f-to').focus();return;}
-  const params=new URLSearchParams({from,to,dep,ret});
-  window.location.href=`pages/flights.html?${params}`;
+// NAVIGATE
+function goFlights() {
+  const from = document.getElementById('f-from').value.trim();
+  const to   = document.getElementById('f-to').value.trim();
+  const dep  = document.getElementById('f-depart').value;
+  const ret  = document.getElementById('f-return').value;
+  if (!to) { document.getElementById('f-to').focus(); shake('f-to'); return; }
+  const p = new URLSearchParams({from, to, dep, ...(tripType !== 'oneway' && {ret})});
+  window.location.href = 'pages/flights.html?' + p;
 }
 
-function searchHotels(){
-  const dest=document.getElementById('h-dest').value.trim();
-  const cin=document.getElementById('h-checkin').value;
-  const cout=document.getElementById('h-checkout').value;
-  if(!dest){document.getElementById('h-dest').focus();return;}
-  const params=new URLSearchParams({dest,cin,cout});
-  window.location.href=`pages/hotels.html?${params}`;
+function goHotels() {
+  const dest = document.getElementById('h-dest').value.trim();
+  const cin  = document.getElementById('h-in').value;
+  const cout = document.getElementById('h-out').value;
+  if (!dest) { document.getElementById('h-dest').focus(); shake('h-dest'); return; }
+  const p = new URLSearchParams({dest, cin, cout});
+  window.location.href = 'pages/hotels.html?' + p;
 }
 
-// MOBILE NAV
-function toggleMobileNav(){
-  document.getElementById('mobileNav').classList.toggle('open');
-  const spans=document.querySelectorAll('.hamburger span');
-  const open=document.getElementById('mobileNav').classList.contains('open');
-  if(open){spans[0].style.transform='translateY(7px) rotate(45deg)';spans[1].style.opacity='0';spans[2].style.transform='translateY(-7px) rotate(-45deg)';}
-  else{spans.forEach(s=>{s.style.transform='';s.style.opacity='';})}
+function shake(id) {
+  const el = document.getElementById(id);
+  el.style.animation = 'none';
+  el.style.borderColor = '#D96570';
+  el.style.boxShadow = '0 0 0 3px rgba(217,101,112,.2)';
+  setTimeout(() => { el.style.borderColor = ''; el.style.boxShadow = ''; }, 1400);
 }
-document.addEventListener('click',e=>{
-  if(!e.target.closest('#ham')&&!e.target.closest('#mobileNav'))
-    document.getElementById('mobileNav').classList.remove('open');
+
+// MOBILE MENU
+function toggleMenu() {
+  const m = document.getElementById('mobileMenu');
+  const h = document.getElementById('ham');
+  const open = m.classList.toggle('open');
+  const spans = h.querySelectorAll('span');
+  if (open) {
+    spans[0].style.transform = 'translateY(7px) rotate(45deg)';
+    spans[1].style.opacity = '0';
+    spans[2].style.transform = 'translateY(-7px) rotate(-45deg)';
+  } else {
+    spans.forEach(s => { s.style.transform = ''; s.style.opacity = ''; });
+  }
+}
+document.addEventListener('click', e => {
+  if (!e.target.closest('#ham') && !e.target.closest('#mobileMenu'))
+    document.getElementById('mobileMenu').classList.remove('open');
 });
 </script>
 </body>
