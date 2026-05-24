@@ -1,362 +1,69 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width,initial-scale=1.0,maximum-scale=1.0,user-scalable=no">
-<title>AeroFly — Flights</title>
-<link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
-<link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;500;600;700;800&family=Roboto:wght@400;500;700&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="../css/global.css">
-<link rel="stylesheet" href="../css/flights.css">
-</head>
-<body>
+/* FLIGHT CARDS */
+.main-grid{display:grid;grid-template-columns:1.8fr 1fr;gap:2.5rem;margin-top:2.5rem}
+.results-header{color:var(--text-gray);font-size:.95rem;margin-bottom:1.2rem;font-weight:500}
+.flight-card{background:var(--white);border-radius:20px;padding:1.5rem;margin-bottom:1rem;box-shadow:var(--card-shadow);border:1px solid var(--border-color);transition:transform .2s}
+.flight-card.featured{border:1px solid transparent;background-image:linear-gradient(var(--white),var(--white)),var(--gemini-gradient);background-origin:border-box;background-clip:padding-box,border-box;box-shadow:var(--glow-shadow);position:relative;overflow:hidden}
+.flight-card.featured::after{content:'';position:absolute;right:0;top:0;width:150px;height:100%;background:radial-gradient(circle at right,rgba(161,82,249,0.08) 0%,rgba(255,255,255,0) 70%);z-index:0;pointer-events:none}
+.card-top{display:flex;justify-content:space-between;align-items:center;margin-bottom:1rem;position:relative;z-index:1}
+.airline-info{display:flex;align-items:center;gap:1rem;width:30%}
+.airline-logo{width:44px;height:44px;background:var(--bg-color);border-radius:12px;display:flex;align-items:center;justify-content:center;font-size:1.2rem;flex-shrink:0}
+.airline-name{font-weight:600;font-size:1.05rem}
+.flight-number{font-size:.8rem;color:var(--text-gray)}
+.flight-route{display:flex;align-items:center;gap:1rem;text-align:center;width:40%;justify-content:center}
+.time{font-size:1.15rem;font-weight:700;font-family:'Outfit',sans-serif}
+.route-line{display:flex;flex-direction:column;align-items:center;gap:.3rem}
+.duration{font-size:.75rem;color:var(--text-gray)}
+.stops-badge{font-size:.7rem;font-weight:600;padding:.2rem .5rem;border-radius:6px;background:#E6F4EA;color:#137333}
+.price-section{text-align:right;width:30%;position:relative;z-index:1}
+.price-label{font-size:.8rem;color:var(--text-gray)}
+.price{font-size:1.6rem;font-weight:800;color:var(--text-dark)}
+.flight-card.featured .price{background:var(--gemini-gradient);-webkit-background-clip:text;-webkit-text-fill-color:transparent}
 
-<!-- MODAL -->
-<div id="modal-overlay">
-  <div class="booking-modal">
-    <div class="modal-top-bar">
-      <div class="modal-top-bar-header">
-        <h3 id="modal-step-title">Passenger Details</h3>
-        <span class="step-counter" id="modal-step-counter">Step 1 of 5</span>
-      </div>
-      <div class="progress-plane-bar">
-        <div class="progress-plane-fill" id="progressFill"></div>
-        <div class="progress-plane-icon" id="progressPlane">✈</div>
-      </div>
-      <div class="step-pills" id="stepPills">
-        <div class="step-pill active">Passenger</div>
-        <div class="step-pill">Seats</div>
-        <div class="step-pill">Food</div>
-        <div class="step-pill">Bags</div>
-        <div class="step-pill">Review</div>
-      </div>
-      <button class="close-modal-btn" onclick="closeBookingModal()"><i class="fa-solid fa-xmark"></i></button>
-    </div>
-    <div class="modal-body">
+/* FLIGHT PLAN SECTION — ENHANCED */
+.flight-plan-section{margin:1rem 0;border-top:1px dashed var(--border-color);border-bottom:1px dashed var(--border-color);position:relative;z-index:1}
+.plan-toggle{padding:.8rem 0;display:flex;justify-content:space-between;align-items:center;cursor:pointer;color:var(--gemini-purple);font-weight:600;font-size:.9rem}
+.plan-toggle i.arrow{transition:transform .3s ease}
+.plan-toggle.open i.arrow{transform:rotate(180deg)}
+.plan-content{max-height:0;overflow:hidden;transition:max-height .4s ease}
+.plan-content.active{max-height:600px;margin-bottom:1rem}
+.plan-inner{background:var(--bg-color);border-radius:14px;padding:1.2rem;margin-top:.5rem}
 
-      <!-- STEP 1 -->
-      <div class="step-panel active" id="step-1">
-        <div id="passengers-container"></div>
-        <button class="add-passenger-btn" onclick="addPassenger()">
-          <i class="fa-solid fa-circle-plus"></i> Add Passenger
-        </button>
-      </div>
+/* timeline enhanced */
+.tl-wrap{position:relative;padding:.5rem 0}
+.tl-line{position:absolute;left:22px;top:28px;bottom:28px;width:2px;background:linear-gradient(to bottom,var(--gemini-blue),var(--gemini-purple),var(--gemini-red))}
+.tl-event{display:flex;gap:1rem;position:relative;margin-bottom:1.2rem}
+.tl-event:last-child{margin-bottom:0}
+.tl-dot{width:44px;height:44px;border-radius:50%;background:var(--white);border:2px solid var(--border-color);display:flex;align-items:center;justify-content:center;font-size:.9rem;flex-shrink:0;z-index:1;box-shadow:0 2px 8px rgba(0,0,0,0.08)}
+.tl-dot.dep{border-color:var(--gemini-blue);color:var(--gemini-blue)}
+.tl-dot.arr{border-color:var(--gemini-red);color:var(--gemini-red)}
+.tl-dot.layover{border-color:var(--gemini-purple);color:var(--gemini-purple)}
+.tl-dot.mid{border-color:var(--text-gray);color:var(--text-gray)}
+.tl-body{flex:1;padding-top:.1rem}
+.tl-label{font-weight:700;font-family:'Outfit',sans-serif;font-size:.9rem;color:var(--text-dark)}
+.tl-sub{font-size:.75rem;color:var(--text-gray);margin-top:.15rem;line-height:1.5}
+.tl-time-badge{font-size:.8rem;font-weight:700;font-family:'Outfit',sans-serif;color:var(--gemini-purple);background:rgba(155,114,203,.1);padding:.15rem .5rem;border-radius:6px;display:inline-block;margin-top:.2rem}
+.tl-chips{display:flex;flex-wrap:wrap;gap:.35rem;margin-top:.4rem}
+.tl-chip{font-size:.68rem;font-weight:600;padding:.2rem .5rem;border-radius:6px;background:var(--white);border:1px solid var(--border-color);color:var(--text-gray);font-family:'Outfit',sans-serif}
+.tl-chip.highlight{background:rgba(66,133,244,.08);border-color:rgba(66,133,244,.3);color:var(--gemini-blue)}
+.layover-bar{background:rgba(155,114,203,.07);border:1.5px dashed rgba(155,114,203,.3);border-radius:10px;padding:.6rem 1rem;margin:.3rem 0 1.2rem 0;display:flex;align-items:center;gap:.6rem;font-size:.78rem;font-family:'Outfit',sans-serif;color:var(--gemini-purple);font-weight:600}
+.layover-bar i{font-size:.9rem}
 
-      <!-- STEP 2 -->
-      <div class="step-panel" id="step-2">
-        <div class="class-selector">
-          <div class="class-card fc active" onclick="selectClass('fc')">
-            <div class="class-card-check"><i class="fa-solid fa-check"></i></div>
-            <div class="class-card-icon">🛋️</div>
-            <div class="class-card-name">First Class</div>
-            <div class="class-card-price">from $2,400</div>
-          </div>
-          <div class="class-card prem" onclick="selectClass('prem')">
-            <div class="class-card-check"><i class="fa-solid fa-check"></i></div>
-            <div class="class-card-icon">⭐</div>
-            <div class="class-card-name">Premium</div>
-            <div class="class-card-price">from $1,100</div>
-          </div>
-          <div class="class-card eco" onclick="selectClass('eco')">
-            <div class="class-card-check"><i class="fa-solid fa-check"></i></div>
-            <div class="class-card-icon">🪑</div>
-            <div class="class-card-name">Economy</div>
-            <div class="class-card-price">from $845</div>
-          </div>
-        </div>
-        <div class="seat-diagram-area">
-          <div class="plane-svg-wrap">
-            <svg viewBox="0 0 100 270" xmlns="http://www.w3.org/2000/svg">
-              <defs>
-                <clipPath id="body-clip"><path d="M50 6 C66 6 67 22 67 38 L67 205 C67 230 58 250 50 256 C42 250 33 230 33 205 L33 38 C33 22 34 6 50 6 Z"/></clipPath>
-                <filter id="zone-glow" x="-30%" y="-30%" width="160%" height="160%"><feGaussianBlur stdDeviation="2.5" result="blur"/><feMerge><feMergeNode in="blur"/><feMergeNode in="SourceGraphic"/></feMerge></filter>
-              </defs>
-              <path d="M33 105 L2 155 L8 170 L33 148 Z" fill="#CBD5E1"/>
-              <path d="M67 105 L98 155 L92 170 L67 148 Z" fill="#CBD5E1"/>
-              <path d="M36 205 L16 240 L24 250 L40 220 Z" fill="#CBD5E1"/>
-              <path d="M64 205 L84 240 L76 250 L60 220 Z" fill="#CBD5E1"/>
-              <path d="M50 6 C66 6 67 22 67 38 L67 205 C67 230 58 250 50 256 C42 250 33 230 33 205 L33 38 C33 22 34 6 50 6 Z" fill="#E2E8F0" stroke="#CBD5E1" stroke-width="1.5"/>
-              <rect x="0" y="5" width="100" height="72" fill="#4285F4" clip-path="url(#body-clip)" id="svg-zone-fc" opacity="0" style="transition:opacity .35s" filter="url(#zone-glow)"/>
-              <rect x="0" y="77" width="100" height="80" fill="#9B72CB" clip-path="url(#body-clip)" id="svg-zone-prem" opacity="0" style="transition:opacity .35s" filter="url(#zone-glow)"/>
-              <rect x="0" y="157" width="100" height="100" fill="#D96570" clip-path="url(#body-clip)" id="svg-zone-eco" opacity="0" style="transition:opacity .35s" filter="url(#zone-glow)"/>
-              <line x1="33" y1="77" x2="67" y2="77" stroke="#94A3B8" stroke-width="1" stroke-dasharray="4,3"/>
-              <line x1="33" y1="157" x2="67" y2="157" stroke="#94A3B8" stroke-width="1" stroke-dasharray="4,3"/>
-              <circle cx="42" cy="28" r="2.5" fill="white" opacity=".7"/><circle cx="58" cy="28" r="2.5" fill="white" opacity=".7"/>
-              <circle cx="42" cy="43" r="2.5" fill="white" opacity=".7"/><circle cx="58" cy="43" r="2.5" fill="white" opacity=".7"/>
-              <circle cx="42" cy="58" r="2.5" fill="white" opacity=".7"/><circle cx="58" cy="58" r="2.5" fill="white" opacity=".7"/>
-              <circle cx="42" cy="90" r="2" fill="white" opacity=".7"/><circle cx="58" cy="90" r="2" fill="white" opacity=".7"/>
-              <circle cx="42" cy="105" r="2" fill="white" opacity=".7"/><circle cx="58" cy="105" r="2" fill="white" opacity=".7"/>
-              <circle cx="42" cy="120" r="2" fill="white" opacity=".7"/><circle cx="58" cy="120" r="2" fill="white" opacity=".7"/>
-              <circle cx="42" cy="135" r="2" fill="white" opacity=".7"/><circle cx="58" cy="135" r="2" fill="white" opacity=".7"/>
-              <circle cx="41" cy="170" r="1.8" fill="white" opacity=".7"/><circle cx="59" cy="170" r="1.8" fill="white" opacity=".7"/>
-              <circle cx="41" cy="185" r="1.8" fill="white" opacity=".7"/><circle cx="59" cy="185" r="1.8" fill="white" opacity=".7"/>
-              <circle cx="41" cy="200" r="1.8" fill="white" opacity=".7"/><circle cx="59" cy="200" r="1.8" fill="white" opacity=".7"/>
-              <text x="50" y="44" text-anchor="middle" font-family="Outfit,sans-serif" font-size="6" fill="#0F172A" opacity=".45" font-weight="700">FC</text>
-              <text x="50" y="122" text-anchor="middle" font-family="Outfit,sans-serif" font-size="5.5" fill="#0F172A" opacity=".45" font-weight="700">PREM</text>
-              <text x="50" y="195" text-anchor="middle" font-family="Outfit,sans-serif" font-size="5.5" fill="#0F172A" opacity=".45" font-weight="700">ECO</text>
-            </svg>
-          </div>
-          <div class="seat-grid-panel">
-            <div class="seat-grid-header" id="seat-grid-label">First Class — Select your seat</div>
-            <div id="seat-grid-container"></div>
-          </div>
-        </div>
-        <div class="benefits-section">
-          <div class="benefits-label">Included Benefits</div>
-          <div class="benefits-grid" id="benefits-container"></div>
-        </div>
-      </div>
+.card-bottom{display:flex;justify-content:space-between;align-items:center;position:relative;z-index:1;padding-top:.5rem}
+.amenities{display:flex;gap:1.5rem}
+.amenities span{font-size:.8rem;color:var(--text-gray);display:flex;align-items:center;gap:.4rem}
+.card-book-btn{background:var(--bg-color);border:none;color:var(--text-dark);border-radius:50px;padding:.6rem 1.8rem;font-size:.95rem;font-weight:600;cursor:pointer;transition:all .2s;min-width:140px}
+.flight-card.featured .card-book-btn{background:var(--gemini-purple);color:var(--white);box-shadow:0 4px 12px rgba(155,114,203,0.3)}
+.card-book-btn:hover:not(:disabled){transform:scale(1.05)}
 
-      <!-- STEP 3 -->
-      <div class="step-panel" id="step-3">
-        <div style="font-size:.85rem;color:var(--text-gray);margin-bottom:1rem;">Choose your in-flight meal preference for each passenger.</div>
-        <div class="food-grid">
-          <div class="food-card veg active" onclick="selectFood(this)">
-            <div class="food-icon">🥦</div>
-            <div class="food-info"><div class="food-name">Vegetarian</div><div class="food-desc">Seasonal vegetables, lentils, grains & plant-based protein</div><div class="food-badge">Vegetarian</div></div>
-            <div class="food-check-icon"><i class="fa-solid fa-check"></i></div>
-          </div>
-          <div class="food-card std" onclick="selectFood(this)">
-            <div class="food-icon">🥩</div>
-            <div class="food-info"><div class="food-name">Standard (Meat & Fish)</div><div class="food-desc">Premium beef, chicken or fresh Atlantic salmon with sides</div><div class="food-badge">Standard</div></div>
-            <div class="food-check-icon"><i class="fa-solid fa-check"></i></div>
-          </div>
-          <div class="food-card spc" onclick="selectFood(this)">
-            <div class="food-icon">🌙</div>
-            <div class="food-info"><div class="food-name">Specialty</div><div class="food-desc">Halal, Kosher, or fully plant-based vegan — please indicate preference</div><div class="food-badge">Specialty</div></div>
-            <div class="food-check-icon"><i class="fa-solid fa-check"></i></div>
-          </div>
-        </div>
-      </div>
+/* SIDEBAR + GLOBE */
+.sidebar{display:flex;flex-direction:column;gap:1.5rem}
+.globe-container{background:#0F172A;border-radius:24px;box-shadow:0 10px 30px rgba(15,23,42,0.2);padding:1.5rem;display:flex;justify-content:center;position:relative;overflow:hidden}
+.globe-container::before{content:'';position:absolute;inset:0;background:radial-gradient(circle at center,rgba(66,133,244,0.1) 0%,transparent 70%);pointer-events:none}
+.globe-container canvas{border-radius:50%;width:100%;max-width:260px;height:auto;aspect-ratio:1/1;filter:drop-shadow(0 0 15px rgba(66,133,244,0.3))}
 
-      <!-- STEP 4 -->
-      <div class="step-panel" id="step-4">
-        <div class="bag-section">
-          <h4>Choose your baggage allowance</h4>
-          <div class="bag-option-row active" onclick="selectBag(this)">
-            <div class="bag-visual"><div class="bag-icon">🎒</div></div>
-            <div class="bag-info"><div class="bag-name">Carry-on Only</div><div class="bag-detail">1 cabin bag, max 10kg</div></div>
-            <div class="bag-price-tag">Included</div><div class="bag-radio"></div>
-          </div>
-          <div class="bag-option-row" onclick="selectBag(this)">
-            <div class="bag-visual"><div class="bag-icon scale-lg">🧳</div></div>
-            <div class="bag-info"><div class="bag-name">1 Checked Bag — 20kg</div><div class="bag-detail">1 cabin bag + 1 hold bag (20kg)</div></div>
-            <div class="bag-price-tag">+ $45</div><div class="bag-radio"></div>
-          </div>
-          <div class="bag-option-row" onclick="selectBag(this)">
-            <div class="bag-visual"><div class="bag-icon scale-xl">🧳</div></div>
-            <div class="bag-info"><div class="bag-name">1 Checked Bag — 32kg</div><div class="bag-detail">1 cabin bag + 1 heavy hold bag (32kg)</div></div>
-            <div class="bag-price-tag">+ $75</div><div class="bag-radio"></div>
-          </div>
-          <div class="bag-option-row" onclick="selectBag(this)">
-            <div class="bag-visual"><div class="bag-icon scale-2x">🧳</div><div class="bag-icon scale-2x" style="opacity:.7">🧳</div></div>
-            <div class="bag-info"><div class="bag-name">2 Checked Bags — 23kg each</div><div class="bag-detail">1 cabin bag + 2 hold bags (23kg each)</div></div>
-            <div class="bag-price-tag">+ $95</div><div class="bag-radio"></div>
-          </div>
-        </div>
-      </div>
-
-      <!-- STEP 5 -->
-      <div class="step-panel" id="step-5">
-        <div class="insurance-card active" id="insurance-card" onclick="toggleInsurance()">
-          <div class="insurance-info">
-            <i class="fa-solid fa-shield-halved"></i>
-            <div><div class="insurance-name">Protect My Trip</div><div class="insurance-sub">Full cancellation, delay & medical cover · $28</div></div>
-          </div>
-          <div class="toggle-switch" id="insurance-toggle"></div>
-        </div>
-        <div class="delivery-label">Send boarding pass via</div>
-        <div class="delivery-opts">
-          <div class="delivery-opt active" onclick="selectDelivery(this)"><i class="fa-solid fa-envelope"></i><span>Email</span></div>
-          <div class="delivery-opt" onclick="selectDelivery(this)"><i class="fa-solid fa-comment-sms"></i><span>SMS</span></div>
-          <div class="delivery-opt" onclick="selectDelivery(this)"><i class="fa-brands fa-whatsapp"></i><span>WhatsApp</span></div>
-        </div>
-        <div class="final-summary">
-          <h4>Booking Summary</h4>
-          <div class="summary-row"><span class="lbl">Flight</span><span class="val">BRU → SIN · NV905</span></div>
-          <div class="summary-row"><span class="lbl">Passenger</span><span class="val" id="rev-passenger">—</span></div>
-          <div class="summary-row"><span class="lbl">Class & Seat</span><span class="val" id="rev-seat">—</span></div>
-          <div class="summary-row"><span class="lbl">Meal</span><span class="val" id="rev-food">—</span></div>
-          <div class="summary-row"><span class="lbl">Bags</span><span class="val" id="rev-bags">Carry-on</span></div>
-          <div class="summary-row"><span class="lbl">Insurance</span><span class="val" id="rev-insurance">Included ($28)</span></div>
-          <div class="summary-row"><span class="lbl">Total Due</span><span class="val" id="rev-total">$873</span></div>
-        </div>
-      </div>
-
-    </div>
-    <div class="modal-footer">
-      <button class="btn-back" id="btn-back" onclick="prevStep()" style="display:none;">← Back</button>
-      <button class="btn-next" id="btn-next" onclick="nextStep()">Continue →</button>
-    </div>
-  </div>
-</div>
-
-<!-- CINEMATIC -->
-<div id="page-dimmer"></div>
-<div id="cinematic-container">
-  <button class="cinematic-btn" id="cinematicBtn">
-    <span class="cine-text"><i class="fa-solid fa-spinner fa-spin"></i> Processing Payment...</span>
-    <div class="animation-stage">
-      <div class="clouds-bg"></div>
-      <div class="world-scroll">
-        <div class="terrain terrain-city z-bru"><div class="platform p-start"><span class="airport-code">BRU</span><div class="pad"></div></div><div class="building b1"></div><div class="building b2"></div><div class="atomium-sphere"></div></div>
-        <div class="water-body w1"><div class="waves"></div></div>
-        <div class="terrain terrain-nature z-forest"><div class="hill h1"></div><div class="hill h2"></div><div class="hill h3"></div><div class="tree t1"></div><div class="tree t2"></div><div class="tree t3"></div></div>
-        <div class="water-body w2"><div class="waves"></div></div>
-        <div class="terrain terrain-city z-sin"><div class="platform p-dest"><span class="airport-code">SIN</span><div class="pad"></div></div><div class="building b3"></div><div class="building b4"></div><div class="building b5"></div></div>
-      </div>
-      <div class="plane-wrapper"><i class="fa-solid fa-plane plane"></i></div>
-    </div>
-    <span class="success-text"><i class="fa-solid fa-circle-check"></i> Booking Confirmed!</span>
-  </button>
-  <button class="skip-btn" id="skipAnimBtn">Skip Animation <i class="fa-solid fa-forward-step" style="margin-left:5px;"></i></button>
-</div>
-
-<!-- MAIN -->
-<header>
-  <div class="logo-menu-group">
-    <div class="hamburger" id="menuToggle"><span></span><span></span><span></span></div>
-    <div class="logo"><i class="fa-solid fa-sparkles" style="font-size:1.1rem;margin-right:5px;"></i>AeroFly</div>
-  </div>
-  <div class="nav-dropdown" id="navDropdown">
-    <a href="#"><i class="fa-solid fa-plane-up" style="margin-right:8px;"></i> Flights</a>
-    <a href="#"><i class="fa-solid fa-bed" style="margin-right:8px;"></i> Hotels</a>
-    <a href="#"><i class="fa-solid fa-map-location-dot" style="margin-right:8px;"></i> Experiences</a>
-  </div>
-  <div class="user-actions">
-    <button class="icon-btn" title="Notifications"><i class="fa-regular fa-bell"></i><div class="notification-badge"></div></button>
-    <div class="profile-char" title="Account"><i class="fa-solid fa-user-astronaut"></i></div>
-  </div>
-</header>
-
-<main id="main-ui">
-  <h1>Explore the Future of Travel.</h1>
-
-  <!-- SEARCH ROW -->
-  <div class="search-wrapper">
-    <div class="search-pill">
-      <div class="input-segment" id="seg-from">
-        <label>Where from?</label>
-        <div class="seg-display">Brussels (BRU)</div>
-      </div>
-      <div class="input-segment" id="seg-to">
-        <label>Where to?</label>
-        <div class="seg-display">Singapore (SIN)</div>
-      </div>
-      <!-- DATE SEGMENT -->
-      <div class="input-segment" id="seg-dates" onclick="toggleDatePicker(event)">
-        <label>Dates</label>
-        <div class="seg-display" id="dates-display">14 May – 25 May</div>
-        <!-- Date popup anchored to this segment -->
-        <div class="seg-popup" id="date-popup" onclick="event.stopPropagation()">
-          <div class="dp-header">
-            <button class="dp-nav" id="dp-prev" onclick="dpNav(-1)"><i class="fa-solid fa-chevron-left"></i></button>
-            <h4 id="dp-month-label"></h4>
-            <button class="dp-nav" id="dp-next" onclick="dpNav(1)"><i class="fa-solid fa-chevron-right"></i></button>
-          </div>
-          <div class="dp-grid-header">
-            <span>Mo</span><span>Tu</span><span>We</span><span>Th</span><span>Fr</span><span>Sa</span><span>Su</span>
-          </div>
-          <div class="dp-grid" id="dp-grid"></div>
-          <div class="dp-mode-hint" id="dp-hint">Select departure date</div>
-          <div class="dp-footer">
-            <span id="dp-selection-text">No dates selected</span>
-            <button class="dp-confirm" onclick="confirmDates()">Done</button>
-          </div>
-        </div>
-      </div>
-      <!-- TRAVELERS SEGMENT -->
-      <div class="input-segment" id="seg-travelers" onclick="toggleTravelersPicker(event)">
-        <label>Travelers</label>
-        <div class="seg-display" id="travelers-display">1 Adult · Economy</div>
-        <div class="seg-popup" id="travelers-popup" onclick="event.stopPropagation()">
-          <div class="traveler-row">
-            <div class="traveler-info">
-              <div class="traveler-type">Adults</div>
-              <div class="traveler-age">Age 12+</div>
-            </div>
-            <div class="counter">
-              <button class="counter-btn" id="adult-minus" onclick="adjustTraveler('adult',-1)">−</button>
-              <span class="counter-val" id="adult-count">1</span>
-              <button class="counter-btn" onclick="adjustTraveler('adult',1)">+</button>
-            </div>
-          </div>
-          <div class="traveler-row">
-            <div class="traveler-info">
-              <div class="traveler-type">Children</div>
-              <div class="traveler-age">Age 2–11</div>
-            </div>
-            <div class="counter">
-              <button class="counter-btn" id="kid-minus" onclick="adjustTraveler('kid',-1)">−</button>
-              <span class="counter-val" id="kid-count">0</span>
-              <button class="counter-btn" onclick="adjustTraveler('kid',1)">+</button>
-            </div>
-          </div>
-          <div class="traveler-row">
-            <div class="traveler-info">
-              <div class="traveler-type">Infants</div>
-              <div class="traveler-age">Under 2 · on lap</div>
-            </div>
-            <div class="counter">
-              <button class="counter-btn" id="baby-minus" onclick="adjustTraveler('baby',-1)">−</button>
-              <span class="counter-val" id="baby-count">0</span>
-              <button class="counter-btn" onclick="adjustTraveler('baby',1)">+</button>
-            </div>
-          </div>
-          <div class="travelers-footer">
-            <div class="travelers-class-sel">
-              <div class="tclass-pill active" onclick="setTClass(this,'Economy')">Economy</div>
-              <div class="tclass-pill" onclick="setTClass(this,'Premium')">Premium</div>
-              <div class="tclass-pill" onclick="setTClass(this,'First')">First</div>
-            </div>
-            <button class="travelers-done" onclick="confirmTravelers()">Done</button>
-          </div>
-        </div>
-      </div>
-      <button class="search-pill-btn"><i class="fa-solid fa-magnifying-glass"></i></button>
-    </div>
-    <!-- FILTER BUTTON -->
-    <button class="filter-toggle-btn" id="filter-toggle-btn" onclick="toggleFilter()">
-      <i class="fa-solid fa-sliders"></i> Filter
-      <span class="badge" id="filter-badge" style="display:none;">!</span>
-    </button>
-  </div>
-
-  <!-- FILTER PANEL -->
-  <div class="filter-panel" id="filter-panel">
-    <div class="filter-panel-inner">
-      <div class="filter-group">
-        <label>Connections</label>
-        <div class="conn-pills">
-          <div class="conn-pill active" onclick="toggleConnPill(this,'any')">Any</div>
-          <div class="conn-pill" onclick="toggleConnPill(this,'direct')">Direct only</div>
-          <div class="conn-pill" onclick="toggleConnPill(this,'1stop')">Max 1 stop</div>
-        </div>
-      </div>
-      <div class="filter-group" style="min-width:220px;">
-        <label>Max price per person</label>
-        <div class="price-range-wrap">
-          <div class="price-range-row"><span>$0</span><strong id="price-val">$1,200</strong><span>$3,000</span></div>
-          <input type="range" id="price-range" min="0" max="3000" value="1200" step="50" oninput="updatePriceRange(this.value)">
-        </div>
-      </div>
-      <button class="filter-reset" onclick="resetFilters()"><i class="fa-solid fa-rotate-left"></i> Reset</button>
-    </div>
-  </div>
-
-  <!-- MAIN GRID -->
-  <div class="main-grid">
-    <div class="results-column">
-      <div class="results-header" id="results-header"><span>BRUSSELS (BRU) <i class="fa-solid fa-arrow-right" style="font-size:.8em;margin:0 4px"></i> SINGAPORE (SIN)</span> | Wed, 14 May | <span id="results-traveler-summary">1 Adult</span></div>
-      <div id="flights-list"></div>
-    </div>
-    <div class="sidebar">
-      <div class="globe-container"><canvas id="globe" width="300" height="300"></canvas></div>
-    </div>
-  </div>
-</main>
-
-<script src="../js/global.js"></script>
-<script src="../js/flights.js"></script>
-</body>
-</html>
+/* MODAL FOOTER */
+.modal-footer{padding:1rem 1.5rem 1.5rem;border-top:1px solid var(--border-color);display:flex;gap:.75rem;flex-shrink:0}
+.btn-back{background:var(--bg-color);border:1px solid var(--border-color);color:var(--text-gray);border-radius:50px;padding:.85rem 1.5rem;font-size:.95rem;font-weight:600;cursor:pointer;font-family:'Outfit',sans-serif;transition:all .2s}
+.btn-back:hover{background:var(--border-color);color:var(--text-dark)}
+.btn-next{flex:1;background:var(--gemini-gradient);color:white;border:none;border-radius:50px;padding:.85rem 1.5rem;font-size:1rem;font-weight:700;cursor:pointer;font-family:'Outfit',sans-serif;transition:all .2s;box-shadow:var(--glow-shadow)}
+.btn-next:hover{transform:translateY(-2px);box-shadow:0 16px 40px rgba(155,114,203,0.35)}
