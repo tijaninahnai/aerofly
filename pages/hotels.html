@@ -1,1 +1,376 @@
 
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1.0,maximum-scale=1.0,user-scalable=no">
+  <title>AeroFly — Hotels in Singapore</title>
+  <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+  <link rel="stylesheet" href="../css/global.css">
+  <link rel="stylesheet" href="../css/hotels.css">
+</head>
+<body>
+
+  <div class="detail-overlay" id="detail-overlay">
+    <div class="detail-modal">
+      <button class="dm-close" onclick="closeDetail()"><i class="fa-solid fa-xmark"></i></button>
+      
+      <div class="dm-gallery">
+        <button class="dm-btn prev" onclick="dmSlide(-1)"><i class="fa-solid fa-chevron-left"></i></button>
+        <div class="dm-track" id="dm-track"></div>
+        <button class="dm-btn next" onclick="dmSlide(1)"><i class="fa-solid fa-chevron-right"></i></button>
+        <div class="dm-dots" id="dm-dots"></div>
+        <div class="dm-img-count" id="dm-count">1 / 5</div>
+      </div>
+      
+      <div class="dm-body">
+        <div class="dm-header">
+          <div class="dm-title-row">
+            <div>
+              <div class="dm-stars"><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i></div>
+              <div class="dm-name" id="dm-name">Hotel Name</div>
+              <div class="dm-address"><i class="fa-solid fa-location-dot"></i> <span id="dm-loc">Singapore</span> · <a href="#" class="dm-link">Show on map</a></div>
+            </div>
+            <div class="dm-score-block">
+              <div class="dm-score-big" id="dm-score">9.2</div>
+              <div class="dm-score-lbl" id="dm-slbl">Superb</div>
+              <div class="dm-score-cnt" id="dm-scnt">2,847 reviews</div>
+            </div>
+          </div>
+        </div>
+        
+        <div class="dm-cio">
+          <div class="dm-ci"><div class="dm-ci-lbl">Check-in</div><div class="dm-ci-time">15:00</div><div class="dm-ci-sub">Front desk 24h</div></div>
+          <div class="dm-ci"><div class="dm-ci-lbl">Check-out</div><div class="dm-ci-time">11:00</div><div class="dm-ci-sub">Express available</div></div>
+        </div>
+        
+        <div class="dm-sky-tabs" id="dm-sky-tabs"></div>
+        
+        <div class="dm-tc active">
+          <div class="room-card">
+            <div class="rc-top">
+              <div class="rc-img"><img src="https://images.unsplash.com/photo-1631049307264-da0ec9d70304?w=400&q=80" alt="Room"></div>
+              <div class="rc-info">
+                <div class="rc-name">Deluxe King Room</div>
+                <div class="rc-feats"><span class="rc-feat"><i class="fa-solid fa-bed"></i> 1 Extra-large bed</span><span class="rc-feat"><i class="fa-solid fa-city"></i> City view</span></div>
+                <div class="rc-cancel free"><i class="fa-solid fa-check"></i> Free cancellation</div>
+              </div>
+            </div>
+            <div class="rc-bottom">
+              <div>
+                <div class="room-price-val">$320</div>
+                <div class="room-price-night">/ night · includes taxes</div>
+              </div>
+              <button class="rc-btn" onclick="openBookModal(this, 320, 'Deluxe King Room')">Reserve Room</button>
+            </div>
+          </div>
+          <div class="room-card">
+            <div class="rc-top">
+              <div class="rc-img"><img src="https://images.unsplash.com/photo-1578683010236-d716f9a3f461?w=400&q=80" alt="Room"></div>
+              <div class="rc-info">
+                <div class="rc-name">Premium Suite with Balcony</div>
+                <div class="rc-feats"><span class="rc-feat"><i class="fa-solid fa-bed"></i> 1 Super-king bed</span><span class="rc-feat"><i class="fa-solid fa-water"></i> Bay view</span></div>
+                <div class="rc-cancel free"><i class="fa-solid fa-check"></i> Free cancellation</div>
+              </div>
+            </div>
+            <div class="rc-bottom">
+              <div>
+                <div class="room-price-val">$480</div>
+                <div class="room-price-night">/ night · breakfast included</div>
+              </div>
+              <button class="rc-btn" onclick="openBookModal(this, 480, 'Premium Suite with Balcony')">Reserve Suite</button>
+            </div>
+          </div>
+        </div>
+        
+        <div class="dm-tc">
+          <div class="fac-grid">
+            <div class="fac-sec-lbl">Popular Facilities</div>
+            <div class="fac-item"><i class="fa-solid fa-person-swimming"></i> Outdoor swimming pool</div>
+            <div class="fac-item"><i class="fa-solid fa-wifi"></i> Free high-speed WiFi</div>
+            <div class="fac-item"><i class="fa-solid fa-spa"></i> Spa and wellness centre</div>
+            <div class="fac-item"><i class="fa-solid fa-square-parking"></i> Private parking</div>
+            <div class="fac-item"><i class="fa-solid fa-utensils"></i> 4 Restaurants</div>
+            <div class="fac-item"><i class="fa-solid fa-martini-glass"></i> Bar / Lounge</div>
+          </div>
+        </div>
+        
+        <div class="dm-tc">
+          <div class="rules-list">
+            <div class="rule-item info"><i class="fa-solid fa-id-card"></i> <div><strong>ID Required</strong><br><span style="font-size:0.75rem;color:var(--mist)">Guests must provide a valid photo ID upon check-in.</span></div></div>
+            <div class="rule-item no"><i class="fa-solid fa-ban-smoking"></i> <div><strong>No Smoking</strong><br><span style="font-size:0.75rem;color:var(--mist)">Strictly non-smoking property. Fine applies.</span></div></div>
+            <div class="rule-item no"><i class="fa-solid fa-paw"></i> <div><strong>Pets not allowed</strong><br><span style="font-size:0.75rem;color:var(--mist)">Service animals permitted with prior notice.</span></div></div>
+            <div class="rule-item ok"><i class="fa-solid fa-children"></i> <div><strong>Children welcome</strong><br><span style="font-size:0.75rem;color:var(--mist)">Cots available on request for infants under 2 years.</span></div></div>
+          </div>
+        </div>
+        
+        <div class="dm-tc">
+          <div class="rev-summary">
+            <div>
+              <div class="rev-big" id="dm-rev-score">9.2</div>
+              <div class="rev-meta">Based on verified stays</div>
+            </div>
+            <div class="rating-bars">
+              <div class="rb-row"><span class="rb-lbl">Clean</span><div class="rb-track"><div class="rb-fill" style="width:95%"></div></div><span class="rb-val">9.5</span></div>
+              <div class="rb-row"><span class="rb-lbl">Comfort</span><div class="rb-track"><div class="rb-fill" style="width:94%"></div></div><span class="rb-val">9.4</span></div>
+              <div class="rb-row"><span class="rb-lbl">Location</span><div class="rb-track"><div class="rb-fill" style="width:98%"></div></div><span class="rb-val">9.8</span></div>
+            </div>
+          </div>
+          <div class="rev-card">
+            <div class="rev-hdr">
+              <div class="rev-user"><div class="rev-av">T</div><div><div class="rev-name">Tijani</div><div class="rev-date">Stayed in April 2026</div></div></div>
+              <div class="rev-stars"><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star-half-stroke"></i></div>
+            </div>
+            <div class="rev-text">"Absolutely incredible experience. The infinity pool views are breathtaking and the room was spotless. Highly recommend!"</div>
+          </div>
+        </div>
+        
+      </div>
+      <div class="dm-booking-strip">
+        <div class="dbs-price"><div class="dbs-amount" id="dbs-amount">$320</div><div class="dbs-night">/ night</div></div>
+        <div class="dbs-btns">
+          <button class="dbs-fav" onclick="toggleDmFav()"><i class="fa-regular fa-heart" id="dbs-fav-icon"></i></button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="modal-overlay" id="book-overlay">
+    <div class="book-modal">
+      <div class="bm-top">
+        <div class="bm-top-row">
+          <h3 class="bm-step-title" id="bm-step-title">Guest Details</h3>
+          <span class="bm-step-counter" id="bm-step-counter">Step 1 of 4</span>
+        </div>
+        <div class="sky-progress" id="bm-sky"></div>
+        <button class="bm-close" onclick="closeBookModal()"><i class="fa-solid fa-xmark"></i></button>
+      </div>
+      <div class="bm-body">
+        
+        <div class="bm-step active" id="bm-step-1">
+          <div id="pax-container"></div>
+          <button class="add-pax-btn" onclick="addPax()"><i class="fa-solid fa-circle-plus"></i> Add Another Guest</button>
+        </div>
+        
+        <div class="bm-step" id="bm-step-2">
+          <div class="form-group" style="margin-bottom:1.5rem">
+            <label>Estimated Arrival Time</label>
+            <select>
+              <option>I don't know yet</option>
+              <option>12:00 - 13:00</option>
+              <option>14:00 - 15:00</option>
+              <option>15:00 - 16:00</option>
+              <option>Late Check-in (After 20:00)</option>
+            </select>
+          </div>
+          <div class="form-group">
+            <label>Special Requests (Optional)</label>
+            <textarea rows="4" placeholder="E.g., High floor, quiet room, late check-out requested..."></textarea>
+            <span style="font-size:0.65rem;color:var(--mist);margin-top:4px;">*Requests are subject to availability and cannot be guaranteed.</span>
+          </div>
+        </div>
+        
+        <div class="bm-step" id="bm-step-3">
+          <div class="ins-card active" id="ins-card" onclick="toggleIns()">
+            <div class="ins-info">
+              <i class="fa-solid fa-shield-halved"></i>
+              <div><div class="ins-name">Travel Protection</div><div class="ins-sub">Free cancellation & medical coverage · $28 total</div></div>
+            </div>
+            <div class="toggle-sw"></div>
+          </div>
+          <span class="del-lbl">Confirmation Delivery</span>
+          <div class="del-opts">
+            <div class="del-opt active" onclick="selDel(this)"><i class="fa-solid fa-envelope"></i><span>Email</span></div>
+            <div class="del-opt" onclick="selDel(this)"><i class="fa-solid fa-comment-sms"></i><span>SMS</span></div>
+            <div class="del-opt" onclick="selDel(this)"><i class="fa-brands fa-whatsapp"></i><span>WhatsApp</span></div>
+          </div>
+        </div>
+        
+        <div class="bm-step" id="bm-step-4">
+          <div class="final-summary">
+            <h4>Booking Summary</h4>
+            <div class="sum-row"><span class="lbl">Hotel</span><span class="val" id="sum-hotel">—</span></div>
+            <div class="sum-row"><span class="lbl">Room</span><span class="val" id="sum-room">—</span></div>
+            <div class="sum-row"><span class="lbl">Primary Guest</span><span class="val" id="sum-guest">—</span></div>
+            <div class="sum-row"><span class="lbl">Insurance</span><span class="val" id="sum-ins">—</span></div>
+            <div class="sum-row"><span class="lbl">Total Due</span><span class="val" id="sum-total">—</span></div>
+          </div>
+        </div>
+        
+      </div>
+      <div class="bm-footer">
+        <button class="btn-back" id="bm-back" onclick="bmPrev()">← Back</button>
+        <button class="btn-next" id="bm-next" onclick="bmNext()">Continue →</button>
+      </div>
+    </div>
+  </div>
+
+  <div id="page-dimmer"></div>
+  <div id="cine-wrap">
+    <div class="cine-title" id="cine-title">Processing your booking...</div>
+    <div class="cine-sub" id="cine-sub">Your destination awaits</div>
+    
+    <div class="cine-stage-outer">
+      <div class="flip-card">
+        <div class="flip-inner" id="flip-inner">
+          <div class="flip-front">
+            <div class="scene-home">
+              <div class="rain-layer" id="rain-layer"></div>
+              <div class="cloud-home" style="width:120px;height:40px;top:20px;left:30px;"></div>
+              <div class="cloud-home" style="width:160px;height:50px;top:40px;right:20px;"></div>
+              <div class="city-home" id="city-home-bldgs"></div>
+              <div class="home-label">Antwerp<span style="opacity:0.8">Raining · 12°C</span></div>
+            </div>
+          </div>
+          <div class="flip-back" id="flip-back-scene">
+            </div>
+        </div>
+      </div>
+    </div>
+    
+    <div class="cine-success-badge" id="cine-success"><i class="fa-solid fa-circle-check"></i> Booking Confirmed!</div>
+    <button class="cine-skip-btn" id="cine-skip">Skip Animation <i class="fa-solid fa-forward-step" style="margin-left:4px;"></i></button>
+  </div>
+
+  <header>
+    <div class="logo-menu-group">
+      <div class="hamburger" id="menuToggle"><span></span><span></span><span></span></div>
+      <div class="logo"><i class="fa-solid fa-sparkles" style="font-size:1.1rem;margin-right:5px;"></i>AeroFly</div>
+    </div>
+    <div class="nav-dropdown" id="navDropdown">
+      <a href="../index.html"><i class="fa-solid fa-house" style="margin-right:8px;"></i> Home</a>
+      <a href="flights.html"><i class="fa-solid fa-plane-up" style="margin-right:8px;"></i> Flights</a>
+      <a href="hotels.html" class="active-link"><i class="fa-solid fa-bed" style="margin-right:8px;"></i> Hotels</a>
+    </div>
+    <div class="user-actions">
+      <button class="icon-btn" title="Notifications"><i class="fa-regular fa-bell"></i><div class="notif-dot"></div></button>
+      <div class="profile-avatar" title="Account">T</div>
+    </div>
+  </header>
+
+  <main class="search-hero" style="padding-bottom: 2rem;">
+    <div class="search-hero-inner">
+      <h1>Find your perfect <em>stay.</em></h1>
+      <p>Luxury hotels and cozy retreats around the globe.</p>
+      
+      <div class="search-bar">
+        <div class="sb-field" id="seg-dest">
+          <span class="sb-label">Destination</span>
+          <span class="sb-val">Singapore</span>
+        </div>
+        <div class="sb-field" id="seg-dates" onclick="toggleDatePicker(event)">
+          <span class="sb-label">Check In / Out</span>
+          <span class="sb-val" id="dates-display">14 May – 25 May</span>
+          <div class="sb-popup date-popup" id="date-popup" onclick="event.stopPropagation()">
+            <div class="dp-header">
+              <button class="dp-nav" id="dp-prev" onclick="dpNav(-1)"><i class="fa-solid fa-chevron-left"></i></button>
+              <h4 id="dp-month-label">May 2026</h4>
+              <button class="dp-nav" id="dp-next" onclick="dpNav(1)"><i class="fa-solid fa-chevron-right"></i></button>
+            </div>
+            <div class="dp-wk"><span>Mo</span><span>Tu</span><span>We</span><span>Th</span><span>Fr</span><span>Sa</span><span>Su</span></div>
+            <div class="dp-grid" id="dp-grid"></div>
+            <div class="dp-hint" id="dp-hint">Select dates</div>
+            <div class="dp-footer"><span id="dp-selection-text"></span><button class="dp-confirm" onclick="confirmDates()">Done</button></div>
+          </div>
+        </div>
+        <div class="sb-field" id="seg-travelers" onclick="toggleTravelersPicker(event)">
+          <span class="sb-label">Guests & Rooms</span>
+          <span class="sb-val" id="travelers-display">2 Guests, 1 Room</span>
+          <div class="sb-popup" id="travelers-popup" onclick="event.stopPropagation()">
+            <div class="guest-row">
+              <div><div class="guest-type">Adults</div><div class="guest-sub">Age 18+</div></div>
+              <div class="ctr">
+                <button class="ctr-btn" id="adult-minus" onclick="adjustTraveler('adult',-1)">−</button>
+                <span class="ctr-val" id="adult-count">2</span>
+                <button class="ctr-btn" onclick="adjustTraveler('adult',1)">+</button>
+              </div>
+            </div>
+            <div class="guest-row">
+              <div><div class="guest-type">Children</div><div class="guest-sub">Age 0-17</div></div>
+              <div class="ctr">
+                <button class="ctr-btn" id="kid-minus" onclick="adjustTraveler('kid',-1)">−</button>
+                <span class="ctr-val" id="kid-count">0</span>
+                <button class="ctr-btn" onclick="adjustTraveler('kid',1)">+</button>
+              </div>
+            </div>
+            <button class="popup-done" onclick="confirmTravelers()">Done</button>
+          </div>
+        </div>
+        <button class="sb-search-btn"><i class="fa-solid fa-magnifying-glass"></i> Search</button>
+      </div>
+    </div>
+  </main>
+
+  <div class="page-body">
+    <div class="results-column">
+      <div class="filter-wrap">
+        <button class="filter-toggle-btn" id="filter-toggle-btn" onclick="toggleFilter()">
+          <i class="fa-solid fa-sliders"></i> Filters
+        </button>
+        <div class="dest-picker">
+          <button class="dest-pick-btn active" onclick="setDestScene(this, 'beach')">Beach</button>
+          <button class="dest-pick-btn" onclick="setDestScene(this, 'neon')">City</button>
+          <button class="dest-pick-btn" onclick="setDestScene(this, 'snow')">Mountains</button>
+        </div>
+      </div>
+      
+      <div class="filter-panel" id="filter-panel">
+        <div class="filter-inner">
+          <div class="filter-group">
+            <label>Hotel Category</label>
+            <div class="star-pills">
+              <div class="star-pill active" onclick="toggleStar(this, 'all')">All</div>
+              <div class="star-pill" onclick="toggleStar(this, '5')">5 <i class="fa-solid fa-star" style="color:var(--warn);font-size:0.6rem"></i></div>
+              <div class="star-pill" onclick="toggleStar(this, '4')">4 <i class="fa-solid fa-star" style="color:var(--warn);font-size:0.6rem"></i></div>
+              <div class="star-pill" onclick="toggleStar(this, '3')">3 <i class="fa-solid fa-star" style="color:var(--warn);font-size:0.6rem"></i></div>
+            </div>
+          </div>
+          <div class="filter-group">
+            <label>Max Price Per Night</label>
+            <div class="price-wrap">
+              <div class="price-row"><span>$0</span><strong id="price-lbl">$600</strong></div>
+              <input type="range" id="price-range" min="100" max="1000" value="600" step="50" oninput="setPriceFilter(this.value)">
+            </div>
+          </div>
+          <button class="filter-reset" onclick="resetFilters()">Reset</button>
+        </div>
+      </div>
+
+      <div class="results-top">
+        <div class="results-count" id="res-count">4 hotels available</div>
+        <div class="sort-bar">
+          <div class="sort-pill active" onclick="setSort(this, 'rec')">Recommended</div>
+          <div class="sort-pill" onclick="setSort(this, 'price')">Price</div>
+          <div class="sort-pill" onclick="setSort(this, 'score')">Top Reviewed</div>
+        </div>
+      </div>
+      
+      <div id="hotels-list"></div>
+    </div>
+
+    <div class="sidebar">
+      <div class="widget-card">
+        <div class="widget-title">Interactive Map</div>
+        <div class="map-area" id="map-area">
+          <canvas id="map-canvas"></canvas>
+        </div>
+        <div class="map-legend">
+          <div class="map-leg-item"><div class="leg-dot" style="background:var(--c2)"></div> Selected</div>
+          <div class="map-leg-item"><div class="leg-dot" style="background:var(--c1)"></div> Available</div>
+          <div class="map-leg-item"><div class="leg-dot" style="background:var(--success)"></div> Top Value</div>
+        </div>
+      </div>
+      
+      <div class="quick-stats-card">
+        <h4>Singapore Overview</h4>
+        <div class="stat-row"><span class="stat-label">Weather</span><span class="stat-val">31°C, Sunny</span></div>
+        <div class="stat-row"><span class="stat-label">Avg. Flight Time</span><span class="stat-val">13h 45m</span></div>
+        <div class="stat-row"><span class="stat-label">Currency</span><span class="stat-val">SGD ($)</span></div>
+      </div>
+    </div>
+  </div>
+
+  <script src="../js/global.js"></script>
+  <script src="../js/hotels.js"></script>
+</body>
+</html>
