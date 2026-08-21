@@ -1,0 +1,164 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1.0,maximum-scale=1.0,user-scalable=no">
+<title>AeroFly — Confirm &amp; Pay</title>
+<link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+<link rel="stylesheet" href="../css/global.css">
+<link rel="stylesheet" href="../css/booking.css">
+</head>
+<body data-section="hotels" id="bookingBody">
+
+<header>
+  <a class="logo" href="../index.html"><i class="fa-solid fa-sparkles"></i> Aero<span>Fly</span></a>
+
+  <div class="nav-current"><i class="fa-solid fa-lock" id="navIcon"></i> <span id="navLabel">Secure checkout</span></div>
+
+  <div class="hdr-actions">
+    <button class="nav-hamburger-btn" id="navHamburgerBtn" onclick="toggleNavMenu(event)" aria-label="Switch section">
+      <i class="fa-solid fa-bars"></i>
+    </button>
+    <div class="nav-menu-popover" id="navMenuPopover">
+      <div class="nav-menu-label">Switch section</div>
+      <a href="flights.html" class="nav-menu-item"><i class="fa-solid fa-plane"></i> Flights</a>
+      <a href="hotels.html" class="nav-menu-item"><i class="fa-solid fa-hotel"></i> Hotels</a>
+      <a href="experiences.html" class="nav-menu-item"><i class="fa-solid fa-ticket"></i> Experiences</a>
+      <a href="../index.html" class="nav-menu-item home"><i class="fa-solid fa-house"></i> Home</a>
+    </div>
+  </div>
+</header>
+
+<div class="booking-wrap" id="bookingView">
+  <div class="booking-inner">
+
+    <div class="booking-title">
+      <h1>Confirm &amp; pay</h1>
+      <p>One last step before <span id="destLabel">Singapore</span> is booked in.</p>
+    </div>
+
+    <div class="booking-grid">
+
+      <!-- LEFT: forms -->
+      <div class="booking-forms">
+
+        <div class="bk-card">
+          <div class="bk-card-title"><i class="fa-solid fa-user"></i> Traveler details</div>
+          <div class="bk-field-row">
+            <div class="bk-field"><label>First name</label><input type="text" placeholder="Jordan"></div>
+            <div class="bk-field"><label>Last name</label><input type="text" placeholder="Peeters"></div>
+          </div>
+          <div class="bk-field-row">
+            <div class="bk-field"><label>Email</label><input type="email" placeholder="jordan@example.com"></div>
+            <div class="bk-field"><label>Phone</label><input type="tel" placeholder="+32 4XX XX XX XX"></div>
+          </div>
+        </div>
+
+        <div class="bk-card">
+          <div class="bk-card-title"><i class="fa-solid fa-credit-card"></i> Payment</div>
+          <div class="bk-field"><label>Card number</label><input type="text" placeholder="4242 4242 4242 4242" inputmode="numeric"></div>
+          <div class="bk-field-row">
+            <div class="bk-field"><label>Expiry</label><input type="text" placeholder="MM / YY"></div>
+            <div class="bk-field"><label>CVC</label><input type="text" placeholder="123" inputmode="numeric"></div>
+          </div>
+          <div class="bk-secure-note"><i class="fa-solid fa-lock"></i> Payments are encrypted. This is a demo checkout — no card is charged.</div>
+        </div>
+
+        <button class="bk-pay-btn" id="payBtn" onclick="submitBooking()">
+          <i class="fa-solid fa-lock"></i> Confirm &amp; Pay <span id="payAmountLbl"></span>
+        </button>
+      </div>
+
+      <!-- RIGHT: order summary -->
+      <div class="bk-summary">
+        <div class="bk-summary-badge" id="summaryBadge"><i class="fa-solid fa-hotel"></i> Hotel</div>
+        <div class="bk-summary-name" id="summaryName">Marina Bay Sands</div>
+        <div class="bk-summary-meta" id="summaryMeta">14 May – 25 May · 2 guests · 1 room</div>
+
+        <div class="bk-divider"></div>
+
+        <div class="bk-line"><span id="lineLabel1">Room rate × 11 nights</span><span id="lineVal1">$3,520</span></div>
+        <div class="bk-line"><span>Taxes &amp; fees</span><span id="lineTax">$284</span></div>
+        <div class="bk-divider"></div>
+        <div class="bk-line total"><span>Total</span><span id="lineTotal">$3,804</span></div>
+
+        <div class="bk-summary-badgebox"><i class="fa-solid fa-shield-halved"></i> Free cancellation up to 48h before</div>
+      </div>
+
+    </div>
+  </div>
+</div>
+
+<!-- CONFIRMATION -->
+<div class="confirm-wrap" id="confirmView">
+  <div class="confirm-card">
+    <svg class="confirm-check" viewBox="0 0 100 100">
+      <circle class="confirm-check-circle" cx="50" cy="50" r="45"/>
+      <path class="confirm-check-mark" d="M28 52 L43 66 L74 34"/>
+    </svg>
+    <h2>You're all booked!</h2>
+    <p id="confirmSub">Marina Bay Sands is confirmed for 14 – 25 May.</p>
+    <div class="confirm-ref">Booking reference <strong id="confirmRef">AF-000000</strong></div>
+
+    <div id="confirmCrosssell"></div>
+
+    <a href="../index.html" class="confirm-home-btn"><i class="fa-solid fa-house"></i> Back to AeroFly</a>
+  </div>
+</div>
+
+<script src="../js/global.js"></script>
+<script>
+const params = new URLSearchParams(window.location.search);
+const type = params.get('type') || 'hotels';
+const name = params.get('name') || 'Marina Bay Sands';
+const price = parseFloat(params.get('price')) || 320;
+
+const TYPE_META = {
+  hotels:      { section:'hotels',      icon:'fa-hotel',  label:'Hotel',      currency:'$', unit:'11 nights', lineLabel:'Room rate × 11 nights', taxRate:0.08 },
+  experiences: { section:'experiences', icon:'fa-ticket', label:'Experience', currency:'$', unit:'2 guests',   lineLabel:'2 guests × ticket price', taxRate:0.05 },
+  flights:     { section:'flights',     icon:'fa-plane',  label:'Flight',     currency:'€', unit:'2 travelers',lineLabel:'2 travelers × fare', taxRate:0.12 },
+};
+const meta = TYPE_META[type] || TYPE_META.hotels;
+
+document.body.dataset.section = meta.section;
+document.getElementById('navIcon').className = 'fa-solid ' + meta.icon;
+document.getElementById('summaryBadge').innerHTML = `<i class="fa-solid ${meta.icon}"></i> ${meta.label}`;
+document.getElementById('summaryName').textContent = name;
+
+const qty = type === 'hotels' ? 11 : 2;
+const lineVal = type === 'hotels' ? price * 11 : price * 2;
+const tax = Math.round(lineVal * meta.taxRate);
+const total = lineVal + tax;
+
+document.getElementById('lineLabel1').textContent = meta.lineLabel;
+document.getElementById('lineVal1').textContent = meta.currency + lineVal.toLocaleString();
+document.getElementById('lineTax').textContent = meta.currency + tax.toLocaleString();
+document.getElementById('lineTotal').textContent = meta.currency + total.toLocaleString();
+document.getElementById('payAmountLbl').textContent = '· ' + meta.currency + total.toLocaleString();
+
+const metaLine = {
+  hotels: '14 May – 25 May · 2 guests · 1 room',
+  experiences: '14 May · 2 guests',
+  flights: 'BRU → SIN · 14 May – 25 May · 2 travelers',
+};
+document.getElementById('summaryMeta').textContent = metaLine[type] || metaLine.hotels;
+
+function submitBooking(){
+  const btn = document.getElementById('payBtn');
+  btn.disabled = true;
+  btn.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> Processing…';
+  setTimeout(()=>{
+    document.getElementById('bookingView').classList.add('leaving');
+    setTimeout(()=>{
+      document.getElementById('bookingView').style.display='none';
+      const cv = document.getElementById('confirmView');
+      cv.classList.add('active');
+      document.getElementById('confirmSub').textContent = `${name} is confirmed${type==='flights' ? ' for your trip to Singapore' : ' for 14 – 25 May'}.`;
+      document.getElementById('confirmRef').textContent = 'AF-' + Math.floor(100000 + Math.random()*900000);
+      AeroUI.renderCrossSell('confirmCrosssell', meta.section, 'Singapore');
+    }, 350);
+  }, 1100);
+}
+</script>
+</body>
+</html>

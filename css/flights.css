@@ -1,89 +1,88 @@
 /* ============================================================
-   AEROFLY — flights.css
-   Flight cards · Timeline · Seat map · Globe sidebar
+   AEROFLY — FLIGHTS PAGE
+   Accent: blue (var(--accent) = var(--flights) on this page)
+   Shared search/sidebar/modal-shell styles live in global.css —
+   everything here is flight-specific.
    ============================================================ */
 
-/* Layout: Sidebar springt naar beneden op mobiel (zie media queries onderaan) */
-.main-grid {
-  display: grid;
-  grid-template-columns: 1fr 305px;
-  gap: 2.5rem;
-  margin-top: 2.5rem;
-  align-items: start;
+.fl-swap-btn{
+  align-self:center; flex-shrink:0;
+  width:36px; height:36px; margin:0 -2px;
+  border-radius:50%; border:1px solid var(--border);
+  background: var(--surface-2); color: var(--text-dim);
+  transition: all .2s ease;
+  z-index:2;
+}
+.fl-swap-btn:hover{ border-color: var(--accent); color: var(--accent); }
+.fl-swap-btn.spun{ transform: rotate(180deg); }
+
+/* ---------- FLIGHT LISTING CARDS ---------- */
+#flights-list{ display:flex; flex-direction:column; gap:14px; }
+
+.flight-card{
+  display:flex; align-items:center; gap:24px;
+  background: var(--surface);
+  border:1px solid var(--border);
+  border-radius: var(--radius-lg);
+  padding:20px 24px;
+  cursor:pointer;
+  transition: transform .18s ease, border-color .18s ease, box-shadow .18s ease;
+}
+.flight-card:hover{
+  transform: translateY(-3px);
+  border-color: var(--accent);
+  box-shadow: var(--shadow-md);
 }
 
-/* FLIGHT CARDS */
-.flight-card {
-  background: var(--wh);
-  border-radius: var(--r-lg);
-  padding: 1.4rem;
-  margin-bottom: 1.2rem;
-  box-shadow: var(--sh-sm);
-  border: 1px solid var(--fog);
-  transition: transform .2s, box-shadow .2s;
+.fl-airline{ display:flex; align-items:center; gap:12px; width:200px; flex-shrink:0; }
+.fl-logo{
+  width:40px; height:40px; border-radius:10px; flex-shrink:0;
+  background: var(--accent-dim); color: var(--accent);
+  display:flex; align-items:center; justify-content:center;
+  font-family: var(--font-display); font-weight:700; font-size:0.82rem;
+}
+.fl-airline-name{ font-size:0.9rem; font-weight:600; }
+.fl-flight-no{ font-size:0.72rem; color: var(--mist); margin-top:2px; }
+
+.fl-route{ display:flex; align-items:center; gap:18px; flex:1; min-width:0; }
+.fl-time-block{ text-align:center; flex-shrink:0; }
+.fl-time{ font-family: var(--font-display); font-size:1.3rem; font-weight:700; }
+.fl-dayoff{ font-size:0.65rem; color: var(--accent); vertical-align:top; margin-left:2px; }
+.fl-code{ font-size:0.72rem; color: var(--mist); margin-top:2px; letter-spacing:.03em; }
+
+.fl-path{ flex:1; text-align:center; min-width:100px; }
+.fl-duration{ font-size:0.74rem; color: var(--mist); margin-bottom:4px; }
+.fl-line{ display:flex; align-items:center; gap:4px; color: var(--accent); font-size:0.7rem; }
+.fl-track{ flex:1; height:1px; background: var(--border); }
+.fl-dot{ width:5px; height:5px; border-radius:50%; background: var(--border); flex-shrink:0; }
+.fl-stops{ font-size:0.72rem; color: var(--mist); margin-top:4px; }
+.fl-stops.nonstop{ color: var(--green); font-weight:500; }
+
+.fl-price-block{ text-align:right; flex-shrink:0; display:flex; flex-direction:column; align-items:flex-end; gap:6px; width:130px; }
+.fl-cabin-tag{ font-size:0.68rem; color: var(--mist); }
+.fl-price{ font-family: var(--font-display); font-size:1.4rem; font-weight:700; }
+.fl-select-btn{
+  padding:9px 20px; border:none; border-radius:9px;
+  background: var(--accent); color:#fff; font-size:0.8rem; font-weight:600;
+  transition: filter .15s ease;
+}
+.fl-select-btn:hover{ filter:brightness(1.1); }
+
+@media (max-width:820px){
+  .flight-card{ flex-wrap:wrap; }
+  .fl-airline{ width:100%; }
+  .fl-price-block{ width:100%; flex-direction:row; align-items:center; justify-content:space-between; }
 }
 
-.flight-card:hover { box-shadow: var(--sh-md); transform: translateY(-1px); }
-
-.flight-card.featured {
-  border: 1px solid transparent;
-  background-image: linear-gradient(var(--wh), var(--wh)), var(--gg);
-  background-origin: border-box;
-  background-clip: padding-box, border-box;
-  box-shadow: var(--glow);
-  position: relative;
-  overflow: hidden;
+/* ---------- DETAIL MODAL: route hero (replaces the image gallery) ---------- */
+.fl-route-hero{
+  height:200px; background: linear-gradient(135deg, var(--surface-2), var(--surface-3));
+  display:flex; align-items:center; justify-content:center;
 }
+.fl-route-hero-inner{ display:flex; align-items:center; gap:40px; padding:0 40px; width:100%; }
+.fl-route-hero-city{ text-align:center; flex-shrink:0; }
+.fl-route-hero-code{ font-family: var(--font-display); font-size:2.2rem; font-weight:700; color: var(--accent); }
+.fl-route-hero-mid{ flex:1; text-align:center; color: var(--text-dim); font-size:0.85rem; }
+.fl-route-hero-line{ display:flex; align-items:center; gap:8px; color: var(--accent); margin:8px 0; }
+.fl-route-hero-line span{ flex:1; height:1px; background: var(--border); }
 
-.card-top { display: flex; justify-content: space-between; align-items: center; margin-bottom: 1rem; position: relative; z-index: 1; }
-.airline-info { display: flex; align-items: center; gap: 1rem; width: 30%; }
-.airline-logo { width: 44px; height: 44px; background: var(--dust); border-radius: 12px; display: flex; align-items: center; justify-content: center; font-size: 1.2rem; flex-shrink: 0; }
-.airline-name { font-weight: 600; font-size: 1.05rem; }
-.flight-number { font-size: .8rem; color: var(--mist); }
-
-.flight-route { display: flex; align-items: center; gap: 1rem; text-align: center; width: 40%; justify-content: center; }
-.time { font-size: 1.15rem; font-weight: 700; font-family: var(--ff-d); }
-.route-line { display: flex; flex-direction: column; align-items: center; gap: .3rem; }
-.duration { font-size: .75rem; color: var(--mist); }
-.stops-badge { font-size: .7rem; font-weight: 600; padding: .2rem .5rem; border-radius: 6px; background: #E6F4EA; color: #137333; }
-
-.price-section { text-align: right; width: 30%; position: relative; z-index: 1; }
-.price { font-size: 1.6rem; font-weight: 800; color: var(--ink); font-family: var(--ff-d); }
-.flight-card.featured .price { background: var(--gg); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
-
-/* Timeline UI */
-.flight-plan-section { margin: 1rem 0; border-top: 1px dashed var(--fog); border-bottom: 1px dashed var(--fog); position: relative; z-index: 1; }
-.plan-toggle { padding: .8rem 0; display: flex; justify-content: space-between; align-items: center; cursor: pointer; color: var(--c2); font-weight: 600; font-size: .9rem; }
-.plan-content { max-height: 0; overflow: hidden; transition: max-height .4s ease; }
-.plan-content.active { max-height: 600px; margin-bottom: 1rem; }
-.plan-inner { background: var(--dust); border-radius: 14px; padding: 1.2rem; margin-top: .5rem; }
-
-.tl-wrap { position: relative; padding: .5rem 0; }
-.tl-line { position: absolute; left: 22px; top: 28px; bottom: 28px; width: 2px; background: linear-gradient(to bottom, var(--c1), var(--c2), var(--c3)); }
-.tl-event { display: flex; gap: 1rem; position: relative; margin-bottom: 1.2rem; }
-.tl-dot { width: 44px; height: 44px; border-radius: 50%; background: var(--wh); border: 2px solid var(--fog); display: flex; align-items: center; justify-content: center; font-size: .9rem; flex-shrink: 0; z-index: 1; box-shadow: var(--sh-sm); }
-.tl-dot.dep { border-color: var(--c1); color: var(--c1); }
-.tl-dot.arr { border-color: var(--c3); color: var(--c3); }
-
-/* Sidebar & Globe */
-.sidebar { display: flex; flex-direction: column; gap: 1.5rem; position: sticky; top: 100px; }
-.globe-container { background: var(--ink); border-radius: 24px; box-shadow: 0 10px 30px rgba(0,0,0,0.2); padding: 1.5rem; display: flex; justify-content: center; position: relative; overflow: hidden; }
-.globe-container canvas { border-radius: 50%; width: 100%; max-width: 260px; aspect-ratio: 1/1; filter: drop-shadow(0 0 15px rgba(66,133,244,0.3)); }
-
-/* RESPONSIVE: De Planeet gaat onder de kaarten op mobiel */
-@media(max-width: 900px) {
-  .main-grid {
-    grid-template-columns: 1fr;
-    gap: 2rem;
-  }
-  .sidebar {
-    order: 2; /* Springt naar onderen */
-    position: static;
-    width: 100%;
-  }
-  .card-top { flex-direction: column; align-items: flex-start; }
-  .airline-info, .flight-route, .price-section { width: 100%; }
-  .flight-route { justify-content: space-between; margin: 1rem 0; }
-  .card-bottom { flex-wrap: wrap; gap: 1rem; }
-  .card-book-btn { width: 100%; }
-}

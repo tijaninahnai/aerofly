@@ -12,15 +12,22 @@
 
 <header>
   <a class="logo" href="../index.html"><i class="fa-solid fa-sparkles"></i> Aero<span>Fly</span></a>
-  <nav class="hdr-nav">
-    <a href="flights.html">Flights</a>
-    <a href="hotels.html" class="active">Hotels</a>
-    <a href="#">Experiences</a>
-    <a href="#">Deals</a>
-  </nav>
+
+  <div class="nav-current"><i class="fa-solid fa-hotel"></i> <span>Hotels</span></div>
+
   <div class="hdr-actions">
     <button class="hdr-btn">Log in</button>
     <button class="hdr-btn gold">Sign up</button>
+    <button class="nav-hamburger-btn" id="navHamburgerBtn" onclick="toggleNavMenu(event)" aria-label="Switch section">
+      <i class="fa-solid fa-bars"></i>
+    </button>
+    <div class="nav-menu-popover" id="navMenuPopover">
+      <div class="nav-menu-label">Switch section</div>
+      <a href="flights.html" class="nav-menu-item"><i class="fa-solid fa-plane"></i> Flights</a>
+      <a href="hotels.html" class="nav-menu-item active"><i class="fa-solid fa-hotel"></i> Hotels</a>
+      <a href="experiences.html" class="nav-menu-item"><i class="fa-solid fa-ticket"></i> Experiences</a>
+      <a href="../index.html" class="nav-menu-item home"><i class="fa-solid fa-house"></i> Home</a>
+    </div>
   </div>
 </header>
 
@@ -102,11 +109,13 @@
         <canvas id="map-canvas" style="position:absolute;inset:0;width:100%;height:100%;"></canvas>
       </div>
       <div class="map-legend">
-        <div class="map-leg-item"><div class="leg-dot" style="background:#3B6B9A"></div> 9.0+ Exceptional</div>
-        <div class="map-leg-item"><div class="leg-dot" style="background:#C9A84C"></div> 8.5–9.0 Superb</div>
-        <div class="map-leg-item"><div class="leg-dot" style="background:#22a05a"></div> 8.0–8.5 Excellent</div>
+        <div class="map-leg-item"><div class="leg-dot" style="background:var(--accent)"></div> 9.0+ Exceptional</div>
+        <div class="map-leg-item"><div class="leg-dot" style="background:var(--gold)"></div> 8.5–9.0 Superb</div>
+        <div class="map-leg-item"><div class="leg-dot" style="background:var(--green)"></div> 8.0–8.5 Excellent</div>
       </div>
     </div>
+    <!-- CROSS-SELL -->
+    <div id="crosssell"></div>
     <!-- FILTERS -->
     <div class="filter-card">
       <div class="fc-title">
@@ -191,15 +200,15 @@
       <div class="dm-tc active" id="dtc-rooms">
         <div class="room-card">
           <div class="rc-top"><div class="rc-img"><img src="https://images.unsplash.com/photo-1631049307264-da0ec9d70304?w=220&q=80" alt="Deluxe Room" onerror="this.parentElement.style.background='#E8E0D0'"></div><div class="rc-info"><div class="rc-name">Deluxe Room – City View</div><div class="rc-feats"><span class="rc-feat">1 King Bed</span><span class="rc-feat">32 m²</span><span class="rc-feat">Free WiFi</span><span class="rc-feat">City View</span></div><div class="rc-cancel">Non-refundable · Pay now</div></div></div>
-          <div class="rc-bottom"><div><div class="rc-price">$320 <span style="font-size:.75rem;font-weight:400;color:var(--mist)">/night</span></div><div class="rc-price-sub">$3,520 total · 11 nights</div></div><button class="rc-btn" onclick="closeDetail()">Select Room</button></div>
+          <div class="rc-bottom"><div><div class="rc-price">$320 <span style="font-size:.75rem;font-weight:400;color:var(--mist)">/night</span></div><div class="rc-price-sub">$3,520 total · 11 nights</div></div><button class="rc-btn" onclick="goBook('Deluxe Room – City View',320)">Select Room</button></div>
         </div>
         <div class="room-card">
           <div class="rc-top"><div class="rc-img"><img src="https://images.unsplash.com/photo-1578683010236-d716f9a3f461?w=220&q=80" alt="Suite" onerror="this.parentElement.style.background='#E8E0D0'"></div><div class="rc-info"><div class="rc-name">Premier Suite – Bay View</div><div class="rc-feats"><span class="rc-feat">1 King Bed</span><span class="rc-feat">55 m²</span><span class="rc-feat">Infinity Pool</span><span class="rc-feat">Breakfast</span></div><div class="rc-cancel free">Free cancellation until 48h before</div></div></div>
-          <div class="rc-bottom"><div><div class="rc-price">$580 <span style="font-size:.75rem;font-weight:400;color:var(--mist)">/night</span></div><div class="rc-price-sub">$6,380 total · 11 nights</div></div><button class="rc-btn" onclick="closeDetail()">Select Room</button></div>
+          <div class="rc-bottom"><div><div class="rc-price">$580 <span style="font-size:.75rem;font-weight:400;color:var(--mist)">/night</span></div><div class="rc-price-sub">$6,380 total · 11 nights</div></div><button class="rc-btn" onclick="goBook('Premier Suite – Bay View',580)">Select Room</button></div>
         </div>
         <div class="room-card">
           <div class="rc-top"><div class="rc-img"><img src="https://images.unsplash.com/photo-1560347876-aeef00ee58a1?w=220&q=80" alt="Studio" onerror="this.parentElement.style.background='#E8E0D0'"></div><div class="rc-info"><div class="rc-name">Garden Studio – Pool Access</div><div class="rc-feats"><span class="rc-feat">2 Twin Beds</span><span class="rc-feat">28 m²</span><span class="rc-feat">Garden View</span><span class="rc-feat">Pool</span></div><div class="rc-cancel">Pay at property</div></div></div>
-          <div class="rc-bottom"><div><div class="rc-price">$195 <span style="font-size:.75rem;font-weight:400;color:var(--mist)">/night</span></div><div class="rc-price-sub">$2,145 total · 11 nights</div></div><button class="rc-btn" onclick="closeDetail()">Select Room</button></div>
+          <div class="rc-bottom"><div><div class="rc-price">$195 <span style="font-size:.75rem;font-weight:400;color:var(--mist)">/night</span></div><div class="rc-price-sub">$2,145 total · 11 nights</div></div><button class="rc-btn" onclick="goBook('Garden Studio – Pool Access',195)">Select Room</button></div>
         </div>
       </div>
       <!-- FACILITIES -->
@@ -255,12 +264,13 @@
       <div class="dbs-price"><div class="dbs-amount" id="dbs-amount">$320</div><div class="dbs-night">/ night · incl. taxes</div></div>
       <div class="dbs-btns">
         <button class="dbs-fav" id="dbs-fav" onclick="toggleDmFav()"><i class="fa-regular fa-heart" id="dbs-fav-icon"></i> Save</button>
-        <button class="dbs-book" onclick="closeDetail()">Book Now</button>
+        <button class="dbs-book" onclick="goBook(currentHotel.name, currentHotel.price)">Book Now</button>
       </div>
     </div>
   </div>
 </div>
 
+<script src="../js/global.js"></script>
 <script>
 
 // ---- DATE PICKER ----
@@ -309,6 +319,9 @@ const hotels=[
 
 let maxPriceFilter=600,starFilter='all';
 
+// tiers mirror the map legend: 9.0+ accent, 8.5-9.0 gold, below that green
+function scoreTier(score){ if(score>=9)return 'tier-accent'; if(score>=8.5)return 'tier-gold'; return 'tier-green'; }
+
 function renderHotels(){
   const filtered=hotels.filter(h=>h.price<=maxPriceFilter&&(starFilter==='all'||h.stars===parseInt(starFilter)));
   document.getElementById('res-count').textContent=filtered.length+' hotel'+(filtered.length!==1?'s':'');
@@ -323,7 +336,7 @@ function renderHotels(){
       <div>
         <div class="hc-top">
           <div><div class="hc-name">${h.name}</div><div class="hc-loc"><i class="fa-solid fa-location-dot"></i> ${h.loc}</div></div>
-          <div class="hc-score-wrap"><div class="hc-score${h.score>=9?' hi':''}">${h.score}</div><div class="hc-score-lbl">${h.scoreLbl}</div></div>
+          <div class="hc-score-wrap"><div class="hc-score ${scoreTier(h.score)}">${h.score}</div><div class="hc-score-lbl">${h.scoreLbl}</div></div>
         </div>
         <div class="hc-tags">${h.tags.map(t=>`<span class="hc-tag">${t}</span>`).join('')}</div>
       </div>
@@ -365,6 +378,11 @@ function openDetail(hid){
   document.getElementById('detail-overlay').classList.add('active');
 }
 function closeDetail(){document.getElementById('detail-overlay').classList.remove('active')}
+function goBook(roomName, roomPrice){
+  const p = roomName ? roomPrice : (currentHotel ? currentHotel.price : 320);
+  const n = roomName || (currentHotel ? currentHotel.name : 'Hotel');
+  window.location.href = 'booking.html?type=hotels&name=' + encodeURIComponent(n) + '&price=' + p;
+}
 function dmSlide(d){dmIdx=Math.max(0,Math.min(dmTotal-1,dmIdx+d));updateDmGallery();renderDmDots()}
 function updateDmGallery(){document.getElementById('dm-track').style.transform=`translateX(${-dmIdx*100}%)`;document.getElementById('dm-count').textContent=(dmIdx+1)+' / '+dmTotal}
 function renderDmDots(){document.getElementById('dm-dots').innerHTML=Array.from({length:dmTotal},(_,i)=>`<div class="dm-dot${i===dmIdx?' active':''}" onclick="dmIdx=${i};updateDmGallery();renderDmDots()"></div>`).join('')}
@@ -410,6 +428,7 @@ function initMap(){
 }
 
 renderHotels();
+AeroUI.renderCrossSell('crosssell','hotels','Singapore');
 window.addEventListener('load',()=>{initMap();});
 setTimeout(initMap,100);
 

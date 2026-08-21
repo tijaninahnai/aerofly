@@ -1,0 +1,338 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1.0,maximum-scale=1.0,user-scalable=no">
+<title>AeroFly — Experiences</title>
+<link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+<link rel="stylesheet" href="../css/global.css">
+<link rel="stylesheet" href="../css/experiences.css">
+</head>
+<body data-section="experiences">
+
+<header>
+  <a class="logo" href="../index.html"><i class="fa-solid fa-sparkles"></i> Aero<span>Fly</span></a>
+
+  <div class="nav-current"><i class="fa-solid fa-ticket"></i> <span>Experiences</span></div>
+
+  <div class="hdr-actions">
+    <button class="hdr-btn">Log in</button>
+    <button class="hdr-btn gold">Sign up</button>
+    <button class="nav-hamburger-btn" id="navHamburgerBtn" onclick="toggleNavMenu(event)" aria-label="Switch section">
+      <i class="fa-solid fa-bars"></i>
+    </button>
+    <div class="nav-menu-popover" id="navMenuPopover">
+      <div class="nav-menu-label">Switch section</div>
+      <a href="flights.html" class="nav-menu-item"><i class="fa-solid fa-plane"></i> Flights</a>
+      <a href="hotels.html" class="nav-menu-item"><i class="fa-solid fa-hotel"></i> Hotels</a>
+      <a href="experiences.html" class="nav-menu-item active"><i class="fa-solid fa-ticket"></i> Experiences</a>
+      <a href="../index.html" class="nav-menu-item home"><i class="fa-solid fa-house"></i> Home</a>
+    </div>
+  </div>
+</header>
+
+<!-- SEARCH HERO -->
+<div class="search-hero">
+  <div class="search-hero-inner">
+    <h1>Things to <em>see and do</em><br>in Singapore</h1>
+    <p>14 May – 25 May · 2 guests</p>
+    <div class="search-bar">
+      <div class="sb-field" style="min-width:220px">
+        <div class="sb-label">Destination</div>
+        <div class="sb-val">Singapore, SG</div>
+      </div>
+      <div class="sb-field" id="sb-dates" onclick="toggleDatePopup(event)" style="position:relative;min-width:200px">
+        <div class="sb-label">Date</div>
+        <div class="sb-val" id="sb-dates-val">Any date</div>
+        <div class="sb-popup date-popup" id="date-popup" onclick="event.stopPropagation()">
+          <div class="dp-header">
+            <button class="dp-nav" onclick="dpNav(-1)"><i class="fa-solid fa-chevron-left"></i></button>
+            <h4 id="dp-month-lbl"></h4>
+            <button class="dp-nav" onclick="dpNav(1)"><i class="fa-solid fa-chevron-right"></i></button>
+          </div>
+          <div class="dp-grid-hdr"><span>Mo</span><span>Tu</span><span>We</span><span>Th</span><span>Fr</span><span>Sa</span><span>Su</span></div>
+          <div class="dp-grid" id="dp-grid"></div>
+          <div class="dp-hint" id="dp-hint">Select a date</div>
+          <div class="dp-footer">
+            <span id="dp-sel-txt">No date selected</span>
+            <button class="dp-confirm" onclick="confirmDates()">Done</button>
+          </div>
+        </div>
+      </div>
+      <div class="sb-field" id="sb-guests" onclick="toggleGuestsPopup(event)" style="position:relative;min-width:150px">
+        <div class="sb-label">Guests</div>
+        <div class="sb-val" id="sb-guests-val">2 guests</div>
+        <div class="sb-popup" id="guests-popup" onclick="event.stopPropagation()">
+          <div class="popup-label">Guests</div>
+          <div class="guest-row"><div><div class="guest-type">Adults</div><div class="guest-sub">Age 18+</div></div><div class="ctr"><button class="ctr-btn" id="a-minus" onclick="adjG('adult',-1)">−</button><span class="ctr-val" id="a-val">2</span><button class="ctr-btn" onclick="adjG('adult',1)">+</button></div></div>
+          <div class="guest-row"><div><div class="guest-type">Children</div><div class="guest-sub">Age 0–17</div></div><div class="ctr"><button class="ctr-btn" id="c-minus" onclick="adjG('child',-1)">−</button><span class="ctr-val" id="c-val">0</span><button class="ctr-btn" onclick="adjG('child',1)">+</button></div></div>
+          <button class="popup-done" onclick="confirmGuests()">Apply</button>
+        </div>
+      </div>
+      <button class="sb-search-btn"><i class="fa-solid fa-magnifying-glass"></i> Search Experiences</button>
+    </div>
+  </div>
+</div>
+
+<!-- PAGE BODY -->
+<div class="page-body">
+  <!-- RESULTS -->
+  <div class="results-col">
+    <div class="results-top">
+      <div class="results-count"><strong id="res-count">5 experiences</strong> found in Singapore</div>
+      <div class="sort-bar">
+        <div class="sort-pill active" onclick="setSort(this,'recommended')">Recommended</div>
+        <div class="sort-pill" onclick="setSort(this,'price')">Price ↑</div>
+        <div class="sort-pill" onclick="setSort(this,'rating')">Rating ↓</div>
+      </div>
+    </div>
+    <div id="xp-list"></div>
+  </div>
+
+  <!-- SIDEBAR -->
+  <div class="sidebar">
+    <div id="crosssell"></div>
+    <div class="filter-card">
+      <div class="fc-title">
+        Filter Results
+        <button onclick="resetFilters()">Reset all</button>
+      </div>
+      <div class="fc-section">
+        <div class="fc-section-label">Category</div>
+        <div class="filter-pills">
+          <div class="filter-pill active" onclick="toggleCat(this,'all')">All</div>
+          <div class="filter-pill" onclick="toggleCat(this,'Tours')">Tours</div>
+          <div class="filter-pill" onclick="toggleCat(this,'Food')">Food &amp; Drink</div>
+          <div class="filter-pill" onclick="toggleCat(this,'Outdoor')">Outdoor</div>
+          <div class="filter-pill" onclick="toggleCat(this,'Culture')">Culture</div>
+        </div>
+      </div>
+      <div class="fc-section">
+        <div class="fc-section-label">Max Price / Person</div>
+        <div class="price-slider-wrap">
+          <div class="price-slider-row"><span>$0</span><strong id="price-lbl">$150</strong><span>$300</span></div>
+          <input type="range" min="0" max="300" value="150" step="5" oninput="setPriceFilter(this.value)">
+        </div>
+      </div>
+      <div class="fc-section">
+        <div class="fc-section-label">Duration</div>
+        <div class="filter-pills">
+          <div class="am-pill" onclick="this.classList.toggle('active')"><i class="fa-solid fa-clock"></i> Up to 2h</div>
+          <div class="am-pill" onclick="this.classList.toggle('active')"><i class="fa-solid fa-clock"></i> Half day</div>
+          <div class="am-pill" onclick="this.classList.toggle('active')"><i class="fa-solid fa-clock"></i> Full day</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- DETAIL MODAL -->
+<div id="detail-overlay">
+  <div class="detail-modal">
+    <div class="dm-gallery">
+      <div class="dm-track" id="dm-track"></div>
+      <button class="dm-btn prev" onclick="dmSlide(-1)"><i class="fa-solid fa-chevron-left"></i></button>
+      <button class="dm-btn next" onclick="dmSlide(1)"><i class="fa-solid fa-chevron-right"></i></button>
+      <div class="dm-dots" id="dm-dots"></div>
+      <div class="dm-img-count" id="dm-count">1 / 3</div>
+      <button class="dm-close" onclick="closeDetail()"><i class="fa-solid fa-xmark"></i></button>
+    </div>
+    <div class="dm-body">
+      <div class="dm-header">
+        <div class="dm-title-row">
+          <div>
+            <div class="dm-stars" id="dm-cat">Culture · Tour</div>
+            <div class="dm-name" id="dm-name">Gardens by the Bay Night Tour</div>
+          </div>
+          <div class="dm-score-block">
+            <div class="dm-score-big" id="dm-score">9.4</div>
+            <div class="dm-score-lbl">Excellent</div>
+            <div class="dm-score-cnt" id="dm-score-cnt">1,204 reviews</div>
+          </div>
+        </div>
+        <div class="dm-address">
+          <i class="fa-solid fa-location-dot"></i>
+          <span id="dm-addr">18 Marina Gardens Dr, Singapore</span>
+          <span>·</span>
+          <span id="dm-duration"><i class="fa-solid fa-clock"></i> 2.5 hours</span>
+        </div>
+      </div>
+
+      <div class="dm-tabs">
+        <div class="dm-tab active" onclick="switchTab(this,'overview')"><i class="fa-solid fa-align-left"></i> Overview</div>
+        <div class="dm-tab" onclick="switchTab(this,'itinerary')"><i class="fa-solid fa-route"></i> Itinerary</div>
+        <div class="dm-tab" onclick="switchTab(this,'included')"><i class="fa-solid fa-circle-check"></i> Included</div>
+        <div class="dm-tab" onclick="switchTab(this,'reviews')"><i class="fa-regular fa-star"></i> Reviews</div>
+      </div>
+
+      <div class="dm-tc active" id="dtc-overview">
+        <p class="xp-desc" id="xp-desc">Wander the Supertree Grove as it lights up after dark, then step inside the Cloud Forest for a close-up of the indoor waterfall. A local guide covers the design story behind the gardens and the best photo spots along the way.</p>
+      </div>
+
+      <div class="dm-tc" id="dtc-itinerary">
+        <div class="fl-seg">
+          <div class="fl-seg-dot"></div>
+          <div class="fl-seg-body"><div class="fl-seg-time">6:30 PM · Meet at Bayfront gate</div><div class="fl-seg-sub">Guide briefing &amp; welcome drink</div></div>
+        </div>
+        <div class="fl-seg-line"><i class="fa-solid fa-person-walking"></i> 45 min · Supertree Grove</div>
+        <div class="fl-seg">
+          <div class="fl-seg-dot"></div>
+          <div class="fl-seg-body"><div class="fl-seg-time">7:30 PM · Cloud Forest</div><div class="fl-seg-sub">Indoor waterfall &amp; skywalk</div></div>
+        </div>
+        <div class="fl-seg-line"><i class="fa-solid fa-person-walking"></i> 40 min · Light show viewing</div>
+        <div class="fl-seg">
+          <div class="fl-seg-dot end"></div>
+          <div class="fl-seg-body"><div class="fl-seg-time">9:00 PM · Tour ends</div><div class="fl-seg-sub">Drop-off at Bayfront gate</div></div>
+        </div>
+      </div>
+
+      <div class="dm-tc" id="dtc-included">
+        <div class="rules-list">
+          <div class="rule-item ok"><i class="fa-solid fa-check"></i> Licensed local guide</div>
+          <div class="rule-item ok"><i class="fa-solid fa-check"></i> Cloud Forest &amp; Supertree Grove entry</div>
+          <div class="rule-item ok"><i class="fa-solid fa-check"></i> Welcome drink</div>
+          <div class="rule-item no"><i class="fa-solid fa-ban"></i> Hotel pickup not included</div>
+          <div class="rule-item info"><i class="fa-solid fa-circle-info"></i> Free cancellation up to 24h before</div>
+        </div>
+      </div>
+
+      <div class="dm-tc" id="dtc-reviews">
+        <div class="rev-summary">
+          <div><div class="rev-big" id="dm-rev-score">9.4</div><div class="rev-meta">Excellent · 1,204 reviews</div></div>
+          <div class="rating-bars">
+            <div class="rb-row"><span class="rb-lbl">Guide</span><div class="rb-track"><div class="rb-fill" style="width:97%"></div></div><span class="rb-val">9.7</span></div>
+            <div class="rb-row"><span class="rb-lbl">Value</span><div class="rb-track"><div class="rb-fill" style="width:88%"></div></div><span class="rb-val">8.8</span></div>
+            <div class="rb-row"><span class="rb-lbl">Organization</span><div class="rb-track"><div class="rb-fill" style="width:93%"></div></div><span class="rb-val">9.3</span></div>
+          </div>
+        </div>
+        <div class="rev-card"><div class="rev-hdr"><div class="rev-user"><div class="rev-av">AL</div><div><div class="rev-name">Anke L.</div><div class="rev-date">April 2025 · Belgium</div></div></div><div class="rev-stars">★★★★★</div></div><div class="rev-text">Our guide was fantastic and the light show timing was perfect. Highly recommend the evening slot.</div></div>
+        <div class="rev-card"><div class="rev-hdr"><div class="rev-user"><div class="rev-av">RT</div><div><div class="rev-name">Ravi T.</div><div class="rev-date">March 2025 · India</div></div></div><div class="rev-stars">★★★★☆</div></div><div class="rev-text">Beautiful gardens, well organized group size. Would have liked a bit more time in Cloud Forest.</div></div>
+      </div>
+    </div>
+    <div class="dm-booking-strip">
+      <div class="dbs-price"><div class="dbs-amount" id="dbs-amount">$68</div><div class="dbs-night">per person</div></div>
+      <div class="dbs-btns">
+        <button class="dbs-fav" id="dbs-fav" onclick="toggleDmFav()"><i class="fa-regular fa-heart" id="dbs-fav-icon"></i> Save</button>
+        <button class="dbs-book" onclick="goBook()">Book Now</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script src="../js/global.js"></script>
+<script>
+
+// ---- DATE PICKER (shared pattern) ----
+const MONTHS=['January','February','March','April','May','June','July','August','September','October','November','December'];
+const today=new Date();today.setHours(0,0,0,0);
+let dpY=today.getFullYear(),dpM=today.getMonth(),dpStart=null,dpEnd=null;
+function toggleDatePopup(e){e.stopPropagation();const p=document.getElementById('date-popup'),g=document.getElementById('guests-popup');g.classList.remove('active');if(p.classList.contains('active')){p.classList.remove('active');return;}renderCal();p.classList.add('active')}
+function dpNav(d){dpM+=d;if(dpM>11){dpM=0;dpY++;}if(dpM<0){dpM=11;dpY--;}renderCal()}
+function renderCal(){
+  document.getElementById('dp-month-lbl').textContent=MONTHS[dpM]+' '+dpY;
+  const fd=new Date(dpY,dpM,1).getDay(),off=(fd===0?6:fd-1),dim=new Date(dpY,dpM+1,0).getDate();
+  let h='';
+  for(let i=0;i<off;i++) h+='<button class="dp-d empty" disabled></button>';
+  for(let d=1;d<=dim;d++){
+    const dt=new Date(dpY,dpM,d);let c='dp-d';
+    if(dt<today)c+=' past';
+    if(dpStart&&dt.getTime()===dpStart.getTime())c+=' rs re';
+    if(dt.getTime()===today.getTime())c+=' today';
+    h+=`<button class="${c}" onclick="dpPick(${dpY},${dpM},${d})">${d}</button>`;
+  }
+  document.getElementById('dp-grid').innerHTML=h;updDpFoot();
+}
+function dpPick(y,m,d){const dt=new Date(y,m,d);if(dt<today)return;dpStart=dt;renderCal()}
+function fmt(d){return d.getDate()+' '+MONTHS[d.getMonth()].slice(0,3)}
+function updDpFoot(){const h=document.getElementById('dp-hint'),s=document.getElementById('dp-sel-txt');if(!dpStart){h.textContent='Select a date';s.textContent='No date selected';}else{h.textContent='';s.textContent=fmt(dpStart);}}
+function confirmDates(){if(dpStart){document.getElementById('sb-dates-val').textContent=fmt(dpStart);}document.getElementById('date-popup').classList.remove('active')}
+
+// ---- GUESTS ----
+let guests={adult:2,child:0};
+function toggleGuestsPopup(e){e.stopPropagation();const p=document.getElementById('guests-popup'),d=document.getElementById('date-popup');d.classList.remove('active');p.classList.toggle('active');updGuestBtns()}
+function adjG(t,d){guests[t]=Math.max(t==='adult'?1:0,guests[t]+d);document.getElementById(t[0]+'-val').textContent=guests[t];updGuestBtns()}
+function updGuestBtns(){document.getElementById('a-minus').disabled=guests.adult<=1;document.getElementById('c-minus').disabled=guests.child<=0}
+function confirmGuests(){const total=guests.adult+guests.child;document.getElementById('sb-guests-val').textContent=total+' guest'+(total!==1?'s':'');document.getElementById('guests-popup').classList.remove('active')}
+document.addEventListener('click',()=>{document.querySelectorAll('.sb-popup').forEach(p=>p.classList.remove('active'))});
+
+// ---- EXPERIENCES DATA ----
+const xps=[
+  {id:'x1',name:'Gardens by the Bay Night Tour',cat:'Culture',catLbl:'Culture · Tour',loc:'Marina Bay',duration:'2.5 hours',score:9.4,scoreLbl:'Excellent',reviews:1204,price:68,desc:'Wander the Supertree Grove as it lights up after dark, then step inside the Cloud Forest for a close-up of the indoor waterfall. A local guide covers the design story behind the gardens and the best photo spots along the way.',imgs:['https://images.unsplash.com/photo-1508964942454-1a56651d54ac?w=900&q=80','https://images.unsplash.com/photo-1533105079780-92b9be482077?w=900&q=80','https://images.unsplash.com/photo-1525625293386-3f8f99389edd?w=900&q=80']},
+  {id:'x2',name:'Singapore Street Food Trail',cat:'Food',catLbl:'Food & Drink · Walking tour',loc:'Chinatown & Tiong Bahru',duration:'3 hours',score:9.6,scoreLbl:'Exceptional',reviews:892,price:79,desc:'Hit six hawker stalls across two historic neighborhoods, tasting everything from chili crab to kaya toast, guided by someone who grew up eating this food.',imgs:['https://images.unsplash.com/photo-1559181567-c3190ca9959b?w=900&q=80','https://images.unsplash.com/photo-1512058564366-18510be2db19?w=900&q=80']},
+  {id:'x3',name:'Southern Islands Kayak & Snorkel',cat:'Outdoor',catLbl:'Outdoor · Half day',loc:'Sentosa Island',duration:'4 hours',score:8.9,scoreLbl:'Superb',reviews:341,price:95,desc:'Paddle out to the Southern Islands, snorkel a quiet reef away from the crowds, and stop for a beach picnic before heading back.',imgs:['https://images.unsplash.com/photo-1544551763-46a013bb70d5?w=900&q=80','https://images.unsplash.com/photo-1544551763-77ef2d0cfc6c?w=900&q=80']},
+  {id:'x4',name:'Peranakan Heritage Walk',cat:'Culture',catLbl:'Culture · Walking tour',loc:'Katong & Joo Chiat',duration:'2 hours',score:9.1,scoreLbl:'Excellent',reviews:203,price:45,desc:'Stroll past colorful shophouses and learn the Peranakan story through architecture, tile patterns and a stop for traditional kueh.',imgs:['https://images.unsplash.com/photo-1512453979798-5ea266f8880c?w=900&q=80','https://images.unsplash.com/photo-1533628635777-112b2239b1c7?w=900&q=80']},
+  {id:'x5',name:'Sunset Rooftop Bar Hop',cat:'Food',catLbl:'Food & Drink · Nightlife',loc:'Marina Bay & CBD',duration:'3 hours',score:8.7,scoreLbl:'Superb',reviews:156,price:120,desc:'Three rooftop bars, three signature cocktails, and the best skyline views in the city as the sun goes down.',imgs:['https://images.unsplash.com/photo-1470337458703-46ad1756a187?w=900&q=80','https://images.unsplash.com/photo-1470337458703-46ad1756a188?w=900&q=80']},
+];
+
+let maxPriceFilter=150,catFilter='all';
+
+function scoreTier(score){ if(score>=9)return 'tier-accent'; if(score>=8.5)return 'tier-gold'; return 'tier-green'; }
+
+function renderXps(){
+  const filtered=xps.filter(x=>x.price<=maxPriceFilter&&(catFilter==='all'||x.cat===catFilter));
+  document.getElementById('res-count').textContent=filtered.length+' experience'+(filtered.length!==1?'s':'');
+  document.getElementById('xp-list').innerHTML=filtered.map(x=>`
+  <div class="xp-card" onclick="openDetail('${x.id}')">
+    <div class="xp-img">
+      <img src="${x.imgs[0]}" alt="${x.name}" onerror="this.style.background='#3A2A2E'">
+      <div class="xp-badge">${x.catLbl.split(' ')[0]}</div>
+      <button class="xp-fav" onclick="event.stopPropagation();this.classList.toggle('saved');this.querySelector('i').className=this.classList.contains('saved')?'fa-solid fa-heart':'fa-regular fa-heart'"><i class="fa-regular fa-heart"></i></button>
+    </div>
+    <div class="xp-body">
+      <div>
+        <div class="xp-top">
+          <div><div class="xp-name">${x.name}</div><div class="xp-loc"><i class="fa-solid fa-location-dot"></i> ${x.loc} · <i class="fa-solid fa-clock"></i> ${x.duration}</div></div>
+          <div class="hc-score-wrap"><div class="hc-score ${scoreTier(x.score)}">${x.score}</div><div class="hc-score-lbl">${x.scoreLbl}</div></div>
+        </div>
+      </div>
+      <div class="hc-bottom">
+        <div class="hc-price-block">
+          <div class="hc-price">$${x.price} <span class="hc-price-night">/ person</span></div>
+          <div class="hc-price-total">${x.reviews.toLocaleString()} reviews</div>
+        </div>
+        <button class="hc-book-btn" onclick="event.stopPropagation();openDetail('${x.id}')">View Details</button>
+      </div>
+    </div>
+  </div>`).join('')||'<div style="text-align:center;padding:3rem;color:var(--mist);">No experiences match your filters.</div>';
+}
+
+function setSort(el,type){document.querySelectorAll('.sort-pill').forEach(p=>p.classList.remove('active'));el.classList.add('active');if(type==='price')xps.sort((a,b)=>a.price-b.price);else if(type==='rating')xps.sort((a,b)=>b.score-a.score);renderXps()}
+function setPriceFilter(v){maxPriceFilter=parseInt(v);document.getElementById('price-lbl').textContent='$'+v;renderXps()}
+function toggleCat(el,v){document.querySelectorAll('.filter-pill').forEach(p=>p.classList.remove('active'));el.classList.add('active');catFilter=v;renderXps()}
+function resetFilters(){maxPriceFilter=150;catFilter='all';document.querySelector('input[type=range]').value=150;document.getElementById('price-lbl').textContent='$150';document.querySelectorAll('.filter-pill').forEach((p,i)=>p.classList.toggle('active',i===0));renderXps()}
+
+// ---- DETAIL MODAL ----
+let dmIdx=0,dmTotal=0,currentXp=null;
+function openDetail(xid){
+  currentXp=xps.find(x=>x.id===xid);if(!currentXp)return;
+  document.getElementById('dm-name').textContent=currentXp.name;
+  document.getElementById('dm-cat').textContent=currentXp.catLbl;
+  document.getElementById('dm-score').textContent=currentXp.score;
+  document.getElementById('dm-score-cnt').textContent=currentXp.reviews.toLocaleString()+' reviews';
+  document.getElementById('dm-rev-score').textContent=currentXp.score;
+  document.getElementById('dm-addr').textContent=currentXp.loc+', Singapore';
+  document.getElementById('dm-duration').innerHTML='<i class="fa-solid fa-clock"></i> '+currentXp.duration;
+  document.getElementById('xp-desc').textContent=currentXp.desc;
+  document.getElementById('dbs-amount').textContent='$'+currentXp.price;
+  dmIdx=0;dmTotal=currentXp.imgs.length;
+  document.getElementById('dm-track').innerHTML=currentXp.imgs.map(s=>`<div class="dm-slide"><img src="${s}" alt="${currentXp.name}" onerror="this.style.background='#3A2A2E'"></div>`).join('');
+  renderDmDots();updateDmGallery();
+  document.querySelectorAll('.dm-tab').forEach((t,i)=>t.classList.toggle('active',i===0));
+  document.querySelectorAll('.dm-tc').forEach((c,i)=>c.classList.toggle('active',i===0));
+  document.getElementById('detail-overlay').classList.add('active');
+}
+function closeDetail(){document.getElementById('detail-overlay').classList.remove('active')}
+function dmSlide(d){dmIdx=Math.max(0,Math.min(dmTotal-1,dmIdx+d));updateDmGallery();renderDmDots()}
+function updateDmGallery(){document.getElementById('dm-track').style.transform=`translateX(${-dmIdx*100}%)`;document.getElementById('dm-count').textContent=(dmIdx+1)+' / '+dmTotal}
+function renderDmDots(){document.getElementById('dm-dots').innerHTML=Array.from({length:dmTotal},(_,i)=>`<div class="dm-dot${i===dmIdx?' active':''}" onclick="dmIdx=${i};updateDmGallery();renderDmDots()"></div>`).join('')}
+function switchTab(el,id){document.querySelectorAll('.dm-tab').forEach(t=>t.classList.remove('active'));el.classList.add('active');document.querySelectorAll('.dm-tc').forEach(c=>c.classList.remove('active'));document.getElementById('dtc-'+id).classList.add('active')}
+function toggleDmFav(){const i=document.getElementById('dbs-fav-icon'),b=document.getElementById('dbs-fav');const saved=i.className.includes('regular');i.className=saved?'fa-solid fa-heart':'fa-regular fa-heart';i.style.color=saved?'var(--red)':'';b.innerHTML=(saved?'<i id="dbs-fav-icon" class="fa-solid fa-heart" style="color:var(--red)"></i> Saved':'<i id="dbs-fav-icon" class="fa-regular fa-heart"></i> Save')}
+function goBook(){ if(currentXp){ window.location.href='booking.html?type=experiences&name='+encodeURIComponent(currentXp.name)+'&price='+currentXp.price; } }
+document.getElementById('detail-overlay').addEventListener('click',function(e){if(e.target===this)closeDetail()});
+
+renderXps();
+AeroUI.renderCrossSell('crosssell','experiences','Singapore');
+
+</script>
+</body>
+</html>

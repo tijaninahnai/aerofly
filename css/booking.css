@@ -1,0 +1,136 @@
+/* ============================================================
+   AEROFLY — BOOKING / CHECKOUT
+   Accent adapts at runtime to whichever section the booking
+   came from (data-section is set by JS: hotels/experiences/flights).
+   ============================================================ */
+
+.booking-wrap{ padding:50px 40px 90px; transition: opacity .3s ease, transform .3s ease; }
+.booking-wrap.leaving{ opacity:0; transform: translateY(-12px); }
+.booking-inner{ max-width:980px; margin:0 auto; }
+
+.booking-title{ margin-bottom:32px; }
+.booking-title h1{ font-size:1.9rem; font-weight:700; }
+.booking-title p{ color: var(--mist); margin-top:6px; }
+.booking-title p span{ color: var(--accent); font-weight:600; }
+
+.booking-grid{ display:grid; grid-template-columns: 1fr 360px; gap:28px; align-items:start; }
+@media (max-width:900px){ .booking-grid{ grid-template-columns:1fr; } }
+
+.booking-forms{ display:flex; flex-direction:column; gap:20px; }
+
+.bk-card{
+  background: var(--surface); border:1px solid var(--border); border-radius: var(--radius-lg);
+  padding:22px 24px;
+}
+.bk-card-title{
+  display:flex; align-items:center; gap:10px;
+  font-family: var(--font-display); font-weight:600; font-size:1rem; margin-bottom:18px;
+}
+.bk-card-title i{ color: var(--accent); }
+
+.bk-field-row{ display:flex; gap:16px; }
+.bk-field{ flex:1; margin-bottom:14px; }
+.bk-field:last-child{ margin-bottom:0; }
+.bk-field label{ display:block; font-size:0.76rem; color: var(--mist); font-weight:600; margin-bottom:6px; text-transform:uppercase; letter-spacing:.03em; }
+.bk-field input{
+  width:100%; padding:12px 14px; border-radius:9px;
+  border:1px solid var(--border); background: var(--surface-2); color: var(--text);
+  font-size:0.9rem; transition: border-color .15s ease;
+}
+.bk-field input:focus{ outline:none; border-color: var(--accent); }
+.bk-field input::placeholder{ color: var(--mist); }
+
+.bk-secure-note{
+  display:flex; align-items:center; gap:8px; margin-top:14px;
+  font-size:0.76rem; color: var(--mist);
+}
+.bk-secure-note i{ color: var(--green); }
+
+.bk-pay-btn{
+  padding:16px; border:none; border-radius:12px;
+  background: var(--accent); color:#fff; font-weight:700; font-size:0.98rem;
+  display:flex; align-items:center; justify-content:center; gap:10px;
+  transition: filter .2s ease, opacity .2s ease;
+}
+.bk-pay-btn:hover{ filter:brightness(1.1); }
+.bk-pay-btn:disabled{ opacity:.75; cursor:wait; }
+
+/* ---------- ORDER SUMMARY ---------- */
+.bk-summary{
+  background: var(--surface); border:1px solid var(--border); border-radius: var(--radius-lg);
+  padding:22px 24px; position:sticky; top:90px;
+}
+.bk-summary-badge{
+  display:inline-flex; align-items:center; gap:7px;
+  padding:5px 12px; border-radius:999px; background: var(--accent-dim); color: var(--accent);
+  font-size:0.74rem; font-weight:600; margin-bottom:12px;
+}
+.bk-summary-name{ font-family: var(--font-display); font-size:1.2rem; font-weight:700; }
+.bk-summary-meta{ font-size:0.82rem; color: var(--mist); margin-top:4px; }
+
+.bk-divider{ height:1px; background: var(--border-soft); margin:16px 0; }
+
+.bk-line{ display:flex; justify-content:space-between; font-size:0.88rem; color: var(--text-dim); margin-bottom:10px; }
+.bk-line:last-of-type{ margin-bottom:0; }
+.bk-line.total{ color: var(--text); font-weight:700; font-size:1.05rem; font-family: var(--font-display); }
+
+.bk-summary-badgebox{
+  display:flex; align-items:center; gap:8px; margin-top:18px;
+  padding:10px 12px; border-radius:9px; background: var(--surface-2);
+  font-size:0.76rem; color: var(--text-dim);
+}
+.bk-summary-badgebox i{ color: var(--green); }
+
+/* ============================================================
+   CONFIRMATION (cinematic checkmark reveal)
+   ============================================================ */
+.confirm-wrap{
+  display:none;
+  min-height:70vh;
+  align-items:center; justify-content:center;
+  padding:60px 24px;
+}
+.confirm-wrap.active{ display:flex; animation: confirmFadeIn .5s ease; }
+@keyframes confirmFadeIn{
+  from{ opacity:0; transform: translateY(16px); }
+  to{ opacity:1; transform: translateY(0); }
+}
+
+.confirm-card{
+  max-width:460px; width:100%; text-align:center;
+  background: var(--surface); border:1px solid var(--border); border-radius: var(--radius-lg);
+  padding:44px 36px;
+}
+
+.confirm-check{ width:88px; height:88px; margin:0 auto 20px; display:block; }
+.confirm-check-circle{
+  fill:none; stroke: var(--accent); stroke-width:5;
+  stroke-dasharray: 283; stroke-dashoffset: 283;
+  animation: confirmCircle .6s ease forwards;
+}
+.confirm-check-mark{
+  fill:none; stroke:#fff; stroke-width:7; stroke-linecap:round; stroke-linejoin:round;
+  stroke-dasharray: 60; stroke-dashoffset: 60;
+  animation: confirmMark .4s ease forwards .55s;
+}
+@keyframes confirmCircle{ to{ stroke-dashoffset:0; } }
+@keyframes confirmMark{ to{ stroke-dashoffset:0; } }
+
+.confirm-card h2{ font-size:1.5rem; font-weight:700; margin-bottom:8px; }
+.confirm-card p{ color: var(--mist); font-size:0.92rem; margin-bottom:18px; }
+
+.confirm-ref{
+  display:inline-block; padding:10px 18px; border-radius:9px;
+  background: var(--surface-2); font-size:0.84rem; color: var(--text-dim); margin-bottom:26px;
+}
+.confirm-ref strong{ color: var(--text); font-family: var(--font-display); letter-spacing:.03em; }
+
+#confirmCrosssell{ margin-bottom:22px; text-align:left; }
+
+.confirm-home-btn{
+  display:inline-flex; align-items:center; gap:8px;
+  padding:12px 24px; border-radius:9px; border:1px solid var(--border);
+  color: var(--text-dim); font-size:0.88rem; font-weight:500;
+  transition: all .15s ease;
+}
+.confirm-home-btn:hover{ border-color: var(--accent); color: var(--text); }

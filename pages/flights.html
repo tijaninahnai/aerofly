@@ -5,358 +5,367 @@
 <meta name="viewport" content="width=device-width,initial-scale=1.0,maximum-scale=1.0,user-scalable=no">
 <title>AeroFly — Flights</title>
 <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
-<link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;500;600;700;800&family=Roboto:wght@400;500;700&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="../css/global.css">
 <link rel="stylesheet" href="../css/flights.css">
 </head>
-<body>
+<body data-section="flights">
 
-<!-- MODAL -->
-<div id="modal-overlay">
-  <div class="booking-modal">
-    <div class="modal-top-bar">
-      <div class="modal-top-bar-header">
-        <h3 id="modal-step-title">Passenger Details</h3>
-        <span class="step-counter" id="modal-step-counter">Step 1 of 5</span>
-      </div>
-      <div class="progress-plane-bar">
-        <div class="progress-plane-fill" id="progressFill"></div>
-        <div class="progress-plane-icon" id="progressPlane">✈</div>
-      </div>
-      <div class="step-pills" id="stepPills">
-        <div class="step-pill active">Passenger</div>
-        <div class="step-pill">Seats</div>
-        <div class="step-pill">Food</div>
-        <div class="step-pill">Bags</div>
-        <div class="step-pill">Review</div>
-      </div>
-      <button class="close-modal-btn" onclick="closeBookingModal()"><i class="fa-solid fa-xmark"></i></button>
-    </div>
-    <div class="modal-body">
-
-      <!-- STEP 1 -->
-      <div class="step-panel active" id="step-1">
-        <div id="passengers-container"></div>
-        <button class="add-passenger-btn" onclick="addPassenger()">
-          <i class="fa-solid fa-circle-plus"></i> Add Passenger
-        </button>
-      </div>
-
-      <!-- STEP 2 -->
-      <div class="step-panel" id="step-2">
-        <div class="class-selector">
-          <div class="class-card fc active" onclick="selectClass('fc')">
-            <div class="class-card-check"><i class="fa-solid fa-check"></i></div>
-            <div class="class-card-icon">🛋️</div>
-            <div class="class-card-name">First Class</div>
-            <div class="class-card-price">from $2,400</div>
-          </div>
-          <div class="class-card prem" onclick="selectClass('prem')">
-            <div class="class-card-check"><i class="fa-solid fa-check"></i></div>
-            <div class="class-card-icon">⭐</div>
-            <div class="class-card-name">Premium</div>
-            <div class="class-card-price">from $1,100</div>
-          </div>
-          <div class="class-card eco" onclick="selectClass('eco')">
-            <div class="class-card-check"><i class="fa-solid fa-check"></i></div>
-            <div class="class-card-icon">🪑</div>
-            <div class="class-card-name">Economy</div>
-            <div class="class-card-price">from $845</div>
-          </div>
-        </div>
-        <div class="seat-diagram-area">
-          <div class="plane-svg-wrap">
-            <svg viewBox="0 0 100 270" xmlns="http://www.w3.org/2000/svg">
-              <defs>
-                <clipPath id="body-clip"><path d="M50 6 C66 6 67 22 67 38 L67 205 C67 230 58 250 50 256 C42 250 33 230 33 205 L33 38 C33 22 34 6 50 6 Z"/></clipPath>
-                <filter id="zone-glow" x="-30%" y="-30%" width="160%" height="160%"><feGaussianBlur stdDeviation="2.5" result="blur"/><feMerge><feMergeNode in="blur"/><feMergeNode in="SourceGraphic"/></feMerge></filter>
-              </defs>
-              <path d="M33 105 L2 155 L8 170 L33 148 Z" fill="#CBD5E1"/>
-              <path d="M67 105 L98 155 L92 170 L67 148 Z" fill="#CBD5E1"/>
-              <path d="M36 205 L16 240 L24 250 L40 220 Z" fill="#CBD5E1"/>
-              <path d="M64 205 L84 240 L76 250 L60 220 Z" fill="#CBD5E1"/>
-              <path d="M50 6 C66 6 67 22 67 38 L67 205 C67 230 58 250 50 256 C42 250 33 230 33 205 L33 38 C33 22 34 6 50 6 Z" fill="#E2E8F0" stroke="#CBD5E1" stroke-width="1.5"/>
-              <rect x="0" y="5" width="100" height="72" fill="#4285F4" clip-path="url(#body-clip)" id="svg-zone-fc" opacity="0" style="transition:opacity .35s" filter="url(#zone-glow)"/>
-              <rect x="0" y="77" width="100" height="80" fill="#9B72CB" clip-path="url(#body-clip)" id="svg-zone-prem" opacity="0" style="transition:opacity .35s" filter="url(#zone-glow)"/>
-              <rect x="0" y="157" width="100" height="100" fill="#D96570" clip-path="url(#body-clip)" id="svg-zone-eco" opacity="0" style="transition:opacity .35s" filter="url(#zone-glow)"/>
-              <line x1="33" y1="77" x2="67" y2="77" stroke="#94A3B8" stroke-width="1" stroke-dasharray="4,3"/>
-              <line x1="33" y1="157" x2="67" y2="157" stroke="#94A3B8" stroke-width="1" stroke-dasharray="4,3"/>
-              <circle cx="42" cy="28" r="2.5" fill="white" opacity=".7"/><circle cx="58" cy="28" r="2.5" fill="white" opacity=".7"/>
-              <circle cx="42" cy="43" r="2.5" fill="white" opacity=".7"/><circle cx="58" cy="43" r="2.5" fill="white" opacity=".7"/>
-              <circle cx="42" cy="58" r="2.5" fill="white" opacity=".7"/><circle cx="58" cy="58" r="2.5" fill="white" opacity=".7"/>
-              <circle cx="42" cy="90" r="2" fill="white" opacity=".7"/><circle cx="58" cy="90" r="2" fill="white" opacity=".7"/>
-              <circle cx="42" cy="105" r="2" fill="white" opacity=".7"/><circle cx="58" cy="105" r="2" fill="white" opacity=".7"/>
-              <circle cx="42" cy="120" r="2" fill="white" opacity=".7"/><circle cx="58" cy="120" r="2" fill="white" opacity=".7"/>
-              <circle cx="42" cy="135" r="2" fill="white" opacity=".7"/><circle cx="58" cy="135" r="2" fill="white" opacity=".7"/>
-              <circle cx="41" cy="170" r="1.8" fill="white" opacity=".7"/><circle cx="59" cy="170" r="1.8" fill="white" opacity=".7"/>
-              <circle cx="41" cy="185" r="1.8" fill="white" opacity=".7"/><circle cx="59" cy="185" r="1.8" fill="white" opacity=".7"/>
-              <circle cx="41" cy="200" r="1.8" fill="white" opacity=".7"/><circle cx="59" cy="200" r="1.8" fill="white" opacity=".7"/>
-              <text x="50" y="44" text-anchor="middle" font-family="Outfit,sans-serif" font-size="6" fill="#0F172A" opacity=".45" font-weight="700">FC</text>
-              <text x="50" y="122" text-anchor="middle" font-family="Outfit,sans-serif" font-size="5.5" fill="#0F172A" opacity=".45" font-weight="700">PREM</text>
-              <text x="50" y="195" text-anchor="middle" font-family="Outfit,sans-serif" font-size="5.5" fill="#0F172A" opacity=".45" font-weight="700">ECO</text>
-            </svg>
-          </div>
-          <div class="seat-grid-panel">
-            <div class="seat-grid-header" id="seat-grid-label">First Class — Select your seat</div>
-            <div id="seat-grid-container"></div>
-          </div>
-        </div>
-        <div class="benefits-section">
-          <div class="benefits-label">Included Benefits</div>
-          <div class="benefits-grid" id="benefits-container"></div>
-        </div>
-      </div>
-
-      <!-- STEP 3 -->
-      <div class="step-panel" id="step-3">
-        <div style="font-size:.85rem;color:var(--text-gray);margin-bottom:1rem;">Choose your in-flight meal preference for each passenger.</div>
-        <div class="food-grid">
-          <div class="food-card veg active" onclick="selectFood(this)">
-            <div class="food-icon">🥦</div>
-            <div class="food-info"><div class="food-name">Vegetarian</div><div class="food-desc">Seasonal vegetables, lentils, grains & plant-based protein</div><div class="food-badge">Vegetarian</div></div>
-            <div class="food-check-icon"><i class="fa-solid fa-check"></i></div>
-          </div>
-          <div class="food-card std" onclick="selectFood(this)">
-            <div class="food-icon">🥩</div>
-            <div class="food-info"><div class="food-name">Standard (Meat & Fish)</div><div class="food-desc">Premium beef, chicken or fresh Atlantic salmon with sides</div><div class="food-badge">Standard</div></div>
-            <div class="food-check-icon"><i class="fa-solid fa-check"></i></div>
-          </div>
-          <div class="food-card spc" onclick="selectFood(this)">
-            <div class="food-icon">🌙</div>
-            <div class="food-info"><div class="food-name">Specialty</div><div class="food-desc">Halal, Kosher, or fully plant-based vegan — please indicate preference</div><div class="food-badge">Specialty</div></div>
-            <div class="food-check-icon"><i class="fa-solid fa-check"></i></div>
-          </div>
-        </div>
-      </div>
-
-      <!-- STEP 4 -->
-      <div class="step-panel" id="step-4">
-        <div class="bag-section">
-          <h4>Choose your baggage allowance</h4>
-          <div class="bag-option-row active" onclick="selectBag(this)">
-            <div class="bag-visual"><div class="bag-icon">🎒</div></div>
-            <div class="bag-info"><div class="bag-name">Carry-on Only</div><div class="bag-detail">1 cabin bag, max 10kg</div></div>
-            <div class="bag-price-tag">Included</div><div class="bag-radio"></div>
-          </div>
-          <div class="bag-option-row" onclick="selectBag(this)">
-            <div class="bag-visual"><div class="bag-icon scale-lg">🧳</div></div>
-            <div class="bag-info"><div class="bag-name">1 Checked Bag — 20kg</div><div class="bag-detail">1 cabin bag + 1 hold bag (20kg)</div></div>
-            <div class="bag-price-tag">+ $45</div><div class="bag-radio"></div>
-          </div>
-          <div class="bag-option-row" onclick="selectBag(this)">
-            <div class="bag-visual"><div class="bag-icon scale-xl">🧳</div></div>
-            <div class="bag-info"><div class="bag-name">1 Checked Bag — 32kg</div><div class="bag-detail">1 cabin bag + 1 heavy hold bag (32kg)</div></div>
-            <div class="bag-price-tag">+ $75</div><div class="bag-radio"></div>
-          </div>
-          <div class="bag-option-row" onclick="selectBag(this)">
-            <div class="bag-visual"><div class="bag-icon scale-2x">🧳</div><div class="bag-icon scale-2x" style="opacity:.7">🧳</div></div>
-            <div class="bag-info"><div class="bag-name">2 Checked Bags — 23kg each</div><div class="bag-detail">1 cabin bag + 2 hold bags (23kg each)</div></div>
-            <div class="bag-price-tag">+ $95</div><div class="bag-radio"></div>
-          </div>
-        </div>
-      </div>
-
-      <!-- STEP 5 -->
-      <div class="step-panel" id="step-5">
-        <div class="insurance-card active" id="insurance-card" onclick="toggleInsurance()">
-          <div class="insurance-info">
-            <i class="fa-solid fa-shield-halved"></i>
-            <div><div class="insurance-name">Protect My Trip</div><div class="insurance-sub">Full cancellation, delay & medical cover · $28</div></div>
-          </div>
-          <div class="toggle-switch" id="insurance-toggle"></div>
-        </div>
-        <div class="delivery-label">Send boarding pass via</div>
-        <div class="delivery-opts">
-          <div class="delivery-opt active" onclick="selectDelivery(this)"><i class="fa-solid fa-envelope"></i><span>Email</span></div>
-          <div class="delivery-opt" onclick="selectDelivery(this)"><i class="fa-solid fa-comment-sms"></i><span>SMS</span></div>
-          <div class="delivery-opt" onclick="selectDelivery(this)"><i class="fa-brands fa-whatsapp"></i><span>WhatsApp</span></div>
-        </div>
-        <div class="final-summary">
-          <h4>Booking Summary</h4>
-          <div class="summary-row"><span class="lbl">Flight</span><span class="val">BRU → SIN · NV905</span></div>
-          <div class="summary-row"><span class="lbl">Passenger</span><span class="val" id="rev-passenger">—</span></div>
-          <div class="summary-row"><span class="lbl">Class & Seat</span><span class="val" id="rev-seat">—</span></div>
-          <div class="summary-row"><span class="lbl">Meal</span><span class="val" id="rev-food">—</span></div>
-          <div class="summary-row"><span class="lbl">Bags</span><span class="val" id="rev-bags">Carry-on</span></div>
-          <div class="summary-row"><span class="lbl">Insurance</span><span class="val" id="rev-insurance">Included ($28)</span></div>
-          <div class="summary-row"><span class="lbl">Total Due</span><span class="val" id="rev-total">$873</span></div>
-        </div>
-      </div>
-
-    </div>
-    <div class="modal-footer">
-      <button class="btn-back" id="btn-back" onclick="prevStep()" style="display:none;">← Back</button>
-      <button class="btn-next" id="btn-next" onclick="nextStep()">Continue →</button>
-    </div>
-  </div>
-</div>
-
-<!-- CINEMATIC -->
-<div id="page-dimmer"></div>
-<div id="cinematic-container">
-  <button class="cinematic-btn" id="cinematicBtn">
-    <span class="cine-text"><i class="fa-solid fa-spinner fa-spin"></i> Processing Payment...</span>
-    <div class="animation-stage">
-      <div class="clouds-bg"></div>
-      <div class="world-scroll">
-        <div class="terrain terrain-city z-bru"><div class="platform p-start"><span class="airport-code">BRU</span><div class="pad"></div></div><div class="building b1"></div><div class="building b2"></div><div class="atomium-sphere"></div></div>
-        <div class="water-body w1"><div class="waves"></div></div>
-        <div class="terrain terrain-nature z-forest"><div class="hill h1"></div><div class="hill h2"></div><div class="hill h3"></div><div class="tree t1"></div><div class="tree t2"></div><div class="tree t3"></div></div>
-        <div class="water-body w2"><div class="waves"></div></div>
-        <div class="terrain terrain-city z-sin"><div class="platform p-dest"><span class="airport-code">SIN</span><div class="pad"></div></div><div class="building b3"></div><div class="building b4"></div><div class="building b5"></div></div>
-      </div>
-      <div class="plane-wrapper"><i class="fa-solid fa-plane plane"></i></div>
-    </div>
-    <span class="success-text"><i class="fa-solid fa-circle-check"></i> Booking Confirmed!</span>
-  </button>
-  <button class="skip-btn" id="skipAnimBtn">Skip Animation <i class="fa-solid fa-forward-step" style="margin-left:5px;"></i></button>
-</div>
-
-<!-- MAIN -->
 <header>
-  <div class="logo-menu-group">
-    <div class="hamburger" id="menuToggle"><span></span><span></span><span></span></div>
-    <div class="logo"><i class="fa-solid fa-sparkles" style="font-size:1.1rem;margin-right:5px;"></i>AeroFly</div>
-  </div>
-  <div class="nav-dropdown" id="navDropdown">
-    <a href="../index.html"><i class="fa-solid fa-house" style="margin-right:8px;"></i> Home</a>
-    <a href="flights.html" class="active-link"><i class="fa-solid fa-plane-up" style="margin-right:8px;"></i> Flights</a>
-    <a href="hotels.html"><i class="fa-solid fa-bed" style="margin-right:8px;"></i> Hotels</a>
-  </div>
-  <div class="user-actions">
-    <button class="icon-btn" title="Notifications"><i class="fa-regular fa-bell"></i><div class="notification-badge"></div></button>
-    <div class="profile-char" title="Account"><i class="fa-solid fa-user-astronaut"></i></div>
+  <a class="logo" href="../index.html"><i class="fa-solid fa-sparkles"></i> Aero<span>Fly</span></a>
+
+  <div class="nav-current"><i class="fa-solid fa-plane"></i> <span>Flights</span></div>
+
+  <div class="hdr-actions">
+    <button class="hdr-btn">Log in</button>
+    <button class="hdr-btn gold">Sign up</button>
+    <button class="nav-hamburger-btn" id="navHamburgerBtn" onclick="toggleNavMenu(event)" aria-label="Switch section">
+      <i class="fa-solid fa-bars"></i>
+    </button>
+    <div class="nav-menu-popover" id="navMenuPopover">
+      <div class="nav-menu-label">Switch section</div>
+      <a href="flights.html" class="nav-menu-item active"><i class="fa-solid fa-plane"></i> Flights</a>
+      <a href="hotels.html" class="nav-menu-item"><i class="fa-solid fa-hotel"></i> Hotels</a>
+      <a href="experiences.html" class="nav-menu-item"><i class="fa-solid fa-ticket"></i> Experiences</a>
+      <a href="../index.html" class="nav-menu-item home"><i class="fa-solid fa-house"></i> Home</a>
+    </div>
   </div>
 </header>
 
-<main id="main-ui">
-  <h1>Explore the Future of Travel.</h1>
-
-  <!-- SEARCH ROW -->
-  <div class="search-wrapper">
-    <div class="search-pill">
-      <div class="input-segment" id="seg-from">
-        <label>Where from?</label>
-        <div class="seg-display">Brussels (BRU)</div>
+<!-- SEARCH HERO -->
+<div class="search-hero">
+  <div class="search-hero-inner">
+    <h1>Find your <em>next flight</em><br>to Singapore</h1>
+    <p>Brussels (BRU) → Singapore (SIN) · 14 May – 25 May · 2 travelers</p>
+    <div class="search-bar">
+      <div class="sb-field" style="min-width:160px">
+        <div class="sb-label">From</div>
+        <div class="sb-val">Brussels, BE</div>
       </div>
-      <div class="input-segment" id="seg-to">
-        <label>Where to?</label>
-        <div class="seg-display">Singapore (SIN)</div>
+      <button class="fl-swap-btn" aria-label="Swap origin and destination" onclick="this.classList.toggle('spun')"><i class="fa-solid fa-right-left"></i></button>
+      <div class="sb-field" style="min-width:160px">
+        <div class="sb-label">To</div>
+        <div class="sb-val">Singapore, SG</div>
       </div>
-      <!-- DATE SEGMENT -->
-      <div class="input-segment" id="seg-dates" onclick="toggleDatePicker(event)">
-        <label>Dates</label>
-        <div class="seg-display" id="dates-display">14 May – 25 May</div>
-        <!-- Date popup anchored to this segment -->
-        <div class="seg-popup" id="date-popup" onclick="event.stopPropagation()">
+      <div class="sb-field" id="sb-dates" onclick="toggleDatePopup(event)" style="position:relative;min-width:200px">
+        <div class="sb-label">Depart / Return</div>
+        <div class="sb-val" id="sb-dates-val">14 May – 25 May</div>
+        <div class="sb-popup date-popup" id="date-popup" onclick="event.stopPropagation()">
           <div class="dp-header">
-            <button class="dp-nav" id="dp-prev" onclick="dpNav(-1)"><i class="fa-solid fa-chevron-left"></i></button>
-            <h4 id="dp-month-label"></h4>
-            <button class="dp-nav" id="dp-next" onclick="dpNav(1)"><i class="fa-solid fa-chevron-right"></i></button>
+            <button class="dp-nav" onclick="dpNav(-1)"><i class="fa-solid fa-chevron-left"></i></button>
+            <h4 id="dp-month-lbl"></h4>
+            <button class="dp-nav" onclick="dpNav(1)"><i class="fa-solid fa-chevron-right"></i></button>
           </div>
-          <div class="dp-grid-header">
-            <span>Mo</span><span>Tu</span><span>We</span><span>Th</span><span>Fr</span><span>Sa</span><span>Su</span>
-          </div>
+          <div class="dp-grid-hdr"><span>Mo</span><span>Tu</span><span>We</span><span>Th</span><span>Fr</span><span>Sa</span><span>Su</span></div>
           <div class="dp-grid" id="dp-grid"></div>
-          <div class="dp-mode-hint" id="dp-hint">Select departure date</div>
+          <div class="dp-hint" id="dp-hint">Select departure date</div>
           <div class="dp-footer">
-            <span id="dp-selection-text">No dates selected</span>
+            <span id="dp-sel-txt">No dates selected</span>
             <button class="dp-confirm" onclick="confirmDates()">Done</button>
           </div>
         </div>
       </div>
-      <!-- TRAVELERS SEGMENT -->
-      <div class="input-segment" id="seg-travelers" onclick="toggleTravelersPicker(event)">
-        <label>Travelers</label>
-        <div class="seg-display" id="travelers-display">1 Adult · Economy</div>
-        <div class="seg-popup" id="travelers-popup" onclick="event.stopPropagation()">
-          <div class="traveler-row">
-            <div class="traveler-info">
-              <div class="traveler-type">Adults</div>
-              <div class="traveler-age">Age 12+</div>
-            </div>
-            <div class="counter">
-              <button class="counter-btn" id="adult-minus" onclick="adjustTraveler('adult',-1)">−</button>
-              <span class="counter-val" id="adult-count">1</span>
-              <button class="counter-btn" onclick="adjustTraveler('adult',1)">+</button>
-            </div>
+      <div class="sb-field" id="sb-pax" onclick="togglePaxPopup(event)" style="position:relative;min-width:150px">
+        <div class="sb-label">Travelers &amp; Class</div>
+        <div class="sb-val" id="sb-pax-val">2 · Economy</div>
+        <div class="sb-popup" id="pax-popup" onclick="event.stopPropagation()">
+          <div class="popup-label">Travelers</div>
+          <div class="guest-row"><div><div class="guest-type">Adults</div><div class="guest-sub">Age 18+</div></div><div class="ctr"><button class="ctr-btn" id="a-minus" onclick="adjP('adult',-1)">−</button><span class="ctr-val" id="a-val">2</span><button class="ctr-btn" onclick="adjP('adult',1)">+</button></div></div>
+          <div class="guest-row"><div><div class="guest-type">Children</div><div class="guest-sub">Age 0–17</div></div><div class="ctr"><button class="ctr-btn" id="c-minus" onclick="adjP('child',-1)">−</button><span class="ctr-val" id="c-val">0</span><button class="ctr-btn" onclick="adjP('child',1)">+</button></div></div>
+          <div class="room-type-grid">
+            <div class="rt-pill active" onclick="setCabin(this)">Economy</div>
+            <div class="rt-pill" onclick="setCabin(this)">Premium</div>
+            <div class="rt-pill" onclick="setCabin(this)">Business</div>
+            <div class="rt-pill" onclick="setCabin(this)">First</div>
           </div>
-          <div class="traveler-row">
-            <div class="traveler-info">
-              <div class="traveler-type">Children</div>
-              <div class="traveler-age">Age 2–11</div>
-            </div>
-            <div class="counter">
-              <button class="counter-btn" id="kid-minus" onclick="adjustTraveler('kid',-1)">−</button>
-              <span class="counter-val" id="kid-count">0</span>
-              <button class="counter-btn" onclick="adjustTraveler('kid',1)">+</button>
-            </div>
-          </div>
-          <div class="traveler-row">
-            <div class="traveler-info">
-              <div class="traveler-type">Infants</div>
-              <div class="traveler-age">Under 2 · on lap</div>
-            </div>
-            <div class="counter">
-              <button class="counter-btn" id="baby-minus" onclick="adjustTraveler('baby',-1)">−</button>
-              <span class="counter-val" id="baby-count">0</span>
-              <button class="counter-btn" onclick="adjustTraveler('baby',1)">+</button>
-            </div>
-          </div>
-          <div class="travelers-footer">
-            <div class="travelers-class-sel">
-              <div class="tclass-pill active" onclick="setTClass(this,'Economy')">Economy</div>
-              <div class="tclass-pill" onclick="setTClass(this,'Premium')">Premium</div>
-              <div class="tclass-pill" onclick="setTClass(this,'First')">First</div>
-            </div>
-            <button class="travelers-done" onclick="confirmTravelers()">Done</button>
-          </div>
+          <button class="popup-done" onclick="confirmPax()">Apply</button>
         </div>
       </div>
-      <button class="search-pill-btn"><i class="fa-solid fa-magnifying-glass"></i></button>
+      <button class="sb-search-btn"><i class="fa-solid fa-magnifying-glass"></i> Search Flights</button>
     </div>
-    <!-- FILTER BUTTON -->
-    <button class="filter-toggle-btn" id="filter-toggle-btn" onclick="toggleFilter()">
-      <i class="fa-solid fa-sliders"></i> Filter
-      <span class="badge" id="filter-badge" style="display:none;">!</span>
-    </button>
+  </div>
+</div>
+
+<!-- PAGE BODY -->
+<div class="page-body">
+  <!-- RESULTS -->
+  <div class="results-col">
+    <div class="results-top">
+      <div class="results-count"><strong id="res-count">5 flights</strong> found · BRU → SIN · May 14</div>
+      <div class="sort-bar">
+        <div class="sort-pill active" onclick="setSort(this,'recommended')">Recommended</div>
+        <div class="sort-pill" onclick="setSort(this,'price')">Price ↑</div>
+        <div class="sort-pill" onclick="setSort(this,'duration')">Duration</div>
+        <div class="sort-pill" onclick="setSort(this,'departure')">Departure</div>
+      </div>
+    </div>
+    <div id="flights-list"></div>
   </div>
 
-  <!-- FILTER PANEL -->
-  <div class="filter-panel" id="filter-panel">
-    <div class="filter-panel-inner">
-      <div class="filter-group">
-        <label>Connections</label>
-        <div class="conn-pills">
-          <div class="conn-pill active" onclick="toggleConnPill(this,'any')">Any</div>
-          <div class="conn-pill" onclick="toggleConnPill(this,'direct')">Direct only</div>
-          <div class="conn-pill" onclick="toggleConnPill(this,'1stop')">Max 1 stop</div>
+  <!-- SIDEBAR -->
+  <div class="sidebar">
+    <div id="crosssell"></div>
+    <div class="filter-card">
+      <div class="fc-title">
+        Filter Results
+        <button onclick="resetFilters()">Reset all</button>
+      </div>
+      <div class="fc-section">
+        <div class="fc-section-label">Stops</div>
+        <div class="filter-pills">
+          <div class="filter-pill active" onclick="toggleStops(this,'all')">All</div>
+          <div class="filter-pill" onclick="toggleStops(this,'0')">Nonstop</div>
+          <div class="filter-pill" onclick="toggleStops(this,'1')">1 stop</div>
+          <div class="filter-pill" onclick="toggleStops(this,'2')">2+ stops</div>
         </div>
       </div>
-      <div class="filter-group" style="min-width:220px;">
-        <label>Max price per person</label>
-        <div class="price-range-wrap">
-          <div class="price-range-row"><span>$0</span><strong id="price-val">$1,200</strong><span>$3,000</span></div>
-          <input type="range" id="price-range" min="0" max="3000" value="1200" step="50" oninput="updatePriceRange(this.value)">
+      <div class="fc-section">
+        <div class="fc-section-label">Max Price</div>
+        <div class="price-slider-wrap">
+          <div class="price-slider-row"><span>€0</span><strong id="price-lbl">€1,200</strong><span>€2,000</span></div>
+          <input type="range" min="0" max="2000" value="1200" step="20" oninput="setPriceFilter(this.value)">
         </div>
       </div>
-      <button class="filter-reset" onclick="resetFilters()"><i class="fa-solid fa-rotate-left"></i> Reset</button>
+      <div class="fc-section">
+        <div class="fc-section-label">Departure Time</div>
+        <div class="filter-pills">
+          <div class="am-pill" onclick="this.classList.toggle('active')"><i class="fa-solid fa-cloud-sun"></i> Morning</div>
+          <div class="am-pill" onclick="this.classList.toggle('active')"><i class="fa-solid fa-sun"></i> Afternoon</div>
+          <div class="am-pill" onclick="this.classList.toggle('active')"><i class="fa-solid fa-cloud-moon"></i> Evening</div>
+          <div class="am-pill" onclick="this.classList.toggle('active')"><i class="fa-solid fa-moon"></i> Night</div>
+        </div>
+      </div>
+      <div class="fc-section">
+        <div class="fc-section-label">Airlines</div>
+        <div class="filter-pills">
+          <div class="am-pill" onclick="this.classList.toggle('active')">Singapore Airlines</div>
+          <div class="am-pill" onclick="this.classList.toggle('active')">Lufthansa</div>
+          <div class="am-pill" onclick="this.classList.toggle('active')">Emirates</div>
+          <div class="am-pill" onclick="this.classList.toggle('active')">Qatar Airways</div>
+        </div>
+      </div>
     </div>
   </div>
+</div>
 
-  <!-- MAIN GRID -->
-  <div class="main-grid">
-    <div class="results-column">
-      <div class="results-header" id="results-header"><span>BRUSSELS (BRU) <i class="fa-solid fa-arrow-right" style="font-size:.8em;margin:0 4px"></i> SINGAPORE (SIN)</span> | Wed, 14 May | <span id="results-traveler-summary">1 Adult</span></div>
-      <div id="flights-list"></div>
+<!-- DETAIL MODAL -->
+<div id="detail-overlay">
+  <div class="detail-modal">
+    <div class="dm-gallery fl-route-hero">
+      <button class="dm-close" onclick="closeDetail()"><i class="fa-solid fa-xmark"></i></button>
+      <div class="fl-route-hero-inner">
+        <div class="fl-route-hero-city"><div class="fl-route-hero-code" id="dm-from-code">BRU</div><div id="dm-from-city">Brussels</div></div>
+        <div class="fl-route-hero-mid">
+          <div id="dm-duration">13h 15m</div>
+          <div class="fl-route-hero-line"><span></span><i class="fa-solid fa-plane"></i><span></span></div>
+          <div id="dm-stops-lbl">Nonstop</div>
+        </div>
+        <div class="fl-route-hero-city"><div class="fl-route-hero-code" id="dm-to-code">SIN</div><div id="dm-to-city">Singapore</div></div>
+      </div>
     </div>
-    <div class="sidebar">
-      <div class="globe-container"><canvas id="globe" width="300" height="300"></canvas></div>
+    <div class="dm-body">
+      <div class="dm-header">
+        <div class="dm-title-row">
+          <div>
+            <div class="dm-stars" id="dm-airline-rating">★★★★☆</div>
+            <div class="dm-name" id="dm-name">Singapore Airlines</div>
+          </div>
+          <div class="dm-score-block">
+            <div class="dm-score-big" id="dm-score">8.9</div>
+            <div class="dm-score-lbl">On-time</div>
+            <div class="dm-score-cnt" id="dm-flightno">SQ 326</div>
+          </div>
+        </div>
+        <div class="dm-address">
+          <i class="fa-solid fa-plane-departure"></i>
+          <span id="dm-aircraft">Boeing 777-300ER</span>
+          <span>·</span>
+          <span id="dm-cabin-lbl">Economy</span>
+        </div>
+      </div>
+
+      <div class="dm-cio">
+        <div class="dm-ci"><div class="dm-ci-lbl">Departs</div><div class="dm-ci-time" id="dm-dep-time">23:35</div><div class="dm-ci-sub" id="dm-dep-sub">Brussels Airport, T1</div></div>
+        <div class="dm-ci"><div class="dm-ci-lbl">Arrives</div><div class="dm-ci-time" id="dm-arr-time">18:50 +1</div><div class="dm-ci-sub" id="dm-arr-sub">Changi Airport, T3</div></div>
+      </div>
+
+      <div class="dm-tabs">
+        <div class="dm-tab active" onclick="switchTab(this,'details')"><i class="fa-solid fa-route"></i> Flight Details</div>
+        <div class="dm-tab" onclick="switchTab(this,'baggage')"><i class="fa-solid fa-suitcase"></i> Baggage</div>
+        <div class="dm-tab" onclick="switchTab(this,'fare')"><i class="fa-solid fa-file-lines"></i> Fare Rules</div>
+      </div>
+
+      <div class="dm-tc active" id="dtc-details">
+        <div class="fl-seg">
+          <div class="fl-seg-dot"></div>
+          <div class="fl-seg-body">
+            <div class="fl-seg-time">23:35 · Brussels (BRU)</div>
+            <div class="fl-seg-sub">Depart Terminal 1</div>
+          </div>
+        </div>
+        <div class="fl-seg-line"><i class="fa-solid fa-plane"></i> 13h 15m in the air · Nonstop</div>
+        <div class="fl-seg">
+          <div class="fl-seg-dot end"></div>
+          <div class="fl-seg-body">
+            <div class="fl-seg-time">18:50 +1 · Singapore (SIN)</div>
+            <div class="fl-seg-sub">Arrive Terminal 3</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="dm-tc" id="dtc-baggage">
+        <div class="fac-grid">
+          <div class="fac-section-lbl">Included</div>
+          <div class="fac-item"><i class="fa-solid fa-briefcase"></i> 1 cabin bag, 7kg</div>
+          <div class="fac-item"><i class="fa-solid fa-suitcase-rolling"></i> 1 checked bag, 23kg</div>
+          <div class="fac-section-lbl">Optional</div>
+          <div class="fac-item"><i class="fa-solid fa-plus"></i> Extra bag from €65</div>
+          <div class="fac-item"><i class="fa-solid fa-chair"></i> Seat selection from €18</div>
+        </div>
+      </div>
+
+      <div class="dm-tc" id="dtc-fare">
+        <div class="rules-list">
+          <div class="rule-item ok"><i class="fa-solid fa-check"></i> Free cancellation within 24h of booking</div>
+          <div class="rule-item info"><i class="fa-solid fa-circle-info"></i> Changes allowed, fee applies</div>
+          <div class="rule-item no"><i class="fa-solid fa-ban"></i> Non-refundable after departure</div>
+          <div class="rule-item info"><i class="fa-solid fa-circle-info"></i> Miles &amp; points eligible</div>
+        </div>
+      </div>
+    </div>
+    <div class="dm-booking-strip">
+      <div class="dbs-price"><div class="dbs-amount" id="dbs-amount">€612</div><div class="dbs-night">per traveler · roundtrip</div></div>
+      <div class="dbs-btns">
+        <button class="dbs-fav" id="dbs-fav" onclick="toggleDmFav()"><i class="fa-regular fa-heart" id="dbs-fav-icon"></i> Save</button>
+        <button class="dbs-book" onclick="goBook()">Select Flight</button>
+      </div>
     </div>
   </div>
-</main>
+</div>
 
 <script src="../js/global.js"></script>
-<script src="../js/flights.js"></script>
+<script>
+
+// ---- DATE PICKER (shared pattern) ----
+const MONTHS=['January','February','March','April','May','June','July','August','September','October','November','December'];
+const today=new Date();today.setHours(0,0,0,0);
+let dpY=today.getFullYear(),dpM=today.getMonth(),dpStart=null,dpEnd=null,dpSel=0;
+function toggleDatePopup(e){e.stopPropagation();const p=document.getElementById('date-popup'),g=document.getElementById('pax-popup');g.classList.remove('active');if(p.classList.contains('active')){p.classList.remove('active');return;}renderCal();p.classList.add('active')}
+function dpNav(d){dpM+=d;if(dpM>11){dpM=0;dpY++;}if(dpM<0){dpM=11;dpY--;}renderCal()}
+function renderCal(){
+  document.getElementById('dp-month-lbl').textContent=MONTHS[dpM]+' '+dpY;
+  const fd=new Date(dpY,dpM,1).getDay(),off=(fd===0?6:fd-1),dim=new Date(dpY,dpM+1,0).getDate();
+  let h='';
+  for(let i=0;i<off;i++) h+='<button class="dp-d empty" disabled></button>';
+  for(let d=1;d<=dim;d++){
+    const dt=new Date(dpY,dpM,d);let c='dp-d';
+    if(dt<today)c+=' past';
+    else if(dpStart&&dpEnd&&dt>dpStart&&dt<dpEnd)c+=' inrange';
+    if(dpStart&&dt.getTime()===dpStart.getTime())c+=' rs';
+    if(dpEnd&&dt.getTime()===dpEnd.getTime())c+=' re';
+    if(dt.getTime()===today.getTime())c+=' today';
+    h+=`<button class="${c}" onclick="dpPick(${dpY},${dpM},${d})">${d}</button>`;
+  }
+  document.getElementById('dp-grid').innerHTML=h;updDpFoot();
+}
+function dpPick(y,m,d){const dt=new Date(y,m,d);if(dt<today)return;if(dpSel===0||dpEnd){dpStart=dt;dpEnd=null;dpSel=1;}else{if(dt<dpStart){dpEnd=dpStart;dpStart=dt;}else dpEnd=dt;dpSel=0;}renderCal()}
+function fmt(d){return d.getDate()+' '+MONTHS[d.getMonth()].slice(0,3)}
+function updDpFoot(){const h=document.getElementById('dp-hint'),s=document.getElementById('dp-sel-txt');if(!dpStart){h.textContent='Select departure date';s.textContent='No dates selected';}else if(!dpEnd){h.textContent='Now select return date';s.textContent=fmt(dpStart)+' → ?';}else{h.textContent='';s.textContent=fmt(dpStart)+' – '+fmt(dpEnd);}}
+function confirmDates(){if(dpStart){const t=dpEnd?fmt(dpStart)+' – '+fmt(dpEnd):fmt(dpStart);document.getElementById('sb-dates-val').textContent=t;}document.getElementById('date-popup').classList.remove('active')}
+
+// ---- TRAVELERS & CABIN ----
+let pax={adult:2,child:0}, cabin='Economy';
+function togglePaxPopup(e){e.stopPropagation();const p=document.getElementById('pax-popup'),d=document.getElementById('date-popup');d.classList.remove('active');p.classList.toggle('active');updPaxBtns()}
+function adjP(t,d){pax[t]=Math.max(t==='adult'?1:0,pax[t]+d);document.getElementById(t[0]+'-val').textContent=pax[t];updPaxBtns()}
+function updPaxBtns(){document.getElementById('a-minus').disabled=pax.adult<=1;document.getElementById('c-minus').disabled=pax.child<=0}
+function setCabin(el){document.querySelectorAll('.rt-pill').forEach(p=>p.classList.remove('active'));el.classList.add('active');cabin=el.textContent}
+function confirmPax(){const total=pax.adult+pax.child;document.getElementById('sb-pax-val').textContent=total+' · '+cabin;document.getElementById('pax-popup').classList.remove('active')}
+document.addEventListener('click',()=>{document.querySelectorAll('.sb-popup').forEach(p=>p.classList.remove('active'))});
+
+// ---- FLIGHTS DATA ----
+const flights=[
+  {id:'fl1',airline:'Singapore Airlines',code:'SQ',flightNo:'SQ 326',aircraft:'Boeing 777-300ER',depTime:'23:35',arrTime:'18:50',dayOff:'+1',duration:'13h 15m',durationMin:795,stops:0,stopLbl:'Nonstop',price:612,cabin:'Economy',rating:'8.9'},
+  {id:'fl2',airline:'Lufthansa',code:'LH',flightNo:'LH 924',aircraft:'Airbus A350-900',depTime:'06:10',arrTime:'05:40',dayOff:'+1',duration:'16h 30m',durationMin:990,stops:1,stopLbl:'1 stop · FRA',price:489,cabin:'Economy',rating:'8.4'},
+  {id:'fl3',airline:'Emirates',code:'EK',flightNo:'EK 182',aircraft:'Airbus A380-800',depTime:'14:20',arrTime:'14:55',dayOff:'+1',duration:'17h 35m',durationMin:1055,stops:1,stopLbl:'1 stop · DXB',price:534,cabin:'Economy',rating:'9.1'},
+  {id:'fl4',airline:'Qatar Airways',code:'QR',flightNo:'QR 072',aircraft:'Boeing 787-9',depTime:'20:45',arrTime:'21:10',dayOff:'+1',duration:'17h 25m',durationMin:1045,stops:1,stopLbl:'1 stop · DOH',price:498,cabin:'Economy',rating:'9.0'},
+  {id:'fl5',airline:'Turkish Airlines',code:'TK',flightNo:'TK 1968',aircraft:'Airbus A330-300',duration:'19h 05m',durationMin:1145,depTime:'11:15',arrTime:'12:20',dayOff:'+1',stops:2,stopLbl:'2 stops · IST, DEL',price:412,cabin:'Economy',rating:'8.1'},
+];
+
+let maxPriceFilter=1200,stopFilter='all';
+
+function renderFlights(){
+  const filtered=flights.filter(f=>f.price<=maxPriceFilter&&(stopFilter==='all'||f.stops===parseInt(stopFilter)||(stopFilter==='2'&&f.stops>=2)));
+  document.getElementById('res-count').textContent=filtered.length+' flight'+(filtered.length!==1?'s':'');
+  document.getElementById('flights-list').innerHTML=filtered.map(f=>`
+  <div class="flight-card" onclick="openDetail('${f.id}')">
+    <div class="fl-airline">
+      <div class="fl-logo">${f.code}</div>
+      <div>
+        <div class="fl-airline-name">${f.airline}</div>
+        <div class="fl-flight-no">${f.flightNo} · ${f.aircraft}</div>
+      </div>
+    </div>
+    <div class="fl-route">
+      <div class="fl-time-block">
+        <div class="fl-time">${f.depTime}</div>
+        <div class="fl-code">BRU</div>
+      </div>
+      <div class="fl-path">
+        <div class="fl-duration">${f.duration}</div>
+        <div class="fl-line"><span class="fl-dot"></span><span class="fl-track"></span><i class="fa-solid fa-plane"></i><span class="fl-track"></span><span class="fl-dot"></span></div>
+        <div class="fl-stops${f.stops===0?' nonstop':''}">${f.stopLbl}</div>
+      </div>
+      <div class="fl-time-block">
+        <div class="fl-time">${f.arrTime}<span class="fl-dayoff">${f.dayOff}</span></div>
+        <div class="fl-code">SIN</div>
+      </div>
+    </div>
+    <div class="fl-price-block">
+      <div class="fl-cabin-tag">${f.cabin}</div>
+      <div class="fl-price">€${f.price}</div>
+      <button class="fl-select-btn" onclick="event.stopPropagation();openDetail('${f.id}')">Select</button>
+    </div>
+  </div>`).join('')||'<div style="text-align:center;padding:3rem;color:var(--mist);">No flights match your filters.</div>';
+}
+
+function setSort(el,type){
+  document.querySelectorAll('.sort-pill').forEach(p=>p.classList.remove('active'));el.classList.add('active');
+  if(type==='price')flights.sort((a,b)=>a.price-b.price);
+  else if(type==='duration')flights.sort((a,b)=>a.durationMin-b.durationMin);
+  else if(type==='departure')flights.sort((a,b)=>a.depTime.localeCompare(b.depTime));
+  else flights.sort((a,b)=>a.stops-b.stops);
+  renderFlights();
+}
+function setPriceFilter(v){maxPriceFilter=parseInt(v);document.getElementById('price-lbl').textContent='€'+v;renderFlights()}
+function toggleStops(el,v){document.querySelectorAll('.filter-pill').forEach(p=>p.classList.remove('active'));el.classList.add('active');stopFilter=v;renderFlights()}
+function resetFilters(){maxPriceFilter=1200;stopFilter='all';document.querySelector('input[type=range]').value=1200;document.getElementById('price-lbl').textContent='€1,200';document.querySelectorAll('.filter-pill').forEach((p,i)=>p.classList.toggle('active',i===0));renderFlights()}
+
+// ---- DETAIL MODAL ----
+let currentFlight=null;
+function openDetail(fid){
+  currentFlight=flights.find(f=>f.id===fid);if(!currentFlight)return;
+  document.getElementById('dm-name').textContent=currentFlight.airline;
+  document.getElementById('dm-score').textContent=currentFlight.rating;
+  document.getElementById('dm-flightno').textContent=currentFlight.flightNo;
+  document.getElementById('dm-aircraft').textContent=currentFlight.aircraft;
+  document.getElementById('dm-cabin-lbl').textContent=currentFlight.cabin;
+  document.getElementById('dm-duration').textContent=currentFlight.duration;
+  document.getElementById('dm-stops-lbl').textContent=currentFlight.stopLbl;
+  document.getElementById('dm-dep-time').textContent=currentFlight.depTime;
+  document.getElementById('dm-arr-time').textContent=currentFlight.arrTime+' '+currentFlight.dayOff;
+  document.getElementById('dbs-amount').textContent='€'+currentFlight.price;
+  document.querySelectorAll('.dm-tab').forEach((t,i)=>t.classList.toggle('active',i===0));
+  document.querySelectorAll('.dm-tc').forEach((c,i)=>c.classList.toggle('active',i===0));
+  document.getElementById('detail-overlay').classList.add('active');
+}
+function closeDetail(){document.getElementById('detail-overlay').classList.remove('active')}
+function switchTab(el,id){document.querySelectorAll('.dm-tab').forEach(t=>t.classList.remove('active'));el.classList.add('active');document.querySelectorAll('.dm-tc').forEach(c=>c.classList.remove('active'));document.getElementById('dtc-'+id).classList.add('active')}
+function toggleDmFav(){const i=document.getElementById('dbs-fav-icon'),b=document.getElementById('dbs-fav');const saved=i.className.includes('regular');i.className=saved?'fa-solid fa-heart':'fa-regular fa-heart';i.style.color=saved?'var(--red)':'';b.innerHTML=(saved?'<i id="dbs-fav-icon" class="fa-solid fa-heart" style="color:var(--red)"></i> Saved':'<i id="dbs-fav-icon" class="fa-regular fa-heart"></i> Save')}
+function goBook(){ if(currentFlight){ window.location.href='booking.html?type=flights&name='+encodeURIComponent(currentFlight.airline+' '+currentFlight.flightNo)+'&price='+currentFlight.price; } }
+document.getElementById('detail-overlay').addEventListener('click',function(e){if(e.target===this)closeDetail()});
+
+renderFlights();
+AeroUI.renderCrossSell('crosssell','flights','Singapore');
+
+</script>
 </body>
-  </html>
+</html>
