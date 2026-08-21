@@ -37,36 +37,206 @@
       <p>One last step before <span id="destLabel">Singapore</span> is booked in.</p>
     </div>
 
+    <!-- STEPPER (built by JS — differs per type) -->
+    <div class="bk-stepper" id="bkStepper"></div>
+
     <div class="booking-grid">
 
       <!-- LEFT: forms -->
       <div class="booking-forms">
 
-        <div class="bk-card">
-          <div class="bk-card-title"><i class="fa-solid fa-user"></i> Traveler details</div>
-          <div class="bk-field-row">
-            <div class="bk-field"><label>First name</label><input type="text" placeholder="Jordan"></div>
-            <div class="bk-field"><label>Last name</label><input type="text" placeholder="Peeters"></div>
+        <div class="bk-step-area" id="bkStepArea">
+
+          <!-- transition loader (icon swapped per type) -->
+          <div class="step-loader" id="stepLoader">
+            <div class="step-loader-inner">
+              <div id="stepLoaderIcon"></div>
+              <div class="step-loader-lbl">Just a moment…</div>
+            </div>
           </div>
-          <div class="bk-field-row">
-            <div class="bk-field"><label>Email</label><input type="email" placeholder="jordan@example.com"></div>
-            <div class="bk-field"><label>Phone</label><input type="tel" placeholder="+32 4XX XX XX XX"></div>
+
+          <!-- TRAVELER -->
+          <div class="bk-step active" data-step="traveler">
+            <div class="bk-card">
+              <div class="bk-card-title"><i class="fa-solid fa-user"></i> Traveler details</div>
+              <div class="bk-field-row">
+                <div class="bk-field"><label>First name</label><input type="text" id="fFirst" placeholder="Jordan"></div>
+                <div class="bk-field"><label>Last name</label><input type="text" id="fLast" placeholder="Peeters"></div>
+              </div>
+              <div class="bk-field-row">
+                <div class="bk-field"><label>Email</label><input type="email" id="fEmail" placeholder="jordan@example.com"></div>
+                <div class="bk-field"><label>Phone</label><input type="tel" id="fPhone" placeholder="+32 4XX XX XX XX"></div>
+              </div>
+              <div class="bk-hint" id="hintTraveler">Fill in all fields with a valid email to continue.</div>
+            </div>
           </div>
+
+          <!-- BAGGAGE (flights only) -->
+          <div class="bk-step" data-step="baggage">
+            <div class="bk-card">
+              <div class="bk-card-title"><i class="fa-solid fa-suitcase-rolling"></i> Baggage</div>
+              <div class="bk-option-grid" id="baggageOptions">
+                <div class="bk-option" data-val="cabin" data-fee="0" onclick="selectOption('baggage',this)">
+                  <div class="bk-option-check"></div>
+                  <div class="bk-option-icon"><i class="fa-solid fa-briefcase"></i></div>
+                  <div class="bk-option-name">Cabin bag only</div>
+                  <div class="bk-option-sub">1 × 7kg</div>
+                  <div class="bk-option-price">Included</div>
+                </div>
+                <div class="bk-option" data-val="checked1" data-fee="35" onclick="selectOption('baggage',this)">
+                  <div class="bk-option-check"></div>
+                  <div class="bk-option-icon"><i class="fa-solid fa-suitcase-rolling"></i></div>
+                  <div class="bk-option-name">+1 checked bag</div>
+                  <div class="bk-option-sub">23kg</div>
+                  <div class="bk-option-price">+€35</div>
+                </div>
+                <div class="bk-option" data-val="checked2" data-fee="65" onclick="selectOption('baggage',this)">
+                  <div class="bk-option-check"></div>
+                  <div class="bk-option-icon"><i class="fa-solid fa-suitcase-rolling"></i></div>
+                  <div class="bk-option-name">+2 checked bags</div>
+                  <div class="bk-option-sub">23kg each</div>
+                  <div class="bk-option-price">+€65</div>
+                </div>
+                <div class="bk-option" data-val="xl" data-fee="55" onclick="selectOption('baggage',this)">
+                  <div class="bk-option-check"></div>
+                  <div class="bk-option-icon"><i class="fa-solid fa-weight-hanging"></i></div>
+                  <div class="bk-option-name">Extra-large bag</div>
+                  <div class="bk-option-sub">32kg</div>
+                  <div class="bk-option-price">+€55</div>
+                </div>
+              </div>
+              <div class="bk-hint" id="hintBaggage">Pick a baggage option to continue.</div>
+            </div>
+          </div>
+
+          <!-- MEAL (flights only) -->
+          <div class="bk-step" data-step="meal">
+            <div class="bk-card">
+              <div class="bk-card-title"><i class="fa-solid fa-utensils"></i> Meal preference</div>
+              <div class="bk-option-grid" id="mealOptions">
+                <div class="bk-option" data-val="standard" data-fee="0" onclick="selectOption('meal',this)">
+                  <div class="bk-option-check"></div>
+                  <div class="bk-option-name">Standard</div>
+                  <div class="bk-option-sub">Chef's choice</div>
+                  <div class="bk-option-price">Included</div>
+                </div>
+                <div class="bk-option" data-val="vegetarian" data-fee="0" onclick="selectOption('meal',this)">
+                  <div class="bk-option-check"></div>
+                  <div class="bk-option-name">Vegetarian</div>
+                  <div class="bk-option-sub">No meat or fish</div>
+                  <div class="bk-option-price">Included</div>
+                </div>
+                <div class="bk-option" data-val="vegan" data-fee="0" onclick="selectOption('meal',this)">
+                  <div class="bk-option-check"></div>
+                  <div class="bk-option-name">Vegan</div>
+                  <div class="bk-option-sub">Plant-based</div>
+                  <div class="bk-option-price">Included</div>
+                </div>
+                <div class="bk-option" data-val="halal" data-fee="0" onclick="selectOption('meal',this)">
+                  <div class="bk-option-check"></div>
+                  <div class="bk-option-name">Halal</div>
+                  <div class="bk-option-sub"></div>
+                  <div class="bk-option-price">Included</div>
+                </div>
+                <div class="bk-option" data-val="kosher" data-fee="0" onclick="selectOption('meal',this)">
+                  <div class="bk-option-check"></div>
+                  <div class="bk-option-name">Kosher</div>
+                  <div class="bk-option-sub"></div>
+                  <div class="bk-option-price">Included</div>
+                </div>
+                <div class="bk-option" data-val="none" data-fee="0" onclick="selectOption('meal',this)">
+                  <div class="bk-option-check"></div>
+                  <div class="bk-option-name">No meal</div>
+                  <div class="bk-option-sub">Skip catering</div>
+                  <div class="bk-option-price">—</div>
+                </div>
+              </div>
+              <div class="bk-hint" id="hintMeal">Pick a meal option to continue.</div>
+            </div>
+          </div>
+
+          <!-- INSURANCE -->
+          <div class="bk-step" data-step="insurance">
+            <div class="bk-card">
+              <div class="bk-card-title"><i class="fa-solid fa-shield-halved"></i> Travel insurance</div>
+              <div class="bk-option-grid" id="insuranceOptions">
+                <div class="bk-option" data-val="none" data-fee="0" onclick="selectOption('insurance',this)">
+                  <div class="bk-option-check"></div>
+                  <div class="bk-option-name">No insurance</div>
+                  <div class="bk-option-sub">Continue without cover</div>
+                  <div class="bk-option-price">$0</div>
+                </div>
+                <div class="bk-option" data-val="basic" data-fee="12" onclick="selectOption('insurance',this)">
+                  <div class="bk-option-check"></div>
+                  <div class="bk-option-name">Basic</div>
+                  <div class="bk-option-sub">Trip cancellation cover</div>
+                  <div class="bk-option-price">+$12</div>
+                </div>
+                <div class="bk-option" data-val="premium" data-fee="24" onclick="selectOption('insurance',this)">
+                  <div class="bk-option-check"></div>
+                  <div class="bk-option-name">Premium</div>
+                  <div class="bk-option-sub">Cancellation + medical + baggage</div>
+                  <div class="bk-option-price">+$24</div>
+                </div>
+              </div>
+              <div class="bk-hint" id="hintInsurance">Pick an option (or "No insurance") to continue.</div>
+            </div>
+          </div>
+
+          <!-- DELIVERY -->
+          <div class="bk-step" data-step="delivery">
+            <div class="bk-card">
+              <div class="bk-card-title"><i class="fa-solid fa-paper-plane"></i> How should we send your booking?</div>
+              <div class="bk-option-grid" id="deliveryOptions">
+                <div class="bk-option" data-val="email" onclick="selectOption('delivery',this)">
+                  <div class="bk-option-check"></div>
+                  <div class="bk-option-icon"><i class="fa-solid fa-envelope"></i></div>
+                  <div class="bk-option-name">Email</div>
+                  <div class="bk-option-sub" id="deliveryEmailSub">To your email address</div>
+                </div>
+                <div class="bk-option" data-val="sms" onclick="selectOption('delivery',this)">
+                  <div class="bk-option-check"></div>
+                  <div class="bk-option-icon"><i class="fa-solid fa-comment-sms"></i></div>
+                  <div class="bk-option-name">SMS</div>
+                  <div class="bk-option-sub" id="deliverySmsSub">To your phone number</div>
+                </div>
+                <div class="bk-option" data-val="whatsapp" onclick="selectOption('delivery',this)">
+                  <div class="bk-option-check"></div>
+                  <div class="bk-option-icon"><i class="fa-brands fa-whatsapp"></i></div>
+                  <div class="bk-option-name">WhatsApp</div>
+                  <div class="bk-option-sub">Instant message</div>
+                </div>
+                <div class="bk-option" data-val="pdf" onclick="selectOption('delivery',this)">
+                  <div class="bk-option-check"></div>
+                  <div class="bk-option-icon"><i class="fa-solid fa-file-pdf"></i></div>
+                  <div class="bk-option-name">Download PDF</div>
+                  <div class="bk-option-sub">Save it yourself</div>
+                </div>
+              </div>
+              <div class="bk-hint" id="hintDelivery">Pick how you'd like to receive your booking.</div>
+            </div>
+          </div>
+
+          <!-- PAYMENT -->
+          <div class="bk-step" data-step="payment">
+            <div class="bk-card">
+              <div class="bk-card-title"><i class="fa-solid fa-credit-card"></i> Payment</div>
+              <div class="bk-field"><label>Card number</label><input type="text" id="fCard" placeholder="4242 4242 4242 4242" inputmode="numeric"></div>
+              <div class="bk-field-row">
+                <div class="bk-field"><label>Expiry</label><input type="text" id="fExpiry" placeholder="MM / YY"></div>
+                <div class="bk-field"><label>CVC</label><input type="text" id="fCvc" placeholder="123" inputmode="numeric"></div>
+              </div>
+              <div class="bk-secure-note"><i class="fa-solid fa-lock"></i> Payments are encrypted. This is a demo checkout — no card is charged.</div>
+              <div class="bk-hint" id="hintPayment">Fill in your card details to confirm.</div>
+            </div>
+          </div>
+
         </div>
 
-        <div class="bk-card">
-          <div class="bk-card-title"><i class="fa-solid fa-credit-card"></i> Payment</div>
-          <div class="bk-field"><label>Card number</label><input type="text" placeholder="4242 4242 4242 4242" inputmode="numeric"></div>
-          <div class="bk-field-row">
-            <div class="bk-field"><label>Expiry</label><input type="text" placeholder="MM / YY"></div>
-            <div class="bk-field"><label>CVC</label><input type="text" placeholder="123" inputmode="numeric"></div>
-          </div>
-          <div class="bk-secure-note"><i class="fa-solid fa-lock"></i> Payments are encrypted. This is a demo checkout — no card is charged.</div>
+        <div class="bk-step-nav">
+          <button class="bk-back-btn" id="bkBackBtn" onclick="goBack()"><i class="fa-solid fa-arrow-left"></i> Back</button>
+          <button class="bk-continue-btn" id="bkContinueBtn" onclick="goNext()">Continue <i class="fa-solid fa-arrow-right"></i></button>
         </div>
-
-        <button class="bk-pay-btn" id="payBtn" onclick="submitBooking()">
-          <i class="fa-solid fa-lock"></i> Confirm &amp; Pay <span id="payAmountLbl"></span>
-        </button>
       </div>
 
       <!-- RIGHT: order summary -->
@@ -77,8 +247,10 @@
 
         <div class="bk-divider"></div>
 
-        <div class="bk-line"><span id="lineLabel1">Room rate × 11 nights</span><span id="lineVal1">$3,520</span></div>
-        <div class="bk-line"><span>Taxes &amp; fees</span><span id="lineTax">$284</span></div>
+        <div id="summaryLines">
+          <div class="bk-line"><span id="lineLabel1">Room rate × 11 nights</span><span id="lineVal1">$3,520</span></div>
+          <div class="bk-line"><span>Taxes &amp; fees</span><span id="lineTax">$284</span></div>
+        </div>
         <div class="bk-divider"></div>
         <div class="bk-line total"><span>Total</span><span id="lineTotal">$3,804</span></div>
 
@@ -92,17 +264,19 @@
 <!-- CONFIRMATION -->
 <div class="confirm-wrap" id="confirmView">
   <div class="confirm-card">
-    <svg class="confirm-check" viewBox="0 0 100 100">
-      <circle class="confirm-check-circle" cx="50" cy="50" r="45"/>
-      <path class="confirm-check-mark" d="M28 52 L43 66 L74 34"/>
-    </svg>
-    <h2>You're all booked!</h2>
-    <p id="confirmSub">Marina Bay Sands is confirmed for 14 – 25 May.</p>
-    <div class="confirm-ref">Booking reference <strong id="confirmRef">AF-000000</strong></div>
 
-    <div id="confirmCrosssell"></div>
+    <div class="confirm-anim" id="confirmAnim"></div>
 
-    <a href="../index.html" class="confirm-home-btn"><i class="fa-solid fa-house"></i> Back to AeroFly</a>
+    <div class="confirm-text-block" id="confirmTextBlock">
+      <h2>You're all booked!</h2>
+      <p id="confirmSub">Marina Bay Sands is confirmed for 14 – 25 May.</p>
+      <div class="confirm-ref">Booking reference <strong id="confirmRef">AF-000000</strong></div>
+      <div class="confirm-delivery-note" id="confirmDeliveryNote"></div>
+
+      <div id="confirmCrosssell"></div>
+
+      <a href="../index.html" class="confirm-home-btn"><i class="fa-solid fa-house"></i> Back to AeroFly</a>
+    </div>
   </div>
 </div>
 
@@ -114,9 +288,9 @@ const name = params.get('name') || 'Marina Bay Sands';
 const price = parseFloat(params.get('price')) || 320;
 
 const TYPE_META = {
-  hotels:      { section:'hotels',      icon:'fa-hotel',  label:'Hotel',      currency:'$', unit:'11 nights', lineLabel:'Room rate × 11 nights', taxRate:0.08 },
-  experiences: { section:'experiences', icon:'fa-ticket', label:'Experience', currency:'$', unit:'2 guests',   lineLabel:'2 guests × ticket price', taxRate:0.05 },
-  flights:     { section:'flights',     icon:'fa-plane',  label:'Flight',     currency:'€', unit:'2 travelers',lineLabel:'2 travelers × fare', taxRate:0.12 },
+  hotels:      { section:'hotels',      icon:'fa-hotel',  label:'Hotel',      currency:'$', lineLabel:'Room rate × 11 nights', taxRate:0.08 },
+  experiences: { section:'experiences', icon:'fa-ticket', label:'Experience', currency:'$', lineLabel:'2 guests × ticket price', taxRate:0.05 },
+  flights:     { section:'flights',     icon:'fa-plane',  label:'Flight',     currency:'€', lineLabel:'2 travelers × fare', taxRate:0.12 },
 };
 const meta = TYPE_META[type] || TYPE_META.hotels;
 
@@ -125,16 +299,12 @@ document.getElementById('navIcon').className = 'fa-solid ' + meta.icon;
 document.getElementById('summaryBadge').innerHTML = `<i class="fa-solid ${meta.icon}"></i> ${meta.label}`;
 document.getElementById('summaryName').textContent = name;
 
-const qty = type === 'hotels' ? 11 : 2;
 const lineVal = type === 'hotels' ? price * 11 : price * 2;
 const tax = Math.round(lineVal * meta.taxRate);
-const total = lineVal + tax;
 
 document.getElementById('lineLabel1').textContent = meta.lineLabel;
 document.getElementById('lineVal1').textContent = meta.currency + lineVal.toLocaleString();
 document.getElementById('lineTax').textContent = meta.currency + tax.toLocaleString();
-document.getElementById('lineTotal').textContent = meta.currency + total.toLocaleString();
-document.getElementById('payAmountLbl').textContent = '· ' + meta.currency + total.toLocaleString();
 
 const metaLine = {
   hotels: '14 May – 25 May · 2 guests · 1 room',
@@ -143,10 +313,268 @@ const metaLine = {
 };
 document.getElementById('summaryMeta').textContent = metaLine[type] || metaLine.hotels;
 
+/* ============================================================
+   STEP CONFIG
+   ============================================================ */
+const STEP_DEFS = {
+  hotels:      ['traveler','insurance','delivery','payment'],
+  experiences: ['traveler','insurance','delivery','payment'],
+  flights:     ['traveler','baggage','meal','insurance','delivery','payment'],
+};
+const steps = STEP_DEFS[type] || STEP_DEFS.hotels;
+
+const STEP_META = {
+  traveler:  { label:'Traveler',  icon:'fa-user' },
+  baggage:   { label:'Baggage',   icon:'fa-suitcase-rolling' },
+  meal:      { label:'Meal',      icon:'fa-utensils' },
+  insurance: { label:'Insurance', icon:'fa-shield-halved' },
+  delivery:  { label:'Delivery',  icon:'fa-paper-plane' },
+  payment:   { label:'Payment',   icon:'fa-credit-card' },
+};
+
+let currentIndex = 0;
+const touched = {};      // stepKey -> bool (user has left this step at least once)
+const selections = { baggage:null, meal:null, insurance:null, delivery:null };
+
+/* ---------- render stepper ---------- */
+function renderStepper(){
+  const wrap = document.getElementById('bkStepper');
+  wrap.innerHTML = steps.map((key,i)=>{
+    const m = STEP_META[key];
+    const valid = isValid(key);
+    let state = '';
+    if(i === currentIndex) state = 'current';
+    else if(i < currentIndex && valid) state = 'done';
+    else if(touched[key] && !valid) state = 'warning';
+    const clickable = i <= currentIndex;
+    const icon = state==='done' ? 'fa-check' : (state==='warning' ? 'fa-triangle-exclamation' : m.icon);
+    return `<div class="bk-step-item ${state} ${clickable?'clickable':''}" onclick="${clickable ? 'jumpToStep('+i+')' : ''}">
+      <div class="bk-step-line ${i<=currentIndex?'done':''}"></div>
+      <div class="bk-step-circle"><i class="fa-solid ${state==='current' ? m.icon : icon}"></i></div>
+      <div class="bk-step-lbl">${m.label}</div>
+    </div>`;
+  }).join('');
+}
+
+/* ---------- validation ---------- */
+function isValid(key){
+  switch(key){
+    case 'traveler': {
+      const f=document.getElementById('fFirst').value.trim();
+      const l=document.getElementById('fLast').value.trim();
+      const e=document.getElementById('fEmail').value.trim();
+      const p=document.getElementById('fPhone').value.trim();
+      return f && l && /^\S+@\S+\.\S+$/.test(e) && p.length>=6;
+    }
+    case 'baggage': return !!selections.baggage;
+    case 'meal': return !!selections.meal;
+    case 'insurance': return !!selections.insurance;
+    case 'delivery': return !!selections.delivery;
+    case 'payment': {
+      const c=document.getElementById('fCard').value.replace(/\s/g,'');
+      const ex=document.getElementById('fExpiry').value.trim();
+      const cvc=document.getElementById('fCvc').value.trim();
+      return c.length>=12 && ex.length>=4 && cvc.length>=3;
+    }
+    default: return true;
+  }
+}
+
+/* ---------- option selection ---------- */
+function selectOption(group, el){
+  const parent = el.parentElement;
+  parent.querySelectorAll('.bk-option').forEach(o=>o.classList.remove('selected'));
+  el.classList.add('selected');
+  selections[group] = { val: el.dataset.val, fee: parseFloat(el.dataset.fee || 0) };
+  const hintEl = document.getElementById('hint'+group.charAt(0).toUpperCase()+group.slice(1));
+  if(hintEl) hintEl.classList.remove('show');
+  updateSummary();
+  renderStepper();
+}
+
+/* ---------- summary totals ---------- */
+function updateSummary(){
+  const lines = [];
+  let extra = 0;
+  if(selections.baggage && selections.baggage.fee > 0){
+    lines.push(['Extra baggage', '+€' + selections.baggage.fee]);
+    extra += selections.baggage.fee;
+  }
+  if(selections.insurance && selections.insurance.fee > 0){
+    lines.push(['Travel insurance', '+' + meta.currency + selections.insurance.fee]);
+    extra += selections.insurance.fee;
+  }
+  const total = lineVal + tax + extra;
+  const el = document.getElementById('summaryLines');
+  el.innerHTML = `
+    <div class="bk-line"><span>${meta.lineLabel}</span><span>${meta.currency}${lineVal.toLocaleString()}</span></div>
+    <div class="bk-line"><span>Taxes &amp; fees</span><span>${meta.currency}${tax.toLocaleString()}</span></div>
+    ${lines.map(l=>`<div class="bk-line"><span>${l[0]}</span><span>${l[1]}</span></div>`).join('')}
+  `;
+  document.getElementById('lineTotal').textContent = meta.currency + total.toLocaleString();
+}
+
+/* ---------- step transition loader ---------- */
+const LOADER_HTML = {
+  flights: '<div class="sl-flight"><div class="sl-line"></div><i class="fa-solid fa-plane"></i></div>',
+  hotels:  '<div class="sl-hotel"><div class="sl-shaft"></div><div class="sl-car"></div></div>',
+  experiences: '<i class="fa-solid fa-ticket sl-xp"></i>',
+};
+function showStepLoader(cb){
+  const loader = document.getElementById('stepLoader');
+  document.getElementById('stepLoaderIcon').innerHTML = LOADER_HTML[type] || LOADER_HTML.hotels;
+  document.querySelectorAll('.bk-step').forEach(s=>s.classList.remove('active'));
+  loader.classList.add('active');
+  setTimeout(()=>{
+    loader.classList.remove('active');
+    cb();
+  }, 550);
+}
+
+/* ---------- navigation ---------- */
+function showStep(i){
+  const key = steps[i];
+  document.querySelectorAll('.bk-step').forEach(s=>s.classList.toggle('active', s.dataset.step===key));
+  document.getElementById('bkBackBtn').disabled = i===0;
+  const last = i === steps.length-1;
+  document.getElementById('bkContinueBtn').innerHTML = last
+    ? '<i class="fa-solid fa-lock"></i> Confirm &amp; Pay'
+    : 'Continue <i class="fa-solid fa-arrow-right"></i>';
+  if(key === 'delivery'){
+    const email = document.getElementById('fEmail').value.trim();
+    const phone = document.getElementById('fPhone').value.trim();
+    if(email) document.getElementById('deliveryEmailSub').textContent = email;
+    if(phone) document.getElementById('deliverySmsSub').textContent = phone;
+  }
+  renderStepper();
+}
+
+function goNext(){
+  const key = steps[currentIndex];
+  touched[key] = true;
+  if(!isValid(key)){
+    const hintEl = document.getElementById('hint'+key.charAt(0).toUpperCase()+key.slice(1));
+    if(hintEl) hintEl.classList.add('show');
+    const card = document.querySelector(`.bk-step[data-step="${key}"] .bk-card`);
+    card.classList.remove('bk-shake'); void card.offsetWidth; card.classList.add('bk-shake');
+    renderStepper();
+    return;
+  }
+  if(currentIndex === steps.length-1){
+    submitBooking();
+    return;
+  }
+  currentIndex++;
+  showStepLoader(()=> showStep(currentIndex));
+}
+
+function goBack(){
+  if(currentIndex===0) return;
+  touched[steps[currentIndex]] = true;
+  currentIndex--;
+  showStepLoader(()=> showStep(currentIndex));
+}
+
+function jumpToStep(i){
+  if(i >= currentIndex) return; // can't skip ahead — only Continue advances
+  touched[steps[currentIndex]] = true;
+  currentIndex = i;
+  showStepLoader(()=> showStep(currentIndex));
+}
+
+/* ---------- submit / confirmation ---------- */
+const CONFIRM_ANIM_HTML = {
+  flights: `<div class="fca">
+    <div class="fca-city"><div class="fca-dot"></div>BRU</div>
+    <div class="fca-stage">
+      <svg viewBox="0 0 400 80" preserveAspectRatio="none">
+        <path class="fca-path-bg" d="M15,65 Q200,-10 385,65"/>
+        <path class="fca-path-fg" id="fcaPathFg" d="M15,65 Q200,-10 385,65" pathLength="1"/>
+      </svg>
+      <i class="fa-solid fa-plane fca-plane" id="fcaPlane"></i>
+    </div>
+    <div class="fca-city"><div class="fca-dot"></div>SIN</div>
+  </div>`,
+  hotels: `<div class="cha">
+    <div class="cha-shaft">
+      <div class="cha-floor-line" style="bottom:0"></div>
+      <div class="cha-floor-line" style="bottom:33%"></div>
+      <div class="cha-floor-line" style="bottom:66%"></div>
+      <div class="cha-car" id="chaCar">
+        <div class="cha-door left"></div>
+        <div class="cha-door right"></div>
+        <i class="fa-solid fa-check cha-check"></i>
+      </div>
+    </div>
+    <div class="cha-lbl" id="chaLbl">Ground floor</div>
+  </div>`,
+  experiences: `<div class="cxa">
+    <i class="fa-solid fa-ticket cxa-ticket"></i>
+    <div class="cxa-stamp"><i class="fa-solid fa-check"></i></div>
+  </div>`,
+};
+
+function playConfirmAnimation(){
+  document.getElementById('confirmAnim').innerHTML = CONFIRM_ANIM_HTML[type] || CONFIRM_ANIM_HTML.hotels;
+
+  if(type === 'flights'){
+    const plane = document.getElementById('fcaPlane');
+    const fg = document.getElementById('fcaPathFg');
+    const stage = plane.parentElement;
+    const rect = stage.getBoundingClientRect();
+    const scaleX = rect.width / 400, scaleY = rect.height / 80;
+    const P0={x:15,y:65}, P1={x:200,y:-10}, P2={x:385,y:65};
+    const dur = 2400;
+    let start=null;
+    function bez(t){
+      const x=(1-t)*(1-t)*P0.x+2*(1-t)*t*P1.x+t*t*P2.x;
+      const y=(1-t)*(1-t)*P0.y+2*(1-t)*t*P1.y+t*t*P2.y;
+      return {x,y};
+    }
+    function tangent(t){
+      const dx=2*(1-t)*(P1.x-P0.x)+2*t*(P2.x-P1.x);
+      const dy=2*(1-t)*(P1.y-P0.y)+2*t*(P2.y-P1.y);
+      return Math.atan2(dy,dx)*180/Math.PI;
+    }
+    function frame(ts){
+      if(!start) start=ts;
+      const p=Math.min(1,(ts-start)/dur);
+      const eased = p<0.5 ? 2*p*p : 1-Math.pow(-2*p+2,2)/2;
+      const pos=bez(eased);
+      plane.style.transform = `translate(${pos.x*scaleX-8}px, ${pos.y*scaleY-8}px) rotate(${tangent(eased)}deg)`;
+      fg.style.strokeDashoffset = String(1-eased);
+      if(p<1) requestAnimationFrame(frame);
+    }
+    requestAnimationFrame(frame);
+    setTimeout(revealConfirmText, dur + 250);
+
+  } else if(type === 'hotels'){
+    const labels = ['Ground floor','3rd floor','7th floor','12th floor · your room'];
+    let li = 0;
+    const lblEl = document.getElementById('chaLbl');
+    const iv = setInterval(()=>{
+      li++;
+      if(li < labels.length) lblEl.textContent = labels[li];
+      else clearInterval(iv);
+    }, 550);
+    setTimeout(()=> document.getElementById('chaCar').classList.add('arrived'), 150);
+    setTimeout(revealConfirmText, 3000);
+
+  } else {
+    setTimeout(revealConfirmText, 1200);
+  }
+}
+
+function revealConfirmText(){
+  document.getElementById('confirmTextBlock').classList.add('revealed');
+}
+
 function submitBooking(){
-  const btn = document.getElementById('payBtn');
+  const btn = document.getElementById('bkContinueBtn');
   btn.disabled = true;
   btn.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> Processing…';
+  const extra = (selections.baggage?.fee||0) + (selections.insurance?.fee||0);
+
   setTimeout(()=>{
     document.getElementById('bookingView').classList.add('leaving');
     setTimeout(()=>{
@@ -155,10 +583,26 @@ function submitBooking(){
       cv.classList.add('active');
       document.getElementById('confirmSub').textContent = `${name} is confirmed${type==='flights' ? ' for your trip to Singapore' : ' for 14 – 25 May'}.`;
       document.getElementById('confirmRef').textContent = 'AF-' + Math.floor(100000 + Math.random()*900000);
+
+      const d = selections.delivery ? selections.delivery.val : 'email';
+      const email = document.getElementById('fEmail').value.trim() || 'your email';
+      const phone = document.getElementById('fPhone').value.trim() || 'your phone';
+      const noteEl = document.getElementById('confirmDeliveryNote');
+      if(d === 'email') noteEl.innerHTML = `<i class="fa-solid fa-envelope"></i> Sent to ${email}`;
+      else if(d === 'sms') noteEl.innerHTML = `<i class="fa-solid fa-comment-sms"></i> Sent via SMS to ${phone}`;
+      else if(d === 'whatsapp') noteEl.innerHTML = `<i class="fa-brands fa-whatsapp"></i> Sent via WhatsApp to ${phone}`;
+      else noteEl.innerHTML = `<i class="fa-solid fa-file-pdf"></i> Ready to download <button class="confirm-pdf-btn" onclick="window.print()"><i class="fa-solid fa-download"></i> Download PDF</button>`;
+
       AeroUI.renderCrossSell('confirmCrosssell', meta.section, 'Singapore');
+      playConfirmAnimation();
     }, 350);
-  }, 1100);
+  }, 900);
 }
+
+/* ---------- init ---------- */
+renderStepper();
+showStep(0);
+updateSummary();
 </script>
 </body>
-</html>
+  </html>
