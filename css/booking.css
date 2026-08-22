@@ -75,6 +75,38 @@
   .bk-step-circle{ width:30px; height:30px; font-size:0.74rem; }
 }
 
+/* ---- hotel-only: elevator floor-button styling for the stepper ----
+   Circles show literal floor numbers and glow like a lit elevator
+   button panel, matching the elevator theme used throughout. */
+body[data-section="hotels"] .bk-step-circle{
+  font-family: var(--font-display);
+  box-shadow: inset 0 1px 3px rgba(0,0,0,.5);
+}
+body[data-section="hotels"] .bk-step-item.current .bk-step-circle{
+  background: radial-gradient(circle at 35% 30%, color-mix(in srgb, var(--hotels) 55%, white), var(--hotels));
+  border-color: var(--hotels); color:#fff;
+  animation: bkLampFlicker 1.8s ease-in-out infinite;
+}
+body[data-section="hotels"] .bk-step-item.done .bk-step-circle{
+  background: radial-gradient(circle at 35% 30%, color-mix(in srgb, var(--hotels) 40%, white), var(--hotels));
+  box-shadow: 0 0 8px 2px var(--accent-dim), inset 0 1px 3px rgba(0,0,0,.3);
+}
+@keyframes bkLampFlicker{
+  0%,100%{ box-shadow: 0 0 10px 3px var(--accent-dim), 0 0 0 4px var(--accent-dim), inset 0 1px 3px rgba(255,255,255,.3); }
+  50%{ box-shadow: 0 0 15px 5px var(--accent-dim), 0 0 0 5px var(--accent-dim), inset 0 1px 3px rgba(255,255,255,.4); }
+}
+
+/* ---- hotel-only: step content "drops in" like an arriving floor,
+   instead of the default fade-up used by flights/experiences ---- */
+body[data-section="hotels"] .bk-step.active{
+  animation: bkElevatorDrop .45s cubic-bezier(.2,.8,.3,1);
+}
+@keyframes bkElevatorDrop{
+  from{ opacity:0; transform: translateY(-20px); }
+  60%{ opacity:1; }
+  to{ opacity:1; transform: translateY(0); }
+}
+
 .booking-grid{ display:grid; grid-template-columns: 1fr 360px; gap:28px; align-items:start; }
 @media (max-width:900px){ .booking-grid{ grid-template-columns:1fr; } }
 
@@ -408,25 +440,51 @@
   100%{ transform:translate(75px,0) scale(0); opacity:0; }
 }
 
-/* ---- hotel elevator animation ---- */
-.cha{ display:flex; flex-direction:column; align-items:center; gap:10px; }
-.cha-shaft{ position:relative; width:64px; height:118px; border:1px solid var(--border); border-radius:8px; background: var(--surface-2); overflow:hidden; }
-.cha-floor-line{ position:absolute; left:0; right:0; height:1px; background: var(--border-soft); }
-.cha-car{
-  position:absolute; left:6px; right:6px; bottom:4px; height:34px;
-  background: var(--surface-3); border:1px solid var(--hotels); border-radius:6px;
-  display:flex; align-items:center; justify-content:center; overflow:hidden;
-  transition: bottom 2.2s cubic-bezier(.65,.05,.36,1);
+/* ---- hotel elevator-doors animation ----
+   Two doors with a round porthole window each, sliding apart from
+   the middle to reveal a (CSS-drawn) hotel corridor behind them. */
+.cha-doors-wrap{
+  position:relative; width:calc(100% + 72px); margin:0 -36px;
+  height:130px; border-radius:16px; overflow:hidden; background:#0b0e14;
 }
-.cha-car.arrived{ bottom:calc(100% - 38px); }
-.cha-door{ position:absolute; top:0; bottom:0; width:50%; background: var(--surface-3); transition: transform .5s ease; transition-delay:2.2s; }
-.cha-door.left{ left:0; border-right:1px solid var(--hotels); }
-.cha-door.right{ right:0; border-left:1px solid var(--hotels); }
-.cha-car.arrived .cha-door.left{ transform: translateX(-100%); }
-.cha-car.arrived .cha-door.right{ transform: translateX(100%); }
-.cha-check{ position:relative; z-index:1; opacity:0; color: var(--hotels); font-size:1.1rem; transition: opacity .3s ease; transition-delay:2.6s; }
-.cha-car.arrived .cha-check{ opacity:1; }
-.cha-lbl{ font-size:0.72rem; color: var(--mist); font-weight:600; }
+.cha-hallway{
+  position:absolute; inset:0;
+  background: linear-gradient(to bottom, #232838 0%, #171a24 55%, #0b0d13 100%);
+}
+.cha-hall-light{
+  position:absolute; left:50%; top:38%; width:70px; height:70px; transform:translate(-50%,-50%);
+  border-radius:50%; background: radial-gradient(circle, rgba(255,224,170,.55), transparent 70%);
+}
+.cha-hallway::after{
+  content:''; position:absolute; inset:0;
+  background:
+    repeating-linear-gradient(to bottom, rgba(255,255,255,.05) 0 2px, transparent 2px 26px),
+    linear-gradient(to bottom, transparent 60%, rgba(0,0,0,.35));
+  clip-path: polygon(30% 100%, 70% 100%, 58% 0%, 42% 0%);
+}
+.cha-hall-check{
+  position:absolute; top:50%; left:50%; transform:translate(-50%,-50%) scale(.4);
+  width:52px; height:52px; border-radius:50%; z-index:3;
+  background: var(--hotels); color:#fff;
+  display:flex; align-items:center; justify-content:center; font-size:1.4rem;
+  opacity:0; transition: all .45s cubic-bezier(.34,1.56,.64,1); transition-delay:1.1s;
+}
+.cha-doors-wrap.opening .cha-hall-check{ opacity:1; transform:translate(-50%,-50%) scale(1); }
+.cha-door-panel{
+  position:absolute; top:0; bottom:0; width:50%; z-index:2;
+  background: linear-gradient(160deg, var(--surface-3), var(--surface-2));
+  display:flex; align-items:center; justify-content:center;
+  transition: transform 1s cubic-bezier(.76,0,.24,1);
+}
+.cha-door-panel.left{ left:0; border-right:2px solid var(--hotels); justify-content:flex-end; padding-right:14px; }
+.cha-door-panel.right{ right:0; border-left:2px solid var(--hotels); justify-content:flex-start; padding-left:14px; }
+.cha-doors-wrap.opening .cha-door-panel.left{ transform: translateX(-100%); }
+.cha-doors-wrap.opening .cha-door-panel.right{ transform: translateX(100%); }
+.cha-porthole{
+  width:32px; height:32px; border-radius:50%; border:3px solid var(--hotels);
+  background: radial-gradient(circle at 35% 30%, rgba(255,255,255,.18), rgba(0,0,0,.35));
+  box-shadow: inset 0 0 8px rgba(0,0,0,.5);
+}
 
 /* ---- experience ticket-stamp animation ---- */
 .cxa{ position:relative; height:96px; display:flex; align-items:center; justify-content:center; }
@@ -479,4 +537,4 @@
   header, .bk-stepper, .confirm-home-btn, #confirmCrosssell, .confirm-pdf-btn{ display:none !important; }
   body{ background:#fff; color:#000; }
   .confirm-card{ border:none; box-shadow:none; }
-}
+                         }
