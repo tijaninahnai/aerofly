@@ -1,437 +1,482 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width,initial-scale=1.0,maximum-scale=1.0,user-scalable=no">
-<title>AeroFly — Hotels</title>
-<link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
-<link rel="stylesheet" href="../css/global.css">
-<link rel="stylesheet" href="../css/hotels.css">
-</head>
-<body data-section="hotels">
+/* ============================================================
+   AEROFLY — BOOKING / CHECKOUT
+   Accent adapts at runtime to whichever section the booking
+   came from (data-section is set by JS: hotels/experiences/flights).
+   ============================================================ */
 
-<header>
-  <a class="logo" href="../index.html"><i class="fa-solid fa-sparkles"></i> Aero<span>Fly</span></a>
+.booking-wrap{ padding:50px 40px 90px; transition: opacity .3s ease, transform .3s ease; }
+.booking-wrap.leaving{ opacity:0; transform: translateY(-12px); }
+.booking-inner{ max-width:980px; margin:0 auto; }
 
-  <div class="nav-current"><i class="fa-solid fa-hotel"></i> <span>Hotels</span></div>
+.booking-title{ margin-bottom:28px; }
+.booking-title h1{ font-size:1.9rem; font-weight:700; }
+.booking-title p{ color: var(--mist); margin-top:6px; }
+.booking-title p span{ color: var(--accent); font-weight:600; }
 
-  <div class="hdr-actions">
-    <button class="hdr-btn">Log in</button>
-    <button class="hdr-btn gold">Sign up</button>
-    <button class="nav-hamburger-btn" id="navHamburgerBtn" onclick="toggleNavMenu(event)" aria-label="Switch section">
-      <i class="fa-solid fa-bars"></i>
-    </button>
-    <div class="nav-menu-popover" id="navMenuPopover">
-      <div class="nav-menu-label">Switch section</div>
-      <a href="flights.html" class="nav-menu-item"><i class="fa-solid fa-plane"></i> Flights</a>
-      <a href="hotels.html" class="nav-menu-item active"><i class="fa-solid fa-hotel"></i> Hotels</a>
-      <a href="experiences.html" class="nav-menu-item"><i class="fa-solid fa-ticket"></i> Experiences</a>
-      <a href="../index.html" class="nav-menu-item home"><i class="fa-solid fa-house"></i> Home</a>
-    </div>
-  </div>
-</header>
-
-<!-- SEARCH HERO -->
-<div class="search-hero">
-  <div class="search-hero-inner">
-    <h1>Find your <em>perfect stay</em><br>in Singapore</h1>
-    <p>14 May – 25 May · 2 guests · 1 room</p>
-    <div class="search-bar">
-      <div class="sb-field" style="min-width:200px">
-        <div class="sb-label">Destination</div>
-        <div class="sb-val">Singapore, SG</div>
-      </div>
-      <div class="sb-field" id="sb-dates" onclick="toggleDatePopup(event)" style="position:relative;min-width:200px">
-        <div class="sb-label">Check-in / Check-out</div>
-        <div class="sb-val" id="sb-dates-val">14 May – 25 May</div>
-        <div class="sb-popup date-popup" id="date-popup" onclick="event.stopPropagation()">
-          <div class="dp-header">
-            <button class="dp-nav" onclick="dpNav(-1)"><i class="fa-solid fa-chevron-left"></i></button>
-            <h4 id="dp-month-lbl"></h4>
-            <button class="dp-nav" onclick="dpNav(1)"><i class="fa-solid fa-chevron-right"></i></button>
-          </div>
-          <div class="dp-grid-hdr"><span>Mo</span><span>Tu</span><span>We</span><span>Th</span><span>Fr</span><span>Sa</span><span>Su</span></div>
-          <div class="dp-grid" id="dp-grid"></div>
-          <div class="dp-hint" id="dp-hint">Select check-in date</div>
-          <div class="dp-footer">
-            <span id="dp-sel-txt">No dates selected</span>
-            <button class="dp-confirm" onclick="confirmDates()">Done</button>
-          </div>
-        </div>
-      </div>
-      <div class="sb-field" id="sb-guests" onclick="toggleGuestsPopup(event)" style="position:relative;min-width:160px">
-        <div class="sb-label">Guests &amp; Rooms</div>
-        <div class="sb-val" id="sb-guests-val">2 guests · 1 room</div>
-        <div class="sb-popup" id="guests-popup" onclick="event.stopPropagation()">
-          <div class="popup-label">Guests &amp; Room Type</div>
-          <div class="guest-row"><div><div class="guest-type">Adults</div><div class="guest-sub">Age 18+</div></div><div class="ctr"><button class="ctr-btn" id="a-minus" onclick="adjG('adult',-1)">−</button><span class="ctr-val" id="a-val">2</span><button class="ctr-btn" onclick="adjG('adult',1)">+</button></div></div>
-          <div class="guest-row"><div><div class="guest-type">Children</div><div class="guest-sub">Age 0–17</div></div><div class="ctr"><button class="ctr-btn" id="c-minus" onclick="adjG('child',-1)">−</button><span class="ctr-val" id="c-val">0</span><button class="ctr-btn" onclick="adjG('child',1)">+</button></div></div>
-          <div class="guest-row"><div><div class="guest-type">Rooms</div><div class="guest-sub"></div></div><div class="ctr"><button class="ctr-btn" id="r-minus" onclick="adjG('room',-1)">−</button><span class="ctr-val" id="r-val">1</span><button class="ctr-btn" onclick="adjG('room',1)">+</button></div></div>
-          <div class="room-type-grid">
-            <div class="rt-pill active" onclick="setRT(this)">Any type</div>
-            <div class="rt-pill" onclick="setRT(this)">Twin beds</div>
-            <div class="rt-pill" onclick="setRT(this)">King bed</div>
-            <div class="rt-pill" onclick="setRT(this)">Suite</div>
-          </div>
-          <button class="popup-done" onclick="confirmGuests()">Apply</button>
-        </div>
-      </div>
-      <button class="sb-search-btn"><i class="fa-solid fa-magnifying-glass"></i> Search Hotels</button>
-    </div>
-  </div>
-</div>
-
-<!-- PAGE BODY -->
-<div class="page-body">
-  <!-- RESULTS -->
-  <div class="results-col">
-    <div class="results-top">
-      <div class="results-count"><strong id="res-count">4 hotels</strong> found in Singapore · May 14–25</div>
-      <div class="sort-bar">
-        <div class="sort-pill active" onclick="setSort(this,'recommended')">Recommended</div>
-        <div class="sort-pill" onclick="setSort(this,'price')">Price ↑</div>
-        <div class="sort-pill" onclick="setSort(this,'score')">Score ↓</div>
-        <div class="sort-pill" onclick="setSort(this,'distance')">Distance</div>
-      </div>
-    </div>
-    <div id="hotels-list"></div>
-  </div>
-
-  <!-- SIDEBAR -->
-  <div class="sidebar">
-    <!-- MAP -->
-    <div class="map-card">
-      <div class="map-title">
-        Destination Map
-        <span onclick="alert('Full map coming soon!')">Expand ↗</span>
-      </div>
-      <div class="map-area" id="map-area">
-        <canvas id="map-canvas" style="position:absolute;inset:0;width:100%;height:100%;"></canvas>
-      </div>
-      <div class="map-legend">
-        <div class="map-leg-item"><div class="leg-dot" style="background:var(--accent)"></div> 9.0+ Exceptional</div>
-        <div class="map-leg-item"><div class="leg-dot" style="background:var(--gold)"></div> 8.5–9.0 Superb</div>
-        <div class="map-leg-item"><div class="leg-dot" style="background:var(--green)"></div> 8.0–8.5 Excellent</div>
-      </div>
-    </div>
-    <!-- CROSS-SELL -->
-    <div id="crosssell"></div>
-    <!-- FILTERS -->
-    <div class="filter-card">
-      <div class="fc-title">
-        Filter Results
-        <button onclick="resetFilters()">Reset all</button>
-      </div>
-      <div class="fc-section">
-        <div class="fc-section-label">Star Rating</div>
-        <div class="star-pills">
-          <div class="star-pill active" onclick="toggleStar(this,'all')">All</div>
-          <div class="star-pill" onclick="toggleStar(this,'5')">★★★★★</div>
-          <div class="star-pill" onclick="toggleStar(this,'4')">★★★★</div>
-          <div class="star-pill" onclick="toggleStar(this,'3')">★★★</div>
-        </div>
-      </div>
-      <div class="fc-section">
-        <div class="fc-section-label">Max Price / Night</div>
-        <div class="price-slider-wrap">
-          <div class="price-slider-row"><span>$0</span><strong id="price-lbl">$600</strong><span>$1,200</span></div>
-          <input type="range" min="0" max="1200" value="600" step="10" oninput="setPriceFilter(this.value)">
-        </div>
-      </div>
-      <div class="fc-section">
-        <div class="fc-section-label">Amenities</div>
-        <div class="amenity-pills">
-          <div class="am-pill" onclick="this.classList.toggle('active')"><i class="fa-solid fa-water-ladder"></i> Pool</div>
-          <div class="am-pill" onclick="this.classList.toggle('active')"><i class="fa-solid fa-spa"></i> Spa</div>
-          <div class="am-pill" onclick="this.classList.toggle('active')"><i class="fa-solid fa-wifi"></i> WiFi</div>
-          <div class="am-pill" onclick="this.classList.toggle('active')"><i class="fa-solid fa-car"></i> Parking</div>
-          <div class="am-pill" onclick="this.classList.toggle('active')"><i class="fa-solid fa-mug-hot"></i> Breakfast</div>
-          <div class="am-pill" onclick="this.classList.toggle('active')"><i class="fa-solid fa-dumbbell"></i> Gym</div>
-        </div>
-      </div>
-    </div>
-  </div>
-</div>
-
-<!-- DETAIL MODAL -->
-<div id="detail-overlay">
-  <div class="detail-modal">
-    <div class="dm-gallery">
-      <div class="dm-track" id="dm-track"></div>
-      <button class="dm-btn prev" onclick="dmSlide(-1)"><i class="fa-solid fa-chevron-left"></i></button>
-      <button class="dm-btn next" onclick="dmSlide(1)"><i class="fa-solid fa-chevron-right"></i></button>
-      <div class="dm-dots" id="dm-dots"></div>
-      <div class="dm-img-count" id="dm-count">1 / 5</div>
-      <button class="dm-close" onclick="closeDetail()"><i class="fa-solid fa-xmark"></i></button>
-    </div>
-    <div class="dm-body">
-      <div class="dm-header">
-        <div class="dm-title-row">
-          <div>
-            <div class="dm-stars" id="dm-stars">★★★★★</div>
-            <div class="dm-name" id="dm-name">Marina Bay Sands</div>
-          </div>
-          <div class="dm-score-block">
-            <div class="dm-score-big" id="dm-score">9.2</div>
-            <div class="dm-score-lbl" id="dm-score-lbl">Superb</div>
-            <div class="dm-score-cnt" id="dm-score-cnt">2,847 reviews</div>
-          </div>
-        </div>
-        <div class="dm-address">
-          <i class="fa-solid fa-location-dot"></i>
-          <span id="dm-addr">10 Bayfront Ave, Singapore</span>
-          <span>·</span>
-          <a href="#" class="dm-link"><i class="fa-solid fa-map"></i> Map</a>
-          <span>·</span>
-          <a href="#" class="dm-link"><i class="fa-solid fa-route"></i> Directions</a>
-        </div>
-      </div>
-      <div class="dm-cio">
-        <div class="dm-ci"><div class="dm-ci-lbl">Check-in</div><div class="dm-ci-time">15:00</div><div class="dm-ci-sub">Early check-in on request</div></div>
-        <div class="dm-ci"><div class="dm-ci-lbl">Check-out</div><div class="dm-ci-time">12:00</div><div class="dm-ci-sub">Late check-out from $40</div></div>
-      </div>
-      <div class="dm-tabs">
-        <div class="dm-tab active" onclick="switchTab(this,'rooms')"><i class="fa-solid fa-bed"></i> Rooms</div>
-        <div class="dm-tab" onclick="switchTab(this,'facilities')"><i class="fa-solid fa-dumbbell"></i> Facilities</div>
-        <div class="dm-tab" onclick="switchTab(this,'rules')"><i class="fa-solid fa-clipboard-list"></i> House Rules</div>
-        <div class="dm-tab" onclick="switchTab(this,'reviews')"><i class="fa-regular fa-star"></i> Reviews</div>
-      </div>
-      <!-- ROOMS -->
-      <div class="dm-tc active" id="dtc-rooms">
-        <div class="room-card">
-          <div class="rc-top"><div class="rc-img"><img src="https://images.unsplash.com/photo-1631049307264-da0ec9d70304?w=220&q=80" alt="Deluxe Room" onerror="this.parentElement.style.background='#E8E0D0'"></div><div class="rc-info"><div class="rc-name">Deluxe Room – City View</div><div class="rc-feats"><span class="rc-feat">1 King Bed</span><span class="rc-feat">32 m²</span><span class="rc-feat">Free WiFi</span><span class="rc-feat">City View</span></div><div class="rc-cancel">Non-refundable · Pay now</div></div></div>
-          <div class="rc-bottom"><div><div class="rc-price">$320 <span style="font-size:.75rem;font-weight:400;color:var(--mist)">/night</span></div><div class="rc-price-sub">$3,520 total · 11 nights</div></div><button class="rc-btn" onclick="goBook('Deluxe Room – City View',320)">Select Room</button></div>
-        </div>
-        <div class="room-card">
-          <div class="rc-top"><div class="rc-img"><img src="https://images.unsplash.com/photo-1578683010236-d716f9a3f461?w=220&q=80" alt="Suite" onerror="this.parentElement.style.background='#E8E0D0'"></div><div class="rc-info"><div class="rc-name">Premier Suite – Bay View</div><div class="rc-feats"><span class="rc-feat">1 King Bed</span><span class="rc-feat">55 m²</span><span class="rc-feat">Infinity Pool</span><span class="rc-feat">Breakfast</span></div><div class="rc-cancel free">Free cancellation until 48h before</div></div></div>
-          <div class="rc-bottom"><div><div class="rc-price">$580 <span style="font-size:.75rem;font-weight:400;color:var(--mist)">/night</span></div><div class="rc-price-sub">$6,380 total · 11 nights</div></div><button class="rc-btn" onclick="goBook('Premier Suite – Bay View',580)">Select Room</button></div>
-        </div>
-        <div class="room-card">
-          <div class="rc-top"><div class="rc-img"><img src="https://images.unsplash.com/photo-1560347876-aeef00ee58a1?w=220&q=80" alt="Studio" onerror="this.parentElement.style.background='#E8E0D0'"></div><div class="rc-info"><div class="rc-name">Garden Studio – Pool Access</div><div class="rc-feats"><span class="rc-feat">2 Twin Beds</span><span class="rc-feat">28 m²</span><span class="rc-feat">Garden View</span><span class="rc-feat">Pool</span></div><div class="rc-cancel">Pay at property</div></div></div>
-          <div class="rc-bottom"><div><div class="rc-price">$195 <span style="font-size:.75rem;font-weight:400;color:var(--mist)">/night</span></div><div class="rc-price-sub">$2,145 total · 11 nights</div></div><button class="rc-btn" onclick="goBook('Garden Studio – Pool Access',195)">Select Room</button></div>
-        </div>
-      </div>
-      <!-- FACILITIES -->
-      <div class="dm-tc" id="dtc-facilities">
-        <div class="fac-grid">
-          <div class="fac-section-lbl">Wellness</div>
-          <div class="fac-item"><i class="fa-solid fa-water-ladder"></i> Infinity Pool (57F)</div>
-          <div class="fac-item"><i class="fa-solid fa-spa"></i> Banyan Tree Spa</div>
-          <div class="fac-item"><i class="fa-solid fa-dumbbell"></i> 24h Fitness Center</div>
-          <div class="fac-item"><i class="fa-solid fa-hot-tub-person"></i> Steam &amp; Sauna</div>
-          <div class="fac-section-lbl">Dining</div>
-          <div class="fac-item"><i class="fa-solid fa-utensils"></i> 6 Restaurants</div>
-          <div class="fac-item"><i class="fa-solid fa-martini-glass"></i> Sky Bar &amp; Lounge</div>
-          <div class="fac-item"><i class="fa-solid fa-mug-hot"></i> 24h Room Service</div>
-          <div class="fac-item"><i class="fa-solid fa-ice-cream"></i> Café &amp; Bakery</div>
-          <div class="fac-section-lbl">Services</div>
-          <div class="fac-item"><i class="fa-solid fa-wifi"></i> Free High-Speed WiFi</div>
-          <div class="fac-item"><i class="fa-solid fa-car"></i> Valet Parking</div>
-          <div class="fac-item"><i class="fa-solid fa-shirt"></i> Laundry Service</div>
-          <div class="fac-item"><i class="fa-solid fa-child"></i> Kids Club</div>
-        </div>
-      </div>
-      <!-- RULES -->
-      <div class="dm-tc" id="dtc-rules">
-        <div class="rules-list">
-          <div class="rule-item ok"><i class="fa-solid fa-check"></i> Pets allowed (up to 10kg, fee applies)</div>
-          <div class="rule-item ok"><i class="fa-solid fa-check"></i> Events in designated areas permitted</div>
-          <div class="rule-item no"><i class="fa-solid fa-ban"></i> Smoking not permitted indoors</div>
-          <div class="rule-item no"><i class="fa-solid fa-ban"></i> No outside food/beverages in pool area</div>
-          <div class="rule-item info"><i class="fa-solid fa-circle-info"></i> Minimum age for check-in: 18 years</div>
-          <div class="rule-item info"><i class="fa-solid fa-circle-info"></i> ID and credit card required at check-in</div>
-          <div class="rule-item info"><i class="fa-solid fa-circle-info"></i> Damage deposit: $200 (refunded at check-out)</div>
-          <div class="rule-item info"><i class="fa-solid fa-circle-info"></i> Quiet hours: 22:00–08:00</div>
-        </div>
-      </div>
-      <!-- REVIEWS -->
-      <div class="dm-tc" id="dtc-reviews">
-        <div class="rev-summary">
-          <div><div class="rev-big" id="dm-rev-score">9.2</div><div class="rev-meta">Superb · 2,847 reviews</div></div>
-          <div class="rating-bars">
-            <div class="rb-row"><span class="rb-lbl">Cleanliness</span><div class="rb-track"><div class="rb-fill" style="width:96%"></div></div><span class="rb-val">9.6</span></div>
-            <div class="rb-row"><span class="rb-lbl">Location</span><div class="rb-track"><div class="rb-fill" style="width:98%"></div></div><span class="rb-val">9.8</span></div>
-            <div class="rb-row"><span class="rb-lbl">Service</span><div class="rb-track"><div class="rb-fill" style="width:92%"></div></div><span class="rb-val">9.2</span></div>
-            <div class="rb-row"><span class="rb-lbl">Value</span><div class="rb-track"><div class="rb-fill" style="width:82%"></div></div><span class="rb-val">8.2</span></div>
-          </div>
-        </div>
-        <div class="rev-card"><div class="rev-hdr"><div class="rev-user"><div class="rev-av">SL</div><div><div class="rev-name">Sophie L.</div><div class="rev-date">April 2025 · Belgium</div></div></div><div class="rev-stars">★★★★★</div></div><div class="rev-text">Absolutely stunning. The infinity pool view at sunset is something I'll never forget. Staff went above and beyond. A true bucket-list hotel.</div></div>
-        <div class="rev-card"><div class="rev-hdr"><div class="rev-user"><div class="rev-av">MK</div><div><div class="rev-name">Mohammed K.</div><div class="rev-date">March 2025 · UAE</div></div></div><div class="rev-stars">★★★★☆</div></div><div class="rev-text">Excellent location and facilities. Room immaculate. Dining options exceptional though pricey. Worth every penny for the experience.</div></div>
-        <div class="rev-card"><div class="rev-hdr"><div class="rev-user"><div class="rev-av">JW</div><div><div class="rev-name">James W.</div><div class="rev-date">February 2025 · UK</div></div></div><div class="rev-stars">★★★★★</div></div><div class="rev-text">Second stay here. Premier Suite is worth the upgrade — private butler service and the view is incomparable. Will return.</div></div>
-      </div>
-    </div>
-    <div class="dm-booking-strip">
-      <div class="dbs-price"><div class="dbs-amount" id="dbs-amount">$320</div><div class="dbs-night">/ night · incl. taxes</div></div>
-      <div class="dbs-btns">
-        <button class="dbs-fav" id="dbs-fav" onclick="toggleDmFav()"><i class="fa-regular fa-heart" id="dbs-fav-icon"></i> Save</button>
-        <button class="dbs-book" onclick="goBook(currentHotel.name, currentHotel.price)">Book Now</button>
-      </div>
-    </div>
-  </div>
-</div>
-
-<script src="../js/global.js"></script>
-<script>
-
-// ---- DATE PICKER ----
-const MONTHS=['January','February','March','April','May','June','July','August','September','October','November','December'];
-const today=new Date();today.setHours(0,0,0,0);
-let dpY=today.getFullYear(),dpM=today.getMonth(),dpStart=null,dpEnd=null,dpSel=0;
-function toggleDatePopup(e){e.stopPropagation();const p=document.getElementById('date-popup'),g=document.getElementById('guests-popup');g.classList.remove('active');if(p.classList.contains('active')){p.classList.remove('active');return;}renderCal();p.classList.add('active')}
-function dpNav(d){dpM+=d;if(dpM>11){dpM=0;dpY++;}if(dpM<0){dpM=11;dpY--;}renderCal()}
-function renderCal(){
-  document.getElementById('dp-month-lbl').textContent=MONTHS[dpM]+' '+dpY;
-  const fd=new Date(dpY,dpM,1).getDay(),off=(fd===0?6:fd-1),dim=new Date(dpY,dpM+1,0).getDate();
-  let h='';
-  for(let i=0;i<off;i++) h+='<button class="dp-d empty" disabled></button>';
-  for(let d=1;d<=dim;d++){
-    const dt=new Date(dpY,dpM,d);let c='dp-d';
-    if(dt<today)c+=' past';
-    else if(dpStart&&dpEnd&&dt>dpStart&&dt<dpEnd)c+=' inrange';
-    if(dpStart&&dt.getTime()===dpStart.getTime())c+=' rs';
-    if(dpEnd&&dt.getTime()===dpEnd.getTime())c+=' re';
-    if(dt.getTime()===today.getTime())c+=' today';
-    h+=`<button class="${c}" onclick="dpPick(${dpY},${dpM},${d})">${d}</button>`;
-  }
-  document.getElementById('dp-grid').innerHTML=h;updDpFoot();
+/* ============================================================
+   PROGRESS BAR (riding icon — matches your original plane bar,
+   themed per section: plane / hotel / ticket)
+   ============================================================ */
+.bk-progress-bar{ position:relative; height:6px; background: var(--border); border-radius:3px; margin-bottom:22px; max-width:720px; }
+.bk-progress-fill{
+  height:100%; border-radius:3px; width:0%;
+  background: linear-gradient(135deg, var(--flights), var(--hotels), var(--experiences));
+  transition: width .5s cubic-bezier(.34,1.56,.64,1);
 }
-function dpPick(y,m,d){const dt=new Date(y,m,d);if(dt<today)return;if(dpSel===0||dpEnd){dpStart=dt;dpEnd=null;dpSel=1;}else{if(dt<dpStart){dpEnd=dpStart;dpStart=dt;}else dpEnd=dt;dpSel=0;}renderCal()}
-function fmt(d){return d.getDate()+' '+MONTHS[d.getMonth()].slice(0,3)}
-function updDpFoot(){const h=document.getElementById('dp-hint'),s=document.getElementById('dp-sel-txt');if(!dpStart){h.textContent='Select check-in date';s.textContent='No dates selected';}else if(!dpEnd){h.textContent='Now select check-out date';s.textContent=fmt(dpStart)+' → ?';}else{h.textContent='';s.textContent=fmt(dpStart)+' – '+fmt(dpEnd);}}
-function confirmDates(){if(dpStart){const t=dpEnd?fmt(dpStart)+' – '+fmt(dpEnd):fmt(dpStart);document.getElementById('sb-dates-val').textContent=t;}document.getElementById('date-popup').classList.remove('active')}
-
-// ---- GUESTS ----
-let guests={adult:2,child:0,room:1};
-function toggleGuestsPopup(e){e.stopPropagation();const p=document.getElementById('guests-popup'),d=document.getElementById('date-popup');d.classList.remove('active');p.classList.toggle('active');updGuestBtns()}
-function adjG(t,d){guests[t]=Math.max(t==='adult'?1:0,guests[t]+d);if(t==='room')guests.room=Math.max(1,guests.room);document.getElementById(t[0]+'-val').textContent=guests[t];updGuestBtns()}
-function updGuestBtns(){document.getElementById('a-minus').disabled=guests.adult<=1;document.getElementById('c-minus').disabled=guests.child<=0;document.getElementById('r-minus').disabled=guests.room<=1}
-function setRT(el){document.querySelectorAll('.rt-pill').forEach(p=>p.classList.remove('active'));el.classList.add('active')}
-function confirmGuests(){const p=[];if(guests.adult)p.push(guests.adult+' adult'+(guests.adult>1?'s':''));if(guests.child)p.push(guests.child+' child'+(guests.child>1?'ren':''));document.getElementById('sb-guests-val').textContent=p.join(', ')+' · '+guests.room+' room'+(guests.room>1?'s':'');document.getElementById('guests-popup').classList.remove('active')}
-document.addEventListener('click',()=>{document.querySelectorAll('.sb-popup').forEach(p=>p.classList.remove('active'))});
-
-// ---- HOTELS DATA ----
-const hotels=[
-  {id:'h1',name:'Marina Bay Sands',stars:5,loc:'Marina Bay · 0.8 km from centre',score:9.2,scoreLbl:'Superb',reviews:2847,price:320,tags:['Infinity Pool','Casino','5-Star','Spa'],featured:true,imgs:['https://images.unsplash.com/photo-1562790351-d273a961e0e9?w=900&q=80','https://images.unsplash.com/photo-1631049307264-da0ec9d70304?w=900&q=80','https://images.unsplash.com/photo-1578683010236-d716f9a3f461?w=900&q=80','https://images.unsplash.com/photo-1445019980597-93fa8acb246c?w=900&q=80','https://images.unsplash.com/photo-1560347876-aeef00ee58a1?w=900&q=80'],mapX:62,mapY:55,dotColor:'#3B6B9A'},
-  {id:'h2',name:'Raffles Singapore',stars:5,loc:'City Hall · 1.2 km from centre',score:9.5,scoreLbl:'Exceptional',reviews:3410,price:480,tags:['Historic','Butler Service','Colonial','Garden'],featured:false,imgs:['https://images.unsplash.com/photo-1571003123894-1f0594d2b5d9?w=900&q=80','https://images.unsplash.com/photo-1566073771259-6a8506099945?w=900&q=80','https://images.unsplash.com/photo-1631049307264-da0ec9d70304?w=900&q=80','https://images.unsplash.com/photo-1445019980597-93fa8acb246c?w=900&q=80'],mapX:38,mapY:35,dotColor:'#C9A84C'},
-  {id:'h3',name:'The Capitol Kempinski',stars:5,loc:'St Andrews Road · 0.5 km centre',score:8.8,scoreLbl:'Excellent',reviews:1204,price:215,tags:['Heritage','City Center','Modern','Rooftop'],featured:false,imgs:['https://images.unsplash.com/photo-1566073771259-6a8506099945?w=900&q=80','https://images.unsplash.com/photo-1578683010236-d716f9a3f461?w=900&q=80','https://images.unsplash.com/photo-1560347876-aeef00ee58a1?w=900&q=80'],mapX:45,mapY:28,dotColor:'#22a05a'},
-  {id:'h4',name:'Capella Singapore',stars:5,loc:'Sentosa Island · 4.1 km from centre',score:9.0,scoreLbl:'Wonderful',reviews:876,price:390,tags:['Beach','Resort','Adults+','Private'],featured:false,imgs:['https://images.unsplash.com/photo-1551882547-ff40c63fe5fa?w=900&q=80','https://images.unsplash.com/photo-1445019980597-93fa8acb246c?w=900&q=80','https://images.unsplash.com/photo-1562790351-d273a961e0e9?w=900&q=80'],mapX:55,mapY:78,dotColor:'#3B6B9A'},
-];
-
-let maxPriceFilter=600,starFilter='all';
-
-// tiers mirror the map legend: 9.0+ accent, 8.5-9.0 gold, below that green
-function scoreTier(score){ if(score>=9)return 'tier-accent'; if(score>=8.5)return 'tier-gold'; return 'tier-green'; }
-
-function renderHotels(){
-  const filtered=hotels.filter(h=>h.price<=maxPriceFilter&&(starFilter==='all'||h.stars===parseInt(starFilter)));
-  document.getElementById('res-count').textContent=filtered.length+' hotel'+(filtered.length!==1?'s':'');
-  document.getElementById('hotels-list').innerHTML=filtered.map(h=>`
-  <div class="hotel-card${h.featured?' featured-card':''}" onclick="openDetail('${h.id}')">
-    <div class="hc-img">
-      <img src="${h.imgs[0]}" alt="${h.name}" onerror="this.style.background='#E8E0D0'">
-      ${h.featured?'<div class="hc-badge gold">✦ Featured</div>':'<div class="hc-badge">Singapore</div>'}
-      <button class="hc-fav" onclick="event.stopPropagation();this.classList.toggle('saved');this.querySelector('i').className=this.classList.contains('saved')?'fa-solid fa-heart':'fa-regular fa-heart'"><i class="fa-regular fa-heart"></i></button>
-    </div>
-    <div class="hc-body">
-      <div>
-        <div class="hc-top">
-          <div><div class="hc-name">${h.name}</div><div class="hc-loc"><i class="fa-solid fa-location-dot"></i> ${h.loc}</div></div>
-          <div class="hc-score-wrap"><div class="hc-score ${scoreTier(h.score)}">${h.score}</div><div class="hc-score-lbl">${h.scoreLbl}</div></div>
-        </div>
-        <div class="hc-tags">${h.tags.map(t=>`<span class="hc-tag">${t}</span>`).join('')}</div>
-      </div>
-      <div class="hc-bottom">
-        <div class="hc-price-block">
-          <div class="hc-price">$${h.price} <span class="hc-price-night">/ night</span></div>
-          <div class="hc-price-total">$${(h.price*11).toLocaleString()} for 11 nights</div>
-        </div>
-        <div class="hc-btns">
-          <button class="hc-save-btn" onclick="event.stopPropagation();this.innerHTML=this.innerHTML.includes('heart')?'<i class=\'fa-solid fa-heart\' style=\'color:var(--red)\'></i> Saved':'<i class=\'fa-regular fa-heart\'></i> Save'"><i class="fa-regular fa-heart"></i> Save</button>
-          <button class="hc-book-btn" onclick="event.stopPropagation();openDetail('${h.id}')">View Deal</button>
-        </div>
-      </div>
-    </div>
-  </div>`).join('')||'<div style="text-align:center;padding:3rem;color:var(--mist);">No hotels match your filters.</div>';
+.bk-progress-icon{
+  position:absolute; top:50%; left:0%; transform:translateY(-50%) translateX(-50%);
+  font-size:1rem; color: var(--accent);
+  filter: drop-shadow(0 2px 6px var(--accent-dim));
+  transition: left .5s cubic-bezier(.34,1.56,.64,1);
 }
 
-function setSort(el,type){document.querySelectorAll('.sort-pill').forEach(p=>p.classList.remove('active'));el.classList.add('active');if(type==='price')hotels.sort((a,b)=>a.price-b.price);else if(type==='score')hotels.sort((a,b)=>b.score-a.score);else if(type==='distance')hotels.sort((a,b)=>parseFloat(a.loc)-parseFloat(b.loc));else hotels.sort((a,b)=>b.featured-a.featured);renderHotels()}
-function setPriceFilter(v){maxPriceFilter=parseInt(v);document.getElementById('price-lbl').textContent='$'+v;renderHotels()}
-function toggleStar(el,v){document.querySelectorAll('.star-pill').forEach(p=>p.classList.remove('active'));el.classList.add('active');starFilter=v;renderHotels()}
-function resetFilters(){maxPriceFilter=600;starFilter='all';document.querySelector('input[type=range]').value=600;document.getElementById('price-lbl').textContent='$600';document.querySelectorAll('.star-pill').forEach((p,i)=>p.classList.toggle('active',i===0));renderHotels()}
-
-// ---- DETAIL MODAL ----
-let dmIdx=0,dmTotal=0,currentHotel=null;
-function openDetail(hid){
-  currentHotel=hotels.find(h=>h.id===hid);if(!currentHotel)return;
-  document.getElementById('dm-name').textContent=currentHotel.name;
-  document.getElementById('dm-score').textContent=currentHotel.score;
-  document.getElementById('dm-score-lbl').textContent=currentHotel.scoreLbl;
-  document.getElementById('dm-score-cnt').textContent=currentHotel.reviews.toLocaleString()+' reviews';
-  document.getElementById('dm-rev-score').textContent=currentHotel.score;
-  document.getElementById('dbs-amount').textContent='$'+currentHotel.price;
-  dmIdx=0;dmTotal=currentHotel.imgs.length;
-  document.getElementById('dm-track').innerHTML=currentHotel.imgs.map(s=>`<div class="dm-slide"><img src="${s}" alt="${currentHotel.name}" onerror="this.style.background='#1E1A14'"></div>`).join('');
-  renderDmDots();updateDmGallery();
-  // reset tabs
-  document.querySelectorAll('.dm-tab').forEach((t,i)=>t.classList.toggle('active',i===0));
-  document.querySelectorAll('.dm-tc').forEach((c,i)=>c.classList.toggle('active',i===0));
-  document.getElementById('detail-overlay').classList.add('active');
+/* ============================================================
+   STEPPER
+   ============================================================ */
+.bk-stepper{
+  display:flex; align-items:flex-start; margin-bottom:30px;
+  max-width:720px;
 }
-function closeDetail(){document.getElementById('detail-overlay').classList.remove('active')}
-function goBook(roomName, roomPrice){
-  const p = roomName ? roomPrice : (currentHotel ? currentHotel.price : 320);
-  const n = roomName || (currentHotel ? currentHotel.name : 'Hotel');
-  window.location.href = 'booking.html?type=hotels&name=' + encodeURIComponent(n) + '&price=' + p;
+.bk-step-item{ display:flex; flex-direction:column; align-items:center; flex:1; position:relative; }
+.bk-step-line{
+  position:absolute; top:18px; left:-50%; width:100%; height:2px;
+  background: var(--border); z-index:0;
 }
-function dmSlide(d){dmIdx=Math.max(0,Math.min(dmTotal-1,dmIdx+d));updateDmGallery();renderDmDots()}
-function updateDmGallery(){document.getElementById('dm-track').style.transform=`translateX(${-dmIdx*100}%)`;document.getElementById('dm-count').textContent=(dmIdx+1)+' / '+dmTotal}
-function renderDmDots(){document.getElementById('dm-dots').innerHTML=Array.from({length:dmTotal},(_,i)=>`<div class="dm-dot${i===dmIdx?' active':''}" onclick="dmIdx=${i};updateDmGallery();renderDmDots()"></div>`).join('')}
-function switchTab(el,id){document.querySelectorAll('.dm-tab').forEach(t=>t.classList.remove('active'));el.classList.add('active');document.querySelectorAll('.dm-tc').forEach(c=>c.classList.remove('active'));document.getElementById('dtc-'+id).classList.add('active')}
-function toggleDmFav(){const i=document.getElementById('dbs-fav-icon'),b=document.getElementById('dbs-fav');const saved=i.className.includes('regular');i.className=saved?'fa-solid fa-heart':'fa-regular fa-heart';i.style.color=saved?'var(--red)':'';b.innerHTML=(saved?'<i id="dbs-fav-icon" class="fa-solid fa-heart" style="color:var(--red)"></i> Saved':'<i id="dbs-fav-icon" class="fa-regular fa-heart"></i> Save')}
-document.getElementById('detail-overlay').addEventListener('click',function(e){if(e.target===this)closeDetail()});
+.bk-step-item:first-child .bk-step-line{ display:none; }
+.bk-step-line.done{ background: var(--accent); }
 
-// ---- MAP ----
-const mapDests=[
-  {name:'Marina Bay Sands',price:'$320',x:62,y:55,color:'#9B72CB',size:20},
-  {name:'Raffles',price:'$480',x:38,y:35,color:'#C9A84C',size:18},
-  {name:'The Capitol',price:'$215',x:45,y:28,color:'#22a05a',size:14},
-  {name:'Capella',price:'$390',x:55,y:78,color:'#9B72CB',size:16},
-];
-function initMap(){
-  const area=document.getElementById('map-area');if(!area)return;
-  const canvas=document.getElementById('map-canvas');
-  canvas.width=area.offsetWidth;canvas.height=area.offsetHeight;
-  const ctx=canvas.getContext('2d'),w=canvas.width,h=canvas.height;
-  // bg
-  ctx.fillStyle='#1C2942';ctx.fillRect(0,0,w,h);
-  // water bodies
-  ctx.fillStyle='#223251';
-  ctx.beginPath();ctx.ellipse(w*.55,h*.6,w*.25,h*.2,0.2,0,Math.PI*2);ctx.fill();
-  ctx.beginPath();ctx.ellipse(w*.2,h*.7,w*.15,h*.15,-0.3,0,Math.PI*2);ctx.fill();
-  // land patches
-  ctx.fillStyle='#243756';
-  [[w*.1,h*.2,w*.4,h*.35],[w*.5,h*.1,w*.35,h*.45],[w*.3,h*.6,w*.2,h*.2]].forEach(([x,y,bw,bh])=>{ctx.beginPath();ctx.ellipse(x,y,bw,bh,0,0,Math.PI*2);ctx.fill()});
-  // grid
-  ctx.strokeStyle='rgba(255,255,255,0.06)';ctx.lineWidth=1;
-  for(let x=0;x<w;x+=w/8){ctx.beginPath();ctx.moveTo(x,0);ctx.lineTo(x,h);ctx.stroke()}
-  for(let y=0;y<h;y+=h/6){ctx.beginPath();ctx.moveTo(0,y);ctx.lineTo(w,y);ctx.stroke()}
-  // roads
-  ctx.strokeStyle='rgba(255,255,255,0.1)';ctx.lineWidth=2;ctx.setLineDash([]);
-  [[w*.1,h*.3,w*.9,h*.5],[w*.3,h*.1,w*.4,h*.9],[w*.5,h*.2,w*.6,h*.8]].forEach(([x1,y1,x2,y2])=>{ctx.beginPath();ctx.moveTo(x1,y1);ctx.lineTo(x2,y2);ctx.stroke()});
-  // add dots via HTML overlay
-  mapDests.forEach(d=>{
-    const dot=document.createElement('div');dot.className='map-dest-dot';
-    dot.style.left=(d.x)+'%';dot.style.top=(d.y)+'%';
-    dot.innerHTML=`<div class="dot-pulse" style="width:${d.size}px;height:${d.size}px;"></div><div class="dot-circle" style="width:${d.size}px;height:${d.size}px;background:${d.color};"></div><div class="dot-price">${d.price}</div>`;
-    area.appendChild(dot);
-  });
+.bk-step-circle{
+  width:36px; height:36px; border-radius:50%; z-index:1;
+  display:flex; align-items:center; justify-content:center;
+  background: var(--surface); border:2px solid var(--border);
+  color: var(--mist); font-size:0.82rem; font-weight:700;
+  font-family: var(--font-display);
+  transition: all .2s ease;
+  cursor:default;
+}
+.bk-step-item.clickable .bk-step-circle{ cursor:pointer; }
+.bk-step-item.clickable .bk-step-circle:hover{ border-color: var(--accent); color: var(--text); }
+
+.bk-step-item.current .bk-step-circle{ border-color: var(--accent); color: var(--accent); box-shadow: 0 0 0 4px var(--accent-dim); }
+.bk-step-item.done .bk-step-circle{ background: var(--accent); border-color: var(--accent); color:#fff; }
+.bk-step-item.warning .bk-step-circle{ background: var(--red); border-color: var(--red); color:#fff; animation: bkPulseWarn 1.4s ease-in-out infinite; }
+
+@keyframes bkPulseWarn{
+  0%,100%{ box-shadow: 0 0 0 0 rgba(232,83,107,0.45); }
+  50%{ box-shadow: 0 0 0 6px rgba(232,83,107,0); }
 }
 
-renderHotels();
-AeroUI.renderCrossSell('crosssell','hotels','Singapore');
-window.addEventListener('load',()=>{initMap();});
-setTimeout(initMap,100);
+.bk-step-lbl{ margin-top:8px; font-size:0.72rem; color: var(--mist); font-weight:600; text-align:center; }
+.bk-step-item.current .bk-step-lbl{ color: var(--text); }
+.bk-step-item.warning .bk-step-lbl{ color: var(--red); }
 
-</script>
-</body>
-</html>
+@media (max-width:720px){
+  .bk-step-lbl{ display:none; }
+  .bk-step-circle{ width:30px; height:30px; font-size:0.74rem; }
+}
+
+.booking-grid{ display:grid; grid-template-columns: 1fr 360px; gap:28px; align-items:start; }
+@media (max-width:900px){ .booking-grid{ grid-template-columns:1fr; } }
+
+.booking-forms{ display:flex; flex-direction:column; gap:20px; }
+
+.bk-card{
+  background: var(--surface); border:1px solid var(--border); border-radius: var(--radius-lg);
+  padding:22px 24px;
+}
+.bk-card-title{
+  display:flex; align-items:center; gap:10px;
+  font-family: var(--font-display); font-weight:600; font-size:1rem; margin-bottom:18px;
+}
+.bk-card-title i{ color: var(--accent); }
+
+.bk-field-row{ display:flex; gap:16px; }
+.bk-field{ flex:1; margin-bottom:14px; }
+.bk-field:last-child{ margin-bottom:0; }
+.bk-field label{ display:block; font-size:0.76rem; color: var(--mist); font-weight:600; margin-bottom:6px; text-transform:uppercase; letter-spacing:.03em; }
+.bk-field input{
+  width:100%; padding:12px 14px; border-radius:9px;
+  border:1px solid var(--border); background: var(--surface-2); color: var(--text);
+  font-size:0.9rem; transition: border-color .15s ease;
+}
+.bk-field input:focus{ outline:none; border-color: var(--accent); }
+.bk-field input::placeholder{ color: var(--mist); }
+.bk-field input.invalid{ border-color: var(--red); }
+
+.bk-secure-note{
+  display:flex; align-items:center; gap:8px; margin-top:14px;
+  font-size:0.76rem; color: var(--mist);
+}
+.bk-secure-note i{ color: var(--green); }
+
+.bk-hint{ font-size:0.78rem; color: var(--red); margin-top:10px; display:none; }
+.bk-hint.show{ display:block; }
+
+/* ---------- STEP CONTENT VISIBILITY + TRANSITIONS ---------- */
+.bk-step-area{ position:relative; min-height:120px; }
+.bk-step{ display:none; }
+.bk-step.active{ display:block; animation: bkStepIn .3s ease; }
+@keyframes bkStepIn{ from{ opacity:0; transform: translateY(8px); } to{ opacity:1; transform:none; } }
+
+.bk-shake{ animation: bkShake .4s ease; }
+@keyframes bkShake{
+  10%,90%{ transform: translateX(-2px); }
+  20%,80%{ transform: translateX(4px); }
+  30%,50%,70%{ transform: translateX(-7px); }
+  40%,60%{ transform: translateX(7px); }
+}
+
+/* ---------- OPTION CARDS (baggage / meal / insurance / delivery) ---------- */
+.bk-option-grid{ display:grid; grid-template-columns: repeat(2,1fr); gap:12px; }
+@media (max-width:520px){ .bk-option-grid{ grid-template-columns:1fr; } }
+
+.bk-option{
+  border:1px solid var(--border); border-radius: var(--radius);
+  padding:16px; cursor:pointer; transition: all .15s ease;
+  background: var(--surface-2);
+}
+.bk-option:hover{ border-color: var(--accent); }
+.bk-option.selected{ border-color: var(--accent); background: var(--accent-soft); box-shadow: inset 0 0 0 1px var(--accent); }
+
+.bk-option-icon{ color: var(--accent); font-size:1.05rem; margin-bottom:8px; }
+.bk-option-name{ font-weight:600; font-size:0.9rem; }
+.bk-option-sub{ font-size:0.76rem; color: var(--mist); margin-top:2px; }
+.bk-option-price{ font-size:0.78rem; font-weight:600; margin-top:8px; color: var(--text-dim); }
+.bk-option.selected .bk-option-price{ color: var(--accent); }
+
+.bk-option-check{
+  float:right; width:20px; height:20px; border-radius:50%;
+  border:1px solid var(--border); position:relative; top:-2px;
+}
+.bk-option.selected .bk-option-check{ background: var(--accent); border-color:transparent; }
+.bk-option.selected .bk-option-check::after{
+  content:'✓'; position:absolute; inset:0; display:flex; align-items:center; justify-content:center;
+  color:#fff; font-size:0.7rem;
+}
+
+/* ---------- AUTOFILL (traveler step) ---------- */
+.passenger-header{ display:flex; justify-content:space-between; align-items:center; }
+.autofill-btn{
+  display:flex; align-items:center; gap:.4rem;
+  background: linear-gradient(135deg, var(--flights-dim, rgba(66,133,244,.15)), var(--accent-dim));
+  border:1px solid var(--accent); color: var(--accent);
+  border-radius:20px; padding:.4rem .9rem; font-size:.8rem; font-weight:600;
+  font-family: var(--font-display); transition: all .2s ease;
+}
+.autofill-btn:hover{ filter:brightness(1.15); transform: scale(1.03); }
+
+.bk-card.bk-autofilling{ animation: bkAutofillBlink 1.6s ease; }
+@keyframes bkAutofillBlink{
+  0%{ box-shadow: inset 0 0 0 1px var(--border); }
+  25%{ box-shadow: inset 0 0 0 1px var(--accent), 0 0 0 3px var(--accent-dim); }
+  100%{ box-shadow: inset 0 0 0 1px var(--border); }
+}
+.bk-field input.filled{ border-color: var(--green); background: color-mix(in srgb, var(--green) 8%, var(--surface-2)); }
+
+/* ---------- SEAT & CLASS SELECTOR (flights) ---------- */
+.class-selector{ display:grid; grid-template-columns:1fr 1fr 1fr; gap:.6rem; margin-bottom:1.2rem; }
+.class-card{
+  border:2px solid var(--border); border-radius:14px; padding:.8rem .5rem; text-align:center;
+  cursor:pointer; transition: all .25s ease; background: var(--surface-2); position:relative; overflow:hidden;
+}
+.class-card::before{ content:''; position:absolute; inset:0; opacity:0; transition:opacity .25s; border-radius:12px; }
+.class-card.fc::before{ background: linear-gradient(135deg, rgba(66,133,244,0.16), rgba(66,133,244,0.04)); }
+.class-card.prem::before{ background: linear-gradient(135deg, rgba(155,114,203,0.18), rgba(155,114,203,0.05)); }
+.class-card.eco::before{ background: linear-gradient(135deg, rgba(217,101,112,0.16), rgba(217,101,112,0.04)); }
+.class-card.active::before{ opacity:1; }
+.class-card.fc.active{ border-color: var(--flights); box-shadow:0 4px 16px rgba(66,133,244,0.25); }
+.class-card.prem.active{ border-color: var(--hotels); box-shadow:0 4px 16px rgba(155,114,203,0.3); }
+.class-card.eco.active{ border-color: var(--experiences); box-shadow:0 4px 16px rgba(217,101,112,0.25); }
+.class-card-icon{ font-size:1.3rem; margin-bottom:.3rem; position:relative; z-index:1; }
+.class-card-name{ font-size:.82rem; font-weight:700; font-family: var(--font-display); position:relative; z-index:1; }
+.class-card-price{ font-size:.72rem; color: var(--mist); margin-top:.2rem; position:relative; z-index:1; }
+.class-card-check{
+  position:absolute; top:6px; right:6px; width:18px; height:18px; border-radius:50%;
+  display:flex; align-items:center; justify-content:center; font-size:.6rem; color:#fff; opacity:0; transition:opacity .2s;
+}
+.class-card.fc .class-card-check{ background: var(--flights); }
+.class-card.prem .class-card-check{ background: var(--hotels); }
+.class-card.eco .class-card-check{ background: var(--experiences); }
+.class-card.active .class-card-check{ opacity:1; }
+
+.seat-diagram-area{ display:flex; gap:1rem; align-items:flex-start; margin-bottom:1.2rem; }
+.plane-svg-wrap{ flex-shrink:0; width:90px; }
+.plane-svg-wrap svg{ width:100%; }
+.seat-grid-panel{ flex:1; min-width:0; }
+.seat-grid-header{ font-size:.76rem; font-weight:700; font-family: var(--font-display); color: var(--mist); text-transform:uppercase; letter-spacing:.4px; margin-bottom:.7rem; }
+.seat-grid{ display:flex; flex-direction:column; gap:5px; }
+.seat-row{ display:flex; align-items:center; gap:4px; }
+.seat-row-num{ width:16px; font-size:.65rem; color: var(--mist); text-align:center; flex-shrink:0; font-weight:600; }
+.seat-aisle{ width:12px; flex-shrink:0; }
+.seat-col-labels{ display:flex; gap:4px; margin-bottom:3px; padding-left:20px; }
+.seat-col-label{ font-size:.62rem; font-weight:700; color: var(--mist); text-align:center; font-family: var(--font-display); }
+.seat{
+  width:28px; height:26px; border-radius:6px 6px 4px 4px; border:1.5px solid var(--border);
+  background: var(--surface-2); cursor:pointer; display:flex; align-items:center; justify-content:center;
+  font-size:.6rem; font-weight:700; color: var(--mist); position:relative; transition: all .18s ease; flex-shrink:0;
+}
+.seat:hover:not(.occupied){ border-color: var(--accent); transform: translateY(-2px); box-shadow:0 4px 10px var(--accent-dim); }
+.seat.occupied{ background: var(--surface); border-color: var(--border-soft); cursor:not-allowed; color: var(--border); }
+.seat.selected{
+  background: linear-gradient(135deg, var(--flights), var(--hotels), var(--experiences));
+  border-color:transparent; color:#fff;
+  box-shadow:0 0 0 2px var(--surface), 0 0 0 4px var(--accent); transform: translateY(-2px) scale(1.05);
+}
+
+.benefits-section{ margin-top:.5rem; }
+.benefits-label{ font-size:.75rem; font-weight:700; font-family: var(--font-display); color: var(--mist); text-transform:uppercase; letter-spacing:.4px; margin-bottom:.6rem; }
+.benefits-grid{ display:grid; grid-template-columns:1fr 1fr; gap:.5rem; }
+.benefit-box{
+  border:1px solid var(--border); border-radius:12px; padding:.6rem .75rem; background: var(--surface-2);
+  display:flex; align-items:center; gap:.5rem; font-size:.78rem; font-weight:500; color: var(--text-dim);
+}
+.benefit-box i{ color: var(--accent); font-size:.85rem; flex-shrink:0; }
+
+@media (max-width:560px){
+  .seat-diagram-area{ flex-direction:column; align-items:center; }
+  .plane-svg-wrap{ width:70px; }
+}
+
+/* ---------- STEP NAV (back / continue) ---------- */
+.bk-step-nav{ display:flex; justify-content:space-between; gap:12px; margin-top:4px; }
+.bk-back-btn{
+  padding:14px 22px; border-radius:12px; border:1px solid var(--border);
+  background:transparent; color: var(--text-dim); font-weight:600; font-size:0.9rem;
+  display:flex; align-items:center; gap:8px; transition: all .15s ease;
+}
+.bk-back-btn:hover{ border-color: var(--accent); color: var(--text); }
+.bk-back-btn:disabled{ opacity:0; pointer-events:none; }
+
+.bk-continue-btn{
+  flex:1; padding:14px; border:none; border-radius:12px;
+  background: var(--accent); color:#fff; font-weight:700; font-size:0.95rem;
+  display:flex; align-items:center; justify-content:center; gap:10px;
+  transition: filter .2s ease, opacity .2s ease;
+}
+.bk-continue-btn:hover{ filter:brightness(1.1); }
+.bk-continue-btn:disabled{ opacity:.75; cursor:wait; }
+
+/* ---------- THEMED STEP-TRANSITION LOADER ---------- */
+.step-loader{
+  display:none;
+  align-items:center; justify-content:center;
+  min-height:160px;
+}
+.step-loader.active{ display:flex; }
+
+.sl-flight{ position:relative; width:180px; height:26px; }
+.sl-flight .sl-line{ position:absolute; top:12px; left:0; right:0; height:2px; background: var(--border); }
+.sl-flight i{
+  position:absolute; top:2px; left:0; font-size:1.1rem; color: var(--flights);
+  animation: slFlyLoop 1.1s ease-in-out infinite alternate;
+}
+@keyframes slFlyLoop{ from{ left:0; } to{ left:calc(100% - 20px); } }
+
+.sl-hotel{ position:relative; width:26px; height:110px; }
+.sl-hotel .sl-shaft{ position:absolute; inset:0; border:1px solid var(--border); border-radius:6px; background: var(--surface-2); }
+.sl-hotel .sl-car{
+  position:absolute; left:3px; right:3px; height:16px; border-radius:3px;
+  background: var(--hotels);
+  animation: slElevLoop 1.1s ease-in-out infinite alternate;
+}
+@keyframes slElevLoop{ from{ bottom:3px; } to{ bottom:calc(100% - 19px); } }
+
+.sl-xp{ font-size:2rem; color: var(--experiences); animation: slPulse 1s ease-in-out infinite; }
+@keyframes slPulse{ 0%,100%{ transform:scale(1); opacity:.7; } 50%{ transform:scale(1.15); opacity:1; } }
+
+.step-loader-lbl{ margin-left:16px; font-size:0.84rem; color: var(--mist); font-weight:500; }
+.step-loader-inner{ display:flex; align-items:center; }
+
+/* ---------- ORDER SUMMARY ---------- */
+.bk-summary{
+  background: var(--surface); border:1px solid var(--border); border-radius: var(--radius-lg);
+  padding:22px 24px; position:sticky; top:90px;
+}
+.bk-summary-badge{
+  display:inline-flex; align-items:center; gap:7px;
+  padding:5px 12px; border-radius:999px; background: var(--accent-dim); color: var(--accent);
+  font-size:0.74rem; font-weight:600; margin-bottom:12px;
+}
+.bk-summary-name{ font-family: var(--font-display); font-size:1.2rem; font-weight:700; }
+.bk-summary-meta{ font-size:0.82rem; color: var(--mist); margin-top:4px; }
+
+.bk-divider{ height:1px; background: var(--border-soft); margin:16px 0; }
+
+.bk-line{ display:flex; justify-content:space-between; font-size:0.88rem; color: var(--text-dim); margin-bottom:10px; animation: bkStepIn .25s ease; }
+.bk-line:last-of-type{ margin-bottom:0; }
+.bk-line.total{ color: var(--text); font-weight:700; font-size:1.05rem; font-family: var(--font-display); }
+
+.bk-summary-badgebox{
+  display:flex; align-items:center; gap:8px; margin-top:18px;
+  padding:10px 12px; border-radius:9px; background: var(--surface-2);
+  font-size:0.76rem; color: var(--text-dim);
+}
+.bk-summary-badgebox i{ color: var(--green); }
+
+/* ============================================================
+   CONFIRMATION (cinematic, type-specific)
+   ============================================================ */
+.confirm-wrap{
+  display:none;
+  min-height:70vh;
+  align-items:center; justify-content:center;
+  padding:60px 24px;
+}
+.confirm-wrap.active{ display:flex; animation: confirmFadeIn .5s ease; }
+@keyframes confirmFadeIn{
+  from{ opacity:0; transform: translateY(16px); }
+  to{ opacity:1; transform: translateY(0); }
+}
+
+.confirm-card{
+  max-width:460px; width:100%; text-align:center;
+  background: var(--surface); border:1px solid var(--border); border-radius: var(--radius-lg);
+  padding:40px 36px;
+}
+
+.confirm-anim{ min-height:110px; display:flex; flex-direction:column; align-items:center; justify-content:center; }
+
+/* ---- flight cinematic: world-scroll takeoff-to-landing sequence ----
+   Ported from the original single-file prototype, unscaled, so the
+   hand-tuned pixel choreography (world pan / plane keyframes) lines
+   up exactly like it did there. Sits full-width in the confirm-card
+   via the negative margin below. */
+.fca-world{
+  position:relative;
+  width:calc(100% + 72px); margin:0 -36px;
+  height:120px; border-radius:16px;
+  background:linear-gradient(to bottom,#0F172A,#1E293B);
+  overflow:hidden;
+}
+.fca-world .clouds-bg{
+  position:absolute; top:15px; left:0; width:2000px; height:40px; opacity:.3;
+  background-image:url("data:image/svg+xml,%3Csvg width='120' height='30' viewBox='0 0 120 30' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M10,20 Q15,10 25,15 Q35,5 45,15 Q55,10 60,20 Z' fill='white'/%3E%3Cpath d='M70,25 Q75,15 85,20 Q95,10 105,20 Q110,28 95,28 L70,28 Z' fill='white'/%3E%3C/svg%3E");
+  background-repeat:repeat-x;
+}
+.fca-world .world-scroll{ position:absolute; bottom:0; left:0; width:1600px; height:100%; transform:translateX(0); }
+.fca-world .terrain{ position:absolute; bottom:0; height:35px; background:#4A3525; border-radius:12px 12px 0 0; z-index:5; }
+.fca-world .terrain-city{ border-top:6px solid #475569; }
+.fca-world .terrain-nature{ border-top:6px solid #10B981; }
+.fca-world .water-body{ position:absolute; bottom:0; height:20px; background:linear-gradient(to bottom,#0284C7,#0369A1); z-index:3; overflow:hidden; }
+.fca-world .waves{
+  position:absolute; top:-2px; left:0; width:2000px; height:10px;
+  background-image:url("data:image/svg+xml,%3Csvg width='40' height='10' viewBox='0 0 40 10' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M0,5 Q10,0 20,5 T40,5' fill='none' stroke='rgba(255,255,255,0.4)' stroke-width='2'/%3E%3C/svg%3E");
+  animation: waveMove 3s linear infinite;
+}
+.fca-world .z-bru{ left:0; width:250px; } .fca-world .z-forest{ left:450px; width:400px; } .fca-world .z-sin{ left:1050px; width:350px; }
+.fca-world .w1{ left:230px; width:240px; } .fca-world .w2{ left:830px; width:240px; }
+.fca-world .building{
+  position:absolute; bottom:35px;
+  background:linear-gradient(to bottom,rgba(255,255,255,0.15),rgba(255,255,255,0.02));
+  border-top:1px solid rgba(255,255,255,0.4); border-right:1px solid rgba(255,255,255,0.1);
+}
+.fca-world .b1{ left:80px; width:25px; height:40px; } .fca-world .b2{ left:110px; width:35px; height:55px; }
+.fca-world .atomium-sphere{
+  position:absolute; bottom:60px; left:165px; width:20px; height:20px; border-radius:50%;
+  background:radial-gradient(circle at 30% 30%,#E2E8F0,#64748B); box-shadow:0 4px 6px rgba(0,0,0,0.3);
+}
+.fca-world .hill{ position:absolute; bottom:35px; border-radius:100px 100px 0 0; }
+.fca-world .h1{ left:20px; width:140px; height:40px; background:#065F46; }
+.fca-world .h2{ left:120px; width:160px; height:50px; background:#047857; z-index:2; }
+.fca-world .h3{ left:240px; width:120px; height:35px; background:#064E3B; }
+.fca-world .tree{ position:absolute; bottom:35px; border-left:10px solid transparent; border-right:10px solid transparent; border-bottom:30px solid #022C22; z-index:3; }
+.fca-world .t1{ left:60px; } .fca-world .t2{ left:180px; border-bottom:40px solid #064E3B; } .fca-world .t3{ left:280px; }
+.fca-world .b3{ left:150px; width:30px; height:60px; } .fca-world .b4{ left:185px; width:20px; height:45px; } .fca-world .b5{ left:210px; width:35px; height:70px; }
+.fca-world .platform{ position:absolute; bottom:40px; width:50px; display:flex; flex-direction:column; align-items:center; z-index:10; }
+.fca-world .p-start{ left:20px; } .fca-world .p-dest{ left:90px; }
+.fca-world .airport-code{ font-size:.8rem; font-weight:800; color:#fff; letter-spacing:1px; font-family: var(--font-display); }
+.fca-world .pad{ width:34px; height:3px; background:#fff; border-radius:2px; margin-top:2px; box-shadow:0 0 10px rgba(255,255,255,0.6); }
+.fca-world .plane-wrapper{ position:absolute; bottom:44px; left:35px; margin-left:-12px; z-index:20; opacity:0; transform:scale(0); }
+.fca-world .plane{ font-size:1.5rem; color:#fff; filter:drop-shadow(0 8px 10px rgba(0,0,0,0.4)); }
+
+.fca-world.playing .world-scroll{ animation: panWorld 6s ease-in-out forwards; }
+.fca-world.playing .clouds-bg{ animation: panClouds 6s linear forwards; }
+.fca-world.playing .plane-wrapper{ animation: flightSequence 6s ease-in-out forwards; }
+
+@keyframes panWorld{ 0%,15%{ transform:translateX(0); } 85%,100%{ transform:translateX(-1050px); } }
+@keyframes panClouds{ 0%{ transform:translateX(0); } 100%{ transform:translateX(-200px); } }
+@keyframes waveMove{ 0%{ transform:translateX(0); } 100%{ transform:translateX(-40px); } }
+@keyframes flightSequence{
+  0%{ transform:translate(0,0) scale(0); opacity:0; }
+  5%{ transform:translate(0,0) scale(1); opacity:1; }
+  15%{ transform:translate(60px,-50px) scale(1.1) rotate(-15deg); opacity:1; }
+  35%{ transform:translate(110px,-60px) scale(1.2) rotate(0deg); opacity:1; }
+  55%{ transform:translate(110px,-55px) scale(1.2) rotate(2deg); opacity:1; }
+  75%{ transform:translate(110px,-65px) scale(1.2) rotate(-2deg); opacity:1; }
+  88%{ transform:translate(85px,-15px) scale(1.1) rotate(15deg); opacity:1; }
+  96%{ transform:translate(75px,0) scale(.8) rotate(0deg); opacity:1; }
+  100%{ transform:translate(75px,0) scale(0); opacity:0; }
+}
+
+/* ---- hotel elevator animation ---- */
+.cha{ display:flex; flex-direction:column; align-items:center; gap:10px; }
+.cha-shaft{ position:relative; width:64px; height:118px; border:1px solid var(--border); border-radius:8px; background: var(--surface-2); overflow:hidden; }
+.cha-floor-line{ position:absolute; left:0; right:0; height:1px; background: var(--border-soft); }
+.cha-car{
+  position:absolute; left:6px; right:6px; bottom:4px; height:34px;
+  background: var(--surface-3); border:1px solid var(--hotels); border-radius:6px;
+  display:flex; align-items:center; justify-content:center; overflow:hidden;
+  transition: bottom 2.2s cubic-bezier(.65,.05,.36,1);
+}
+.cha-car.arrived{ bottom:calc(100% - 38px); }
+.cha-door{ position:absolute; top:0; bottom:0; width:50%; background: var(--surface-3); transition: transform .5s ease; transition-delay:2.2s; }
+.cha-door.left{ left:0; border-right:1px solid var(--hotels); }
+.cha-door.right{ right:0; border-left:1px solid var(--hotels); }
+.cha-car.arrived .cha-door.left{ transform: translateX(-100%); }
+.cha-car.arrived .cha-door.right{ transform: translateX(100%); }
+.cha-check{ position:relative; z-index:1; opacity:0; color: var(--hotels); font-size:1.1rem; transition: opacity .3s ease; transition-delay:2.6s; }
+.cha-car.arrived .cha-check{ opacity:1; }
+.cha-lbl{ font-size:0.72rem; color: var(--mist); font-weight:600; }
+
+/* ---- experience ticket-stamp animation ---- */
+.cxa{ position:relative; height:96px; display:flex; align-items:center; justify-content:center; }
+.cxa-ticket{ font-size:3.1rem; color: var(--experiences); opacity:.9; }
+.cxa-stamp{
+  position:absolute; width:56px; height:56px; border-radius:50%;
+  border:3px solid var(--experiences); color: var(--experiences);
+  display:flex; align-items:center; justify-content:center; font-size:1.4rem;
+  opacity:0; transform: scale(2.4) rotate(-18deg);
+  animation: cxaStampIn .55s cubic-bezier(.2,1.5,.5,1) forwards .3s;
+}
+@keyframes cxaStampIn{ to{ opacity:1; transform: scale(1) rotate(-12deg); } }
+
+/* ---- text block reveal (after the cinematic bit finishes) ---- */
+.confirm-text-block{ opacity:0; transform: translateY(10px); transition: opacity .5s ease, transform .5s ease; margin-top:10px; }
+.confirm-text-block.revealed{ opacity:1; transform:none; }
+
+.confirm-card h2{ font-size:1.5rem; font-weight:700; margin-bottom:8px; }
+.confirm-card p{ color: var(--mist); font-size:0.92rem; margin-bottom:14px; }
+
+.confirm-ref{
+  display:inline-block; padding:10px 18px; border-radius:9px;
+  background: var(--surface-2); font-size:0.84rem; color: var(--text-dim); margin-bottom:16px;
+}
+.confirm-ref strong{ color: var(--text); font-family: var(--font-display); letter-spacing:.03em; }
+
+.confirm-delivery-note{
+  display:flex; align-items:center; justify-content:center; gap:8px;
+  font-size:0.82rem; color: var(--text-dim); margin-bottom:22px; flex-wrap:wrap;
+}
+.confirm-delivery-note i{ color: var(--accent); }
+.confirm-pdf-btn{
+  display:inline-flex; align-items:center; gap:6px; margin-left:6px;
+  padding:5px 12px; border-radius:999px; border:1px solid var(--border);
+  font-size:0.74rem; font-weight:600; color: var(--text);
+}
+.confirm-pdf-btn:hover{ border-color: var(--accent); color: var(--accent); }
+
+#confirmCrosssell{ margin-bottom:22px; text-align:left; }
+
+.confirm-home-btn{
+  display:inline-flex; align-items:center; gap:8px;
+  padding:12px 24px; border-radius:9px; border:1px solid var(--border);
+  color: var(--text-dim); font-size:0.88rem; font-weight:500;
+  transition: all .15s ease;
+}
+.confirm-home-btn:hover{ border-color: var(--accent); color: var(--text); }
+
+@media print{
+  header, .bk-stepper, .confirm-home-btn, #confirmCrosssell, .confirm-pdf-btn{ display:none !important; }
+  body{ background:#fff; color:#000; }
+  .confirm-card{ border:none; box-shadow:none; }
+}
