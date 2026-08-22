@@ -222,6 +222,85 @@
             </div>
           </div>
 
+          <!-- AMENITIES (hotels only) -->
+          <div class="bk-step" data-step="amenities">
+            <div class="bk-card">
+              <div class="bk-card-title"><i class="fa-solid fa-concierge-bell"></i> Room extras</div>
+              <div class="bk-option-grid" id="amenityOptions">
+                <div class="bk-option" data-val="fitness" data-fee="0" onclick="toggleAmenity(this)">
+                  <div class="bk-option-check"></div>
+                  <div class="bk-option-icon"><i class="fa-solid fa-dumbbell"></i></div>
+                  <div class="bk-option-name">Fitness Center</div>
+                  <div class="bk-option-sub">24h access</div>
+                  <div class="bk-option-price">Included</div>
+                </div>
+                <div class="bk-option" data-val="pool" data-fee="15" onclick="toggleAmenity(this)">
+                  <div class="bk-option-check"></div>
+                  <div class="bk-option-icon"><i class="fa-solid fa-water-ladder"></i></div>
+                  <div class="bk-option-name">Pool &amp; Spa Pass</div>
+                  <div class="bk-option-sub">Full stay access</div>
+                  <div class="bk-option-price">+$15</div>
+                </div>
+                <div class="bk-option" data-val="housekeeping" data-fee="10" onclick="toggleAmenity(this)">
+                  <div class="bk-option-check"></div>
+                  <div class="bk-option-icon"><i class="fa-solid fa-broom"></i></div>
+                  <div class="bk-option-name">Daily Housekeeping+</div>
+                  <div class="bk-option-sub">Turn-down service</div>
+                  <div class="bk-option-price">+$10</div>
+                </div>
+                <div class="bk-option" data-val="laundry" data-fee="20" onclick="toggleAmenity(this)">
+                  <div class="bk-option-check"></div>
+                  <div class="bk-option-icon"><i class="fa-solid fa-shirt"></i></div>
+                  <div class="bk-option-name">Laundry Service</div>
+                  <div class="bk-option-sub">Wash &amp; fold, 24h</div>
+                  <div class="bk-option-price">+$20</div>
+                </div>
+                <div class="bk-option" data-val="shuttle" data-fee="35" onclick="toggleAmenity(this)">
+                  <div class="bk-option-check"></div>
+                  <div class="bk-option-icon"><i class="fa-solid fa-shuttle-van"></i></div>
+                  <div class="bk-option-name">Airport Shuttle</div>
+                  <div class="bk-option-sub">Return transfer</div>
+                  <div class="bk-option-price">+$35</div>
+                </div>
+              </div>
+              <div class="bk-hint" style="display:none">Optional — pick as many as you like, or none.</div>
+            </div>
+          </div>
+
+          <!-- MEAL PLAN (hotels only) -->
+          <div class="bk-step" data-step="mealplan">
+            <div class="bk-card">
+              <div class="bk-card-title"><i class="fa-solid fa-utensils"></i> Meal plan</div>
+              <div class="bk-option-grid" id="mealplanOptions">
+                <div class="bk-option" data-val="room-only" data-fee="0" onclick="selectOption('mealplan',this)">
+                  <div class="bk-option-check"></div>
+                  <div class="bk-option-name">Room Only</div>
+                  <div class="bk-option-sub">No meals included</div>
+                  <div class="bk-option-price">Included</div>
+                </div>
+                <div class="bk-option" data-val="breakfast" data-fee="198" onclick="selectOption('mealplan',this)">
+                  <div class="bk-option-check"></div>
+                  <div class="bk-option-name">Breakfast Included</div>
+                  <div class="bk-option-sub">Daily, $18/night</div>
+                  <div class="bk-option-price">+$198</div>
+                </div>
+                <div class="bk-option" data-val="halfboard" data-fee="495" onclick="selectOption('mealplan',this)">
+                  <div class="bk-option-check"></div>
+                  <div class="bk-option-name">Half Board</div>
+                  <div class="bk-option-sub">Breakfast + dinner, $45/night</div>
+                  <div class="bk-option-price">+$495</div>
+                </div>
+                <div class="bk-option" data-val="roomservice" data-fee="330" onclick="selectOption('mealplan',this)">
+                  <div class="bk-option-check"></div>
+                  <div class="bk-option-name">Room Service Package</div>
+                  <div class="bk-option-sub">Daily dining credit, $30/night</div>
+                  <div class="bk-option-price">+$330</div>
+                </div>
+              </div>
+              <div class="bk-hint" id="hintMealplan">Pick a meal plan (or "Room Only") to continue.</div>
+            </div>
+          </div>
+
           <!-- INSURANCE -->
           <div class="bk-step" data-step="insurance">
             <div class="bk-card">
@@ -384,7 +463,7 @@ document.getElementById('summaryMeta').textContent = metaLine[type] || metaLine.
    STEP CONFIG
    ============================================================ */
 const STEP_DEFS = {
-  hotels:      ['traveler','insurance','delivery','payment'],
+  hotels:      ['traveler','amenities','mealplan','insurance','delivery','payment'],
   experiences: ['traveler','insurance','delivery','payment'],
   flights:     ['traveler','seat','baggage','meal','insurance','delivery','payment'],
 };
@@ -395,6 +474,8 @@ const STEP_META = {
   seat:      { label:'Seat',      icon:'fa-chair' },
   baggage:   { label:'Baggage',   icon:'fa-suitcase-rolling' },
   meal:      { label:'Meal',      icon:'fa-utensils' },
+  amenities: { label:'Extras',    icon:'fa-concierge-bell' },
+  mealplan:  { label:'Meal Plan', icon:'fa-utensils' },
   insurance: { label:'Insurance', icon:'fa-shield-halved' },
   delivery:  { label:'Delivery',  icon:'fa-paper-plane' },
   payment:   { label:'Payment',   icon:'fa-credit-card' },
@@ -402,12 +483,14 @@ const STEP_META = {
 
 let currentIndex = 0;
 const touched = {};      // stepKey -> bool (user has left this step at least once)
-const selections = { baggage:null, meal:null, insurance:null, delivery:null };
+const selections = { baggage:null, meal:null, mealplan:null, insurance:null, delivery:null };
+const selectedAmenities = {}; // val -> fee, for the multi-select amenities step
 let selectedSeatClass = 'eco', selectedSeat = null;
 
 /* ---------- render stepper + progress bar ---------- */
 function renderStepper(){
   const wrap = document.getElementById('bkStepper');
+  const isHotel = type === 'hotels';
   wrap.innerHTML = steps.map((key,i)=>{
     const m = STEP_META[key];
     const valid = isValid(key);
@@ -416,10 +499,14 @@ function renderStepper(){
     else if(i < currentIndex && valid) state = 'done';
     else if(touched[key] && !valid) state = 'warning';
     const clickable = i <= currentIndex;
-    const icon = state==='done' ? 'fa-check' : (state==='warning' ? 'fa-triangle-exclamation' : m.icon);
+    let inner;
+    if(state==='done') inner = '<i class="fa-solid fa-check"></i>';
+    else if(state==='warning') inner = '<i class="fa-solid fa-triangle-exclamation"></i>';
+    else if(isHotel) inner = (i+1); // elevator floor button — show the literal floor number
+    else inner = `<i class="fa-solid ${m.icon}"></i>`;
     return `<div class="bk-step-item ${state} ${clickable?'clickable':''}" onclick="${clickable ? 'jumpToStep('+i+')' : ''}">
       <div class="bk-step-line ${i<=currentIndex?'done':''}"></div>
-      <div class="bk-step-circle"><i class="fa-solid ${state==='current' ? m.icon : icon}"></i></div>
+      <div class="bk-step-circle">${inner}</div>
       <div class="bk-step-lbl">${m.label}</div>
     </div>`;
   }).join('');
@@ -443,6 +530,8 @@ function isValid(key){
     case 'seat': return !!selectedSeat;
     case 'baggage': return !!selections.baggage;
     case 'meal': return !!selections.meal;
+    case 'amenities': return true; // optional, always valid
+    case 'mealplan': return !!selections.mealplan;
     case 'insurance': return !!selections.insurance;
     case 'delivery': return !!selections.delivery;
     case 'payment': {
@@ -465,6 +554,15 @@ function selectOption(group, el){
   if(hintEl) hintEl.classList.remove('show');
   updateSummary();
   renderStepper();
+}
+
+/* ---------- amenities (multi-select, optional) ---------- */
+function toggleAmenity(el){
+  const val = el.dataset.val, fee = parseFloat(el.dataset.fee || 0);
+  el.classList.toggle('selected');
+  if(el.classList.contains('selected')) selectedAmenities[val] = fee;
+  else delete selectedAmenities[val];
+  updateSummary();
 }
 
 /* ---------- seat & class selection ---------- */
@@ -548,6 +646,16 @@ function updateSummary(){
   if(selections.baggage && selections.baggage.fee > 0){
     lines.push(['Extra baggage', '+€' + selections.baggage.fee]);
     extra += selections.baggage.fee;
+  }
+  if(selections.mealplan && selections.mealplan.fee > 0){
+    lines.push(['Meal plan', '+' + meta.currency + selections.mealplan.fee]);
+    extra += selections.mealplan.fee;
+  }
+  const amenityTotal = Object.values(selectedAmenities).reduce((a,b)=>a+b,0);
+  if(amenityTotal > 0){
+    const count = Object.keys(selectedAmenities).length;
+    lines.push([`Room extras (${count})`, '+' + meta.currency + amenityTotal]);
+    extra += amenityTotal;
   }
   if(selections.insurance && selections.insurance.fee > 0){
     lines.push(['Travel insurance', '+' + meta.currency + selections.insurance.fee]);
@@ -644,18 +752,11 @@ const CONFIRM_ANIM_HTML = {
     </div>
     <div class="plane-wrapper" id="fcaPlaneWrapper"><i class="fa-solid fa-plane plane"></i></div>
   </div>`,
-  hotels: `<div class="cha">
-    <div class="cha-shaft">
-      <div class="cha-floor-line" style="bottom:0"></div>
-      <div class="cha-floor-line" style="bottom:33%"></div>
-      <div class="cha-floor-line" style="bottom:66%"></div>
-      <div class="cha-car" id="chaCar">
-        <div class="cha-door left"></div>
-        <div class="cha-door right"></div>
-        <i class="fa-solid fa-check cha-check"></i>
-      </div>
-    </div>
-    <div class="cha-lbl" id="chaLbl">Ground floor</div>
+  hotels: `<div class="cha-doors-wrap" id="chaDoorsWrap">
+    <div class="cha-hallway"><div class="cha-hall-light"></div></div>
+    <div class="cha-hall-check" id="chaHallCheck"><i class="fa-solid fa-check"></i></div>
+    <div class="cha-door-panel left"><div class="cha-porthole"></div></div>
+    <div class="cha-door-panel right"><div class="cha-porthole"></div></div>
   </div>`,
   experiences: `<div class="cxa">
     <i class="fa-solid fa-ticket cxa-ticket"></i>
@@ -673,16 +774,9 @@ function playConfirmAnimation(){
     setTimeout(revealConfirmText, 6300);
 
   } else if(type === 'hotels'){
-    const labels = ['Ground floor','3rd floor','7th floor','12th floor · your room'];
-    let li = 0;
-    const lblEl = document.getElementById('chaLbl');
-    const iv = setInterval(()=>{
-      li++;
-      if(li < labels.length) lblEl.textContent = labels[li];
-      else clearInterval(iv);
-    }, 550);
-    setTimeout(()=> document.getElementById('chaCar').classList.add('arrived'), 150);
-    setTimeout(revealConfirmText, 3000);
+    const wrap = document.getElementById('chaDoorsWrap');
+    setTimeout(()=> wrap.classList.add('opening'), 350);
+    setTimeout(revealConfirmText, 2500);
 
   } else {
     setTimeout(revealConfirmText, 1200);
@@ -733,4 +827,4 @@ if(type === 'flights'){
 }
 </script>
 </body>
-</html>
+                  </html>
