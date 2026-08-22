@@ -37,6 +37,12 @@
       <p>One last step before <span id="destLabel">Singapore</span> is booked in.</p>
     </div>
 
+    <!-- PROGRESS BAR (riding icon — plane for flights, matching your original) -->
+    <div class="bk-progress-bar" id="bkProgressBar">
+      <div class="bk-progress-fill" id="bkProgressFill"></div>
+      <div class="bk-progress-icon" id="bkProgressIcon"><i class="fa-solid fa-plane"></i></div>
+    </div>
+
     <!-- STEPPER (built by JS — differs per type) -->
     <div class="bk-stepper" id="bkStepper"></div>
 
@@ -58,8 +64,11 @@
           <!-- TRAVELER -->
           <div class="bk-step active" data-step="traveler">
             <div class="bk-card">
-              <div class="bk-card-title"><i class="fa-solid fa-user"></i> Traveler details</div>
-              <div class="bk-field-row">
+              <div class="passenger-header">
+                <div class="bk-card-title" style="margin-bottom:0"><i class="fa-solid fa-user"></i> Traveler details</div>
+                <button class="autofill-btn" onclick="autofillTraveler()"><i class="fa-solid fa-bolt"></i> Autofill</button>
+              </div>
+              <div class="bk-field-row" style="margin-top:18px">
                 <div class="bk-field"><label>First name</label><input type="text" id="fFirst" placeholder="Jordan"></div>
                 <div class="bk-field"><label>Last name</label><input type="text" id="fLast" placeholder="Peeters"></div>
               </div>
@@ -68,6 +77,64 @@
                 <div class="bk-field"><label>Phone</label><input type="tel" id="fPhone" placeholder="+32 4XX XX XX XX"></div>
               </div>
               <div class="bk-hint" id="hintTraveler">Fill in all fields with a valid email to continue.</div>
+            </div>
+          </div>
+
+          <!-- SEAT & CLASS (flights only) -->
+          <div class="bk-step" data-step="seat">
+            <div class="bk-card">
+              <div class="bk-card-title"><i class="fa-solid fa-chair"></i> Choose your seat</div>
+              <div class="class-selector" id="classSelector">
+                <div class="class-card fc" data-class="fc" onclick="selectSeatClass('fc')">
+                  <div class="class-card-check"><i class="fa-solid fa-check"></i></div>
+                  <div class="class-card-icon">🛋️</div>
+                  <div class="class-card-name">First</div>
+                  <div class="class-card-price">+€1555</div>
+                </div>
+                <div class="class-card prem" data-class="prem" onclick="selectSeatClass('prem')">
+                  <div class="class-card-check"><i class="fa-solid fa-check"></i></div>
+                  <div class="class-card-icon">⭐</div>
+                  <div class="class-card-name">Premium</div>
+                  <div class="class-card-price">+€255</div>
+                </div>
+                <div class="class-card eco active" data-class="eco" onclick="selectSeatClass('eco')">
+                  <div class="class-card-check"><i class="fa-solid fa-check"></i></div>
+                  <div class="class-card-icon">🪑</div>
+                  <div class="class-card-name">Economy</div>
+                  <div class="class-card-price">Included</div>
+                </div>
+              </div>
+              <div class="seat-diagram-area">
+                <div class="plane-svg-wrap">
+                  <svg viewBox="0 0 100 270" xmlns="http://www.w3.org/2000/svg">
+                    <defs>
+                      <clipPath id="body-clip"><path d="M50 6 C66 6 67 22 67 38 L67 205 C67 230 58 250 50 256 C42 250 33 230 33 205 L33 38 C33 22 34 6 50 6 Z"/></clipPath>
+                    </defs>
+                    <path d="M33 105 L2 155 L8 170 L33 148 Z" fill="var(--surface-3)"/>
+                    <path d="M67 105 L98 155 L92 170 L67 148 Z" fill="var(--surface-3)"/>
+                    <path d="M36 205 L16 240 L24 250 L40 220 Z" fill="var(--surface-3)"/>
+                    <path d="M64 205 L84 240 L76 250 L60 220 Z" fill="var(--surface-3)"/>
+                    <path d="M50 6 C66 6 67 22 67 38 L67 205 C67 230 58 250 50 256 C42 250 33 230 33 205 L33 38 C33 22 34 6 50 6 Z" fill="var(--surface-2)" stroke="var(--border)" stroke-width="1.5"/>
+                    <rect x="0" y="5" width="100" height="72" fill="var(--flights)" clip-path="url(#body-clip)" id="svg-zone-fc" opacity="0" style="transition:opacity .35s"/>
+                    <rect x="0" y="77" width="100" height="80" fill="var(--hotels)" clip-path="url(#body-clip)" id="svg-zone-prem" opacity="0" style="transition:opacity .35s"/>
+                    <rect x="0" y="157" width="100" height="100" fill="var(--experiences)" clip-path="url(#body-clip)" id="svg-zone-eco" opacity="0" style="transition:opacity .35s"/>
+                    <line x1="33" y1="77" x2="67" y2="77" stroke="var(--border)" stroke-width="1" stroke-dasharray="4,3"/>
+                    <line x1="33" y1="157" x2="67" y2="157" stroke="var(--border)" stroke-width="1" stroke-dasharray="4,3"/>
+                    <text x="50" y="44" text-anchor="middle" font-family="Outfit,sans-serif" font-size="6" fill="var(--text)" opacity=".4" font-weight="700">FC</text>
+                    <text x="50" y="122" text-anchor="middle" font-family="Outfit,sans-serif" font-size="5.5" fill="var(--text)" opacity=".4" font-weight="700">PREM</text>
+                    <text x="50" y="195" text-anchor="middle" font-family="Outfit,sans-serif" font-size="5.5" fill="var(--text)" opacity=".4" font-weight="700">ECO</text>
+                  </svg>
+                </div>
+                <div class="seat-grid-panel">
+                  <div class="seat-grid-header" id="seatGridLabel">Economy — select your seat</div>
+                  <div id="seatGridContainer"></div>
+                </div>
+              </div>
+              <div class="benefits-section">
+                <div class="benefits-label">Included benefits</div>
+                <div class="benefits-grid" id="benefitsContainer"></div>
+              </div>
+              <div class="bk-hint" id="hintSeat">Pick a class and tap a seat to continue.</div>
             </div>
           </div>
 
@@ -85,21 +152,21 @@
                 </div>
                 <div class="bk-option" data-val="checked1" data-fee="35" onclick="selectOption('baggage',this)">
                   <div class="bk-option-check"></div>
-                  <div class="bk-option-icon"><i class="fa-solid fa-suitcase-rolling"></i></div>
+                  <div class="bk-option-icon" style="font-size:1.3rem"><i class="fa-solid fa-suitcase-rolling"></i></div>
                   <div class="bk-option-name">+1 checked bag</div>
                   <div class="bk-option-sub">23kg</div>
                   <div class="bk-option-price">+€35</div>
                 </div>
                 <div class="bk-option" data-val="checked2" data-fee="65" onclick="selectOption('baggage',this)">
                   <div class="bk-option-check"></div>
-                  <div class="bk-option-icon"><i class="fa-solid fa-suitcase-rolling"></i></div>
+                  <div class="bk-option-icon" style="font-size:1.55rem"><i class="fa-solid fa-suitcase-rolling"></i></div>
                   <div class="bk-option-name">+2 checked bags</div>
                   <div class="bk-option-sub">23kg each</div>
                   <div class="bk-option-price">+€65</div>
                 </div>
                 <div class="bk-option" data-val="xl" data-fee="55" onclick="selectOption('baggage',this)">
                   <div class="bk-option-check"></div>
-                  <div class="bk-option-icon"><i class="fa-solid fa-weight-hanging"></i></div>
+                  <div class="bk-option-icon" style="font-size:1.4rem"><i class="fa-solid fa-weight-hanging"></i></div>
                   <div class="bk-option-name">Extra-large bag</div>
                   <div class="bk-option-sub">32kg</div>
                   <div class="bk-option-price">+€55</div>
@@ -319,12 +386,13 @@ document.getElementById('summaryMeta').textContent = metaLine[type] || metaLine.
 const STEP_DEFS = {
   hotels:      ['traveler','insurance','delivery','payment'],
   experiences: ['traveler','insurance','delivery','payment'],
-  flights:     ['traveler','baggage','meal','insurance','delivery','payment'],
+  flights:     ['traveler','seat','baggage','meal','insurance','delivery','payment'],
 };
 const steps = STEP_DEFS[type] || STEP_DEFS.hotels;
 
 const STEP_META = {
   traveler:  { label:'Traveler',  icon:'fa-user' },
+  seat:      { label:'Seat',      icon:'fa-chair' },
   baggage:   { label:'Baggage',   icon:'fa-suitcase-rolling' },
   meal:      { label:'Meal',      icon:'fa-utensils' },
   insurance: { label:'Insurance', icon:'fa-shield-halved' },
@@ -335,8 +403,9 @@ const STEP_META = {
 let currentIndex = 0;
 const touched = {};      // stepKey -> bool (user has left this step at least once)
 const selections = { baggage:null, meal:null, insurance:null, delivery:null };
+let selectedSeatClass = 'eco', selectedSeat = null;
 
-/* ---------- render stepper ---------- */
+/* ---------- render stepper + progress bar ---------- */
 function renderStepper(){
   const wrap = document.getElementById('bkStepper');
   wrap.innerHTML = steps.map((key,i)=>{
@@ -354,6 +423,11 @@ function renderStepper(){
       <div class="bk-step-lbl">${m.label}</div>
     </div>`;
   }).join('');
+
+  const pct = steps.length > 1 ? (currentIndex / (steps.length - 1)) * 100 : 100;
+  document.getElementById('bkProgressFill').style.width = pct + '%';
+  document.getElementById('bkProgressIcon').style.left = Math.max(pct, 3) + '%';
+  document.getElementById('bkProgressIcon').innerHTML = `<i class="fa-solid ${meta.icon}"></i>`;
 }
 
 /* ---------- validation ---------- */
@@ -366,6 +440,7 @@ function isValid(key){
       const p=document.getElementById('fPhone').value.trim();
       return f && l && /^\S+@\S+\.\S+$/.test(e) && p.length>=6;
     }
+    case 'seat': return !!selectedSeat;
     case 'baggage': return !!selections.baggage;
     case 'meal': return !!selections.meal;
     case 'insurance': return !!selections.insurance;
@@ -392,10 +467,84 @@ function selectOption(group, el){
   renderStepper();
 }
 
+/* ---------- seat & class selection ---------- */
+const SEAT_CLASS_CONFIG = {
+  fc:   { label:'First — select your seat',    fee:1555, rows:3, cols:['A','B','','C','D'],
+          occupied:['1A','2C'],
+          benefits:[['fa-bed','Lie-flat bed'],['fa-champagne-glasses','Fine dining'],['fa-suitcase','40kg luggage'],['fa-star','Lounge access']] },
+  prem: { label:'Premium — select your seat',  fee:255,  rows:5, cols:['A','B','','C','D','E'],
+          occupied:['1A','2E','3B'],
+          benefits:[['fa-suitcase','30kg luggage'],['fa-utensils','Premium meals'],['fa-users-line','Priority boarding']] },
+  eco:  { label:'Economy — select your seat',  fee:0,    rows:7, cols:['A','B','C','','D','E','F'],
+          occupied:['1A','2B','3E','4F','5A','6C'],
+          benefits:[['fa-suitcase','23kg luggage'],['fa-utensils','Standard meal'],['fa-wifi','WiFi included']] },
+};
+
+function selectSeatClass(cls){
+  selectedSeatClass = cls;
+  selectedSeat = null;
+  document.querySelectorAll('.class-card').forEach(c=>c.classList.toggle('active', c.dataset.class===cls));
+  ['fc','prem','eco'].forEach(z=>{
+    const el = document.getElementById('svg-zone-'+z);
+    if(el) el.style.opacity = z===cls ? '0.55' : '0';
+  });
+  renderSeatGrid();
+  document.getElementById('hintSeat')?.classList.remove('show');
+  updateSummary();
+  renderStepper();
+}
+
+function renderSeatGrid(){
+  const cfg = SEAT_CLASS_CONFIG[selectedSeatClass];
+  document.getElementById('seatGridLabel').textContent = cfg.label;
+  let html = '<div class="seat-col-labels">';
+  cfg.cols.forEach(c=> html += c==='' ? `<div style="width:12px;"></div>` : `<div class="seat-col-label" style="width:30px;">${c}</div>`);
+  html += '</div><div class="seat-grid">';
+  for(let r=1; r<=cfg.rows; r++){
+    html += `<div class="seat-row"><div class="seat-row-num">${r}</div>`;
+    cfg.cols.forEach(c=>{
+      if(c===''){ html += `<div class="seat-aisle"></div>`; return; }
+      const id = `${r}${c}`, occ = cfg.occupied.includes(id);
+      html += `<div class="seat${occ?' occupied':''}" data-seat="${id}" onclick="${occ?'':'pickSeat(this)'}" title="${occ?'Occupied':id}">${occ?'✕':''}</div>`;
+    });
+    html += '</div>';
+  }
+  html += '</div>';
+  document.getElementById('seatGridContainer').innerHTML = html;
+  document.getElementById('benefitsContainer').innerHTML = cfg.benefits.map(b=>
+    `<div class="benefit-box"><i class="fa-solid ${b[0]}"></i> ${b[1]}</div>`).join('');
+}
+
+function pickSeat(el){
+  document.querySelectorAll('#seatGridContainer .seat').forEach(s=>s.classList.remove('selected'));
+  el.classList.add('selected');
+  selectedSeat = el.dataset.seat;
+  document.getElementById('hintSeat')?.classList.remove('show');
+  renderStepper();
+}
+
+/* ---------- autofill (traveler step) ---------- */
+const AUTOFILL_PROFILE = { first:'Sarah', last:'Mitchell', email:'sarah.mitchell@example.com', phone:'+32 478 12 34 56' };
+function autofillTraveler(){
+  const card = document.querySelector('.bk-step[data-step="traveler"] .bk-card');
+  card.classList.remove('bk-autofilling'); void card.offsetWidth; card.classList.add('bk-autofilling');
+  const fields = [['fFirst',AUTOFILL_PROFILE.first],['fLast',AUTOFILL_PROFILE.last],['fEmail',AUTOFILL_PROFILE.email],['fPhone',AUTOFILL_PROFILE.phone]];
+  fields.forEach(([id,val],i)=> setTimeout(()=>{
+    const el = document.getElementById(id);
+    el.value = val;
+    el.classList.add('filled');
+  }, i*90));
+  setTimeout(()=>{ document.getElementById('hintTraveler').classList.remove('show'); renderStepper(); }, fields.length*90 + 150);
+}
+
 /* ---------- summary totals ---------- */
 function updateSummary(){
   const lines = [];
   let extra = 0;
+  if(type === 'flights' && selectedSeatClass && SEAT_CLASS_CONFIG[selectedSeatClass].fee > 0){
+    lines.push(['Seat & class upgrade', '+€' + SEAT_CLASS_CONFIG[selectedSeatClass].fee]);
+    extra += SEAT_CLASS_CONFIG[selectedSeatClass].fee;
+  }
   if(selections.baggage && selections.baggage.fee > 0){
     lines.push(['Extra baggage', '+€' + selections.baggage.fee]);
     extra += selections.baggage.fee;
@@ -484,16 +633,16 @@ function jumpToStep(i){
 
 /* ---------- submit / confirmation ---------- */
 const CONFIRM_ANIM_HTML = {
-  flights: `<div class="fca">
-    <div class="fca-city"><div class="fca-dot"></div>BRU</div>
-    <div class="fca-stage">
-      <svg viewBox="0 0 400 80" preserveAspectRatio="none">
-        <path class="fca-path-bg" d="M15,65 Q200,-10 385,65"/>
-        <path class="fca-path-fg" id="fcaPathFg" d="M15,65 Q200,-10 385,65" pathLength="1"/>
-      </svg>
-      <i class="fa-solid fa-plane fca-plane" id="fcaPlane"></i>
+  flights: `<div class="fca-world" id="fcaWorld">
+    <div class="clouds-bg"></div>
+    <div class="world-scroll">
+      <div class="terrain terrain-city z-bru"><div class="platform p-start"><span class="airport-code">BRU</span><div class="pad"></div></div><div class="building b1"></div><div class="building b2"></div><div class="atomium-sphere"></div></div>
+      <div class="water-body w1"><div class="waves"></div></div>
+      <div class="terrain terrain-nature z-forest"><div class="hill h1"></div><div class="hill h2"></div><div class="hill h3"></div><div class="tree t1"></div><div class="tree t2"></div><div class="tree t3"></div></div>
+      <div class="water-body w2"><div class="waves"></div></div>
+      <div class="terrain terrain-city z-sin"><div class="platform p-dest"><span class="airport-code">SIN</span><div class="pad"></div></div><div class="building b3"></div><div class="building b4"></div><div class="building b5"></div></div>
     </div>
-    <div class="fca-city"><div class="fca-dot"></div>SIN</div>
+    <div class="plane-wrapper" id="fcaPlaneWrapper"><i class="fa-solid fa-plane plane"></i></div>
   </div>`,
   hotels: `<div class="cha">
     <div class="cha-shaft">
@@ -518,35 +667,10 @@ function playConfirmAnimation(){
   document.getElementById('confirmAnim').innerHTML = CONFIRM_ANIM_HTML[type] || CONFIRM_ANIM_HTML.hotels;
 
   if(type === 'flights'){
-    const plane = document.getElementById('fcaPlane');
-    const fg = document.getElementById('fcaPathFg');
-    const stage = plane.parentElement;
-    const rect = stage.getBoundingClientRect();
-    const scaleX = rect.width / 400, scaleY = rect.height / 80;
-    const P0={x:15,y:65}, P1={x:200,y:-10}, P2={x:385,y:65};
-    const dur = 2400;
-    let start=null;
-    function bez(t){
-      const x=(1-t)*(1-t)*P0.x+2*(1-t)*t*P1.x+t*t*P2.x;
-      const y=(1-t)*(1-t)*P0.y+2*(1-t)*t*P1.y+t*t*P2.y;
-      return {x,y};
-    }
-    function tangent(t){
-      const dx=2*(1-t)*(P1.x-P0.x)+2*t*(P2.x-P1.x);
-      const dy=2*(1-t)*(P1.y-P0.y)+2*t*(P2.y-P1.y);
-      return Math.atan2(dy,dx)*180/Math.PI;
-    }
-    function frame(ts){
-      if(!start) start=ts;
-      const p=Math.min(1,(ts-start)/dur);
-      const eased = p<0.5 ? 2*p*p : 1-Math.pow(-2*p+2,2)/2;
-      const pos=bez(eased);
-      plane.style.transform = `translate(${pos.x*scaleX-8}px, ${pos.y*scaleY-8}px) rotate(${tangent(eased)}deg)`;
-      fg.style.strokeDashoffset = String(1-eased);
-      if(p<1) requestAnimationFrame(frame);
-    }
-    requestAnimationFrame(frame);
-    setTimeout(revealConfirmText, dur + 250);
+    const world = document.getElementById('fcaWorld');
+    // kick off on next frame so the browser registers the initial state first
+    requestAnimationFrame(()=> requestAnimationFrame(()=> world.classList.add('playing')));
+    setTimeout(revealConfirmText, 6300);
 
   } else if(type === 'hotels'){
     const labels = ['Ground floor','3rd floor','7th floor','12th floor · your room'];
@@ -603,6 +727,10 @@ function submitBooking(){
 renderStepper();
 showStep(0);
 updateSummary();
+if(type === 'flights'){
+  document.getElementById('svg-zone-eco').style.opacity = '0.55';
+  renderSeatGrid();
+}
 </script>
 </body>
-  </html>
+</html>
