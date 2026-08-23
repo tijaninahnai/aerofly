@@ -123,6 +123,9 @@ body[data-section="hotels"] .bk-step.active{
 .bk-card-title i{ color: var(--accent); }
 
 .bk-field-row{ display:flex; gap:16px; }
+@media (max-width:480px){
+  .bk-field-row{ flex-direction:column; gap:0; }
+}
 .bk-field{ flex:1; margin-bottom:14px; }
 .bk-field:last-child{ margin-bottom:0; }
 .bk-field label{ display:block; font-size:0.76rem; color: var(--mist); font-weight:600; margin-bottom:6px; text-transform:uppercase; letter-spacing:.03em; }
@@ -267,6 +270,9 @@ body[data-section="hotels"] .bk-step.active{
 @media (max-width:560px){
   .seat-diagram-area{ flex-direction:column; align-items:center; }
   .plane-svg-wrap{ width:70px; }
+  .seat-grid-panel{ width:100%; overflow-x:auto; }
+  .class-selector{ grid-template-columns:1fr; }
+  .benefits-grid{ grid-template-columns:1fr; }
 }
 
 /* ---------- STEP NAV (back / continue) ---------- */
@@ -537,4 +543,4 @@ body[data-section="hotels"] .bk-step.active{
   header, .bk-stepper, .confirm-home-btn, #confirmCrosssell, .confirm-pdf-btn{ display:none !important; }
   body{ background:#fff; color:#000; }
   .confirm-card{ border:none; box-shadow:none; }
-                         }
+   }
