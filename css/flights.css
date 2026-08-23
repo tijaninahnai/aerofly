@@ -74,6 +74,12 @@
   .fl-price-block{ width:100%; flex-direction:row; align-items:center; justify-content:space-between; }
 }
 
+@media (max-width:420px){
+  .fl-route{ gap:8px; }
+  .fl-time{ font-size:1.05rem; }
+  .fl-path{ min-width:70px; }
+}
+
 /* ---------- DETAIL MODAL: route hero (replaces the image gallery) ---------- */
 .fl-route-hero{
   height:200px; background: linear-gradient(135deg, var(--surface-2), var(--surface-3));
@@ -86,3 +92,7 @@
 .fl-route-hero-line{ display:flex; align-items:center; gap:8px; color: var(--accent); margin:8px 0; }
 .fl-route-hero-line span{ flex:1; height:1px; background: var(--border); }
 
+@media (max-width:480px){
+  .fl-route-hero-inner{ gap:14px; padding:0 16px; }
+  .fl-route-hero-code{ font-size:1.5rem; }
+}
