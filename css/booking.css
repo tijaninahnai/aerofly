@@ -5,6 +5,10 @@
    ============================================================ */
 
 .booking-wrap{ padding:50px 40px 90px; transition: opacity .3s ease, transform .3s ease; }
+
+@media (max-width:600px){
+  .booking-wrap{ padding:28px 16px 60px; }
+}
 .booking-wrap.leaving{ opacity:0; transform: translateY(-12px); }
 .booking-inner{ max-width:980px; margin:0 auto; }
 
@@ -75,6 +79,14 @@
   .bk-step-circle{ width:30px; height:30px; font-size:0.74rem; }
 }
 
+@media (max-width:480px){
+  .bk-stepper{ overflow-x:auto; -webkit-overflow-scrolling:touch; padding-bottom:4px; scrollbar-width:none; }
+  .bk-stepper::-webkit-scrollbar{ display:none; }
+  .bk-step-item{ flex:0 0 auto; min-width:44px; }
+  .bk-step-line{ width:44px; }
+  .bk-step-circle{ width:26px; height:26px; font-size:0.68rem; }
+}
+
 /* ---- hotel-only: elevator floor-button styling for the stepper ----
    Circles show literal floor numbers and glow like a lit elevator
    button panel, matching the elevator theme used throughout. */
@@ -115,6 +127,9 @@ body[data-section="hotels"] .bk-step.active{
 .bk-card{
   background: var(--surface); border:1px solid var(--border); border-radius: var(--radius-lg);
   padding:22px 24px;
+}
+@media (max-width:480px){
+  .bk-card{ padding:18px 16px; }
 }
 .bk-card-title{
   display:flex; align-items:center; gap:10px;
@@ -372,6 +387,11 @@ body[data-section="hotels"] .bk-step.active{
   padding:40px 36px;
 }
 
+@media (max-width:480px){
+  .confirm-card{ padding:32px 20px; }
+  .fca-world, .cha-doors-wrap{ margin:0 -20px; width:calc(100% + 40px); }
+}
+
 .confirm-anim{ min-height:110px; display:flex; flex-direction:column; align-items:center; justify-content:center; }
 
 /* ---- flight cinematic: world-scroll takeoff-to-landing sequence ----
@@ -543,4 +563,4 @@ body[data-section="hotels"] .bk-step.active{
   header, .bk-stepper, .confirm-home-btn, #confirmCrosssell, .confirm-pdf-btn{ display:none !important; }
   body{ background:#fff; color:#000; }
   .confirm-card{ border:none; box-shadow:none; }
-   }
+}
