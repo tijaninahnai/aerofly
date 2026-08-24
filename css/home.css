@@ -95,6 +95,9 @@
 
 /* ---------- SECTIONS ---------- */
 .section{ padding:70px 40px; }
+@media (max-width:600px){
+  .section{ padding:44px 18px; }
+}
 .section.alt{ background: var(--surface); border-top:1px solid var(--border-soft); border-bottom:1px solid var(--border-soft); }
 .section-inner{ max-width:1200px; margin:0 auto; }
 .section-hdr{ margin-bottom:32px; }
