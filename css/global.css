@@ -950,3 +950,36 @@ header{
 @media (max-width:480px){
   .dm-cio{ flex-direction:column; }
 }
+
+/* ============================================================
+   LEAFLET — SHARED DARK THEME (hotels + experiences maps)
+   ============================================================ */
+.leaflet-container{ background: var(--surface-2); font-family: var(--font-body); }
+.leaflet-control-zoom{ border:none !important; }
+.leaflet-control-zoom a{
+  background: var(--surface) !important; color: var(--text) !important;
+  border:1px solid var(--border) !important;
+}
+.leaflet-control-zoom a:hover{ background: var(--surface-2) !important; }
+.leaflet-tooltip.custom-tooltip{
+  background: var(--surface-2); border:1px solid var(--border); color: var(--text);
+  border-radius:8px; padding:6px 10px; box-shadow: var(--shadow-sm);
+}
+.leaflet-tooltip.custom-tooltip::before{ display:none; }
+.map-tooltip-inner strong{ display:block; font-size:0.76rem; font-weight:700; }
+.map-tooltip-inner span{ font-size:0.68rem; color: var(--mist); }
+
+.marker-dot{
+  border-radius:50%; border:2px solid #fff;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.4);
+  transition: transform .15s ease;
+}
+.marker-dot:hover{ transform: scale(1.2); }
+
+/* card gets a brief highlight pulse when jumped to from a map marker */
+.card-highlight{ animation: cardHighlightPulse 1.4s ease; }
+@keyframes cardHighlightPulse{
+  0%{ box-shadow: 0 0 0 0 var(--accent-dim); border-color: var(--accent); }
+  60%{ box-shadow: 0 0 0 10px rgba(0,0,0,0); border-color: var(--accent); }
+  100%{ box-shadow: 0 0 0 0 rgba(0,0,0,0); }
+}
