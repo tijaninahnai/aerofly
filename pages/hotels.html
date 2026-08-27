@@ -5,6 +5,8 @@
 <meta name="viewport" content="width=device-width,initial-scale=1.0,maximum-scale=1.0,user-scalable=no">
 <title>AeroFly — Hotels</title>
 <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+<link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" crossorigin="">
+<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js" crossorigin=""></script>
 <link rel="stylesheet" href="../css/global.css">
 <link rel="stylesheet" href="../css/hotels.css">
 </head>
@@ -81,12 +83,76 @@
   </div>
 </div>
 
+<!-- INTERACTIVE MAP -->
+<div class="map-section">
+  <div class="map-section-inner">
+    <div class="map-wrapper" id="mapWrapper">
+      <div id="destination-map"></div>
+
+      <div class="map-ui-top">
+        <!-- AI search -->
+        <div class="map-ai-bar">
+          <div class="map-ai-context">Singapore <span>· 2 Adults · May 14–25</span></div>
+          <form id="aiSearchForm" class="map-ai-form">
+            <i class="fa-solid fa-bolt"></i>
+            <input type="text" id="aiSearchInput" placeholder="Ask AI: &quot;luxury hotels with infinity pools&quot; or &quot;cheap stays near MRT&quot;…">
+            <button type="submit">Ask AI</button>
+            <div class="map-ai-loading" id="aiLoading"></div>
+          </form>
+        </div>
+
+        <!-- AI response banner -->
+        <div class="map-ai-banner" id="aiBanner">
+          <i class="fa-solid fa-sparkles"></i>
+          <div>
+            <p id="aiBannerText"></p>
+            <button id="aiClearBtn" type="button">Clear AI filter</button>
+          </div>
+        </div>
+
+        <!-- filter panel -->
+        <div class="map-filter-panel">
+          <div class="mfp-head">Filters</div>
+          <div class="mfp-section">
+            <div class="mfp-row"><label>Max price / night</label><span id="mapPriceDisplay">$600</span></div>
+            <input type="range" id="mapPriceFilter" min="50" max="600" value="600" step="10">
+          </div>
+          <div class="mfp-section">
+            <label class="mfp-label">Review score</label>
+            <label class="mfp-check"><input type="checkbox" class="map-score-cb" value="9" checked><span>9.0+ <em>Superb</em></span></label>
+            <label class="mfp-check"><input type="checkbox" class="map-score-cb" value="8" checked><span>8.0+ <em>Very good</em></span></label>
+            <label class="mfp-check"><input type="checkbox" class="map-score-cb" value="7" checked><span>7.0+ <em>Good</em></span></label>
+          </div>
+          <label class="mfp-toggle"><input type="checkbox" id="mapLabelToggle" checked> Show labels</label>
+          <div class="mfp-legend">
+            <div>
+              <span class="mfp-leg-title">Price</span>
+              <div class="mfp-leg-row"><i style="background:var(--green)"></i>Pricier</div>
+              <div class="mfp-leg-row"><i style="background:var(--hotels)"></i>Cheaper</div>
+            </div>
+            <div>
+              <span class="mfp-leg-title">Score</span>
+              <div class="mfp-leg-row"><i class="mfp-leg-dot big"></i>9.0+</div>
+              <div class="mfp-leg-row"><i class="mfp-leg-dot small"></i>Below 9</div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <button class="map-expand-btn" id="mapExpandBtn" type="button">
+        <span id="mapExpandLbl">Expand map</span>
+        <i class="fa-solid fa-expand" id="mapExpandIcon"></i>
+      </button>
+    </div>
+  </div>
+</div>
+
 <!-- PAGE BODY -->
 <div class="page-body">
   <!-- RESULTS -->
   <div class="results-col">
     <div class="results-top">
-      <div class="results-count"><strong id="res-count">4 hotels</strong> found in Singapore · May 14–25</div>
+      <div class="results-count"><strong id="res-count">5 hotels</strong> found in Singapore · May 14–25</div>
       <div class="sort-bar">
         <div class="sort-pill active" onclick="setSort(this,'recommended')">Recommended</div>
         <div class="sort-pill" onclick="setSort(this,'price')">Price ↑</div>
@@ -99,63 +165,7 @@
 
   <!-- SIDEBAR -->
   <div class="sidebar">
-    <!-- MAP -->
-    <div class="map-card">
-      <div class="map-title">
-        Destination Map
-        <div class="map-zoom-controls">
-          <button onclick="mapZoom(-1)" aria-label="Zoom out"><i class="fa-solid fa-minus"></i></button>
-          <button onclick="mapZoom(1)" aria-label="Zoom in"><i class="fa-solid fa-plus"></i></button>
-        </div>
-      </div>
-      <div class="map-area" id="map-area">
-        <canvas id="map-canvas" style="position:absolute;inset:0;width:100%;height:100%;"></canvas>
-        <div class="map-surface" id="map-surface"></div>
-      </div>
-      <div class="map-legend">
-        <div class="map-leg-item"><div class="leg-dot" style="background:var(--green)"></div> Pricier</div>
-        <div class="map-leg-item"><div class="leg-dot" style="background:var(--hotels)"></div> Cheaper</div>
-        <div class="map-leg-item"><i class="fa-solid fa-circle" style="font-size:8px;color:var(--mist);"></i> Bigger = higher score</div>
-      </div>
-      <div class="map-hint" id="mapHint">Tap a dot to preview · hold to pin for comparison</div>
-      <div class="map-detail-panel" id="mapDetailPanel"></div>
-    </div>
-    <!-- CROSS-SELL -->
     <div id="crosssell"></div>
-    <!-- FILTERS -->
-    <div class="filter-card">
-      <div class="fc-title">
-        Filter Results
-        <button onclick="resetFilters()">Reset all</button>
-      </div>
-      <div class="fc-section">
-        <div class="fc-section-label">Star Rating</div>
-        <div class="star-pills">
-          <div class="star-pill active" onclick="toggleStar(this,'all')">All</div>
-          <div class="star-pill" onclick="toggleStar(this,'5')">★★★★★</div>
-          <div class="star-pill" onclick="toggleStar(this,'4')">★★★★</div>
-          <div class="star-pill" onclick="toggleStar(this,'3')">★★★</div>
-        </div>
-      </div>
-      <div class="fc-section">
-        <div class="fc-section-label">Max Price / Night</div>
-        <div class="price-slider-wrap">
-          <div class="price-slider-row"><span>$0</span><strong id="price-lbl">$600</strong><span>$1,200</span></div>
-          <input type="range" min="0" max="1200" value="600" step="10" oninput="setPriceFilter(this.value)">
-        </div>
-      </div>
-      <div class="fc-section">
-        <div class="fc-section-label">Amenities</div>
-        <div class="amenity-pills">
-          <div class="am-pill" onclick="this.classList.toggle('active')"><i class="fa-solid fa-water-ladder"></i> Pool</div>
-          <div class="am-pill" onclick="this.classList.toggle('active')"><i class="fa-solid fa-spa"></i> Spa</div>
-          <div class="am-pill" onclick="this.classList.toggle('active')"><i class="fa-solid fa-wifi"></i> WiFi</div>
-          <div class="am-pill" onclick="this.classList.toggle('active')"><i class="fa-solid fa-car"></i> Parking</div>
-          <div class="am-pill" onclick="this.classList.toggle('active')"><i class="fa-solid fa-mug-hot"></i> Breakfast</div>
-          <div class="am-pill" onclick="this.classList.toggle('active')"><i class="fa-solid fa-dumbbell"></i> Gym</div>
-        </div>
-      </div>
-    </div>
   </div>
 </div>
 
@@ -317,22 +327,35 @@ document.addEventListener('click',()=>{document.querySelectorAll('.sb-popup').fo
 
 // ---- HOTELS DATA ----
 const hotels=[
-  {id:'h1',name:'Marina Bay Sands',stars:5,loc:'Marina Bay · 0.8 km from centre',score:9.2,scoreLbl:'Superb',reviews:2847,price:320,tags:['Infinity Pool','Casino','5-Star','Spa'],featured:true,facilities:{pool:true,spa:true,wifi:true,parking:true,breakfast:true,gym:true},imgs:['https://images.unsplash.com/photo-1562790351-d273a961e0e9?w=900&q=80','https://images.unsplash.com/photo-1631049307264-da0ec9d70304?w=900&q=80','https://images.unsplash.com/photo-1578683010236-d716f9a3f461?w=900&q=80','https://images.unsplash.com/photo-1445019980597-93fa8acb246c?w=900&q=80','https://images.unsplash.com/photo-1560347876-aeef00ee58a1?w=900&q=80'],mapX:62,mapY:55,dotColor:'#3B6B9A'},
-  {id:'h2',name:'Raffles Singapore',stars:5,loc:'City Hall · 1.2 km from centre',score:9.5,scoreLbl:'Exceptional',reviews:3410,price:480,tags:['Historic','Butler Service','Colonial','Garden'],featured:false,facilities:{pool:true,spa:true,wifi:true,parking:true,breakfast:true,gym:false},imgs:['https://images.unsplash.com/photo-1571003123894-1f0594d2b5d9?w=900&q=80','https://images.unsplash.com/photo-1566073771259-6a8506099945?w=900&q=80','https://images.unsplash.com/photo-1631049307264-da0ec9d70304?w=900&q=80','https://images.unsplash.com/photo-1445019980597-93fa8acb246c?w=900&q=80'],mapX:38,mapY:35,dotColor:'#C9A84C'},
-  {id:'h3',name:'The Capitol Kempinski',stars:5,loc:'St Andrews Road · 0.5 km centre',score:8.8,scoreLbl:'Excellent',reviews:1204,price:215,tags:['Heritage','City Center','Modern','Rooftop'],featured:false,facilities:{pool:true,spa:true,wifi:true,parking:false,breakfast:true,gym:true},imgs:['https://images.unsplash.com/photo-1566073771259-6a8506099945?w=900&q=80','https://images.unsplash.com/photo-1578683010236-d716f9a3f461?w=900&q=80','https://images.unsplash.com/photo-1560347876-aeef00ee58a1?w=900&q=80'],mapX:45,mapY:28,dotColor:'#22a05a'},
-  {id:'h4',name:'Capella Singapore',stars:5,loc:'Sentosa Island · 4.1 km from centre',score:9.0,scoreLbl:'Wonderful',reviews:876,price:390,tags:['Beach','Resort','Adults+','Private'],featured:false,facilities:{pool:true,spa:true,wifi:true,parking:true,breakfast:false,gym:true},imgs:['https://images.unsplash.com/photo-1551882547-ff40c63fe5fa?w=900&q=80','https://images.unsplash.com/photo-1445019980597-93fa8acb246c?w=900&q=80','https://images.unsplash.com/photo-1562790351-d273a961e0e9?w=900&q=80'],mapX:55,mapY:78,dotColor:'#3B6B9A'},
+  {id:'h1',name:'Marina Bay Sands',stars:5,loc:'Marina Bay · 0.8 km from centre',score:9.2,scoreLbl:'Superb',reviews:2847,price:320,tags:['Infinity Pool','Casino','5-Star','Spa'],featured:true,facilities:{pool:true,spa:true,wifi:true,parking:true,breakfast:true,gym:true},imgs:['https://images.unsplash.com/photo-1562790351-d273a961e0e9?w=900&q=80','https://images.unsplash.com/photo-1631049307264-da0ec9d70304?w=900&q=80','https://images.unsplash.com/photo-1578683010236-d716f9a3f461?w=900&q=80','https://images.unsplash.com/photo-1445019980597-93fa8acb246c?w=900&q=80','https://images.unsplash.com/photo-1560347876-aeef00ee58a1?w=900&q=80'],lat:1.2834,lng:103.8607,keywords:'infinity pool casino luxury spa waterfront rooftop'},
+  {id:'h2',name:'Raffles Singapore',stars:5,loc:'City Hall · 1.2 km from centre',score:9.5,scoreLbl:'Exceptional',reviews:3410,price:480,tags:['Historic','Butler Service','Colonial','Garden'],featured:false,facilities:{pool:true,spa:true,wifi:true,parking:true,breakfast:true,gym:false},imgs:['https://images.unsplash.com/photo-1571003123894-1f0594d2b5d9?w=900&q=80','https://images.unsplash.com/photo-1566073771259-6a8506099945?w=900&q=80','https://images.unsplash.com/photo-1631049307264-da0ec9d70304?w=900&q=80','https://images.unsplash.com/photo-1445019980597-93fa8acb246c?w=900&q=80'],lat:1.2946,lng:103.8546,keywords:'historic colonial butler garden heritage luxury'},
+  {id:'h3',name:'The Capitol Kempinski',stars:5,loc:'St Andrews Road · 0.5 km centre',score:8.8,scoreLbl:'Excellent',reviews:1204,price:215,tags:['Heritage','City Center','Modern','Rooftop'],featured:false,facilities:{pool:true,spa:true,wifi:true,parking:false,breakfast:true,gym:true},imgs:['https://images.unsplash.com/photo-1566073771259-6a8506099945?w=900&q=80','https://images.unsplash.com/photo-1578683010236-d716f9a3f461?w=900&q=80','https://images.unsplash.com/photo-1560347876-aeef00ee58a1?w=900&q=80'],lat:1.2934,lng:103.8514,keywords:'heritage city center modern rooftop bar'},
+  {id:'h4',name:'Capella Singapore',stars:5,loc:'Sentosa Island · 4.1 km from centre',score:9.0,scoreLbl:'Wonderful',reviews:876,price:390,tags:['Beach','Resort','Adults+','Private'],featured:false,facilities:{pool:true,spa:true,wifi:true,parking:true,breakfast:false,gym:true},imgs:['https://images.unsplash.com/photo-1551882547-ff40c63fe5fa?w=900&q=80','https://images.unsplash.com/photo-1445019980597-93fa8acb246c?w=900&q=80','https://images.unsplash.com/photo-1562790351-d273a961e0e9?w=900&q=80'],lat:1.2494,lng:103.8303,keywords:'beach resort private adults sentosa quiet'},
+  {id:'h5',name:'Hotel Boss',stars:3,loc:'Lavender · 2.1 km from centre',score:7.8,scoreLbl:'Good',reviews:543,price:95,tags:['Budget','Near MRT','Free WiFi'],featured:false,facilities:{pool:false,spa:false,wifi:true,parking:false,breakfast:true,gym:false},imgs:['https://images.unsplash.com/photo-1631049035182-249067d7618e?w=900&q=80','https://images.unsplash.com/photo-1521783988139-89397d761dce?w=900&q=80','https://images.unsplash.com/photo-1590490360182-c33d57733427?w=900&q=80'],lat:1.3070,lng:103.8631,keywords:'budget cheap affordable mrt basic near'},
 ];
 
-let maxPriceFilter=600,starFilter='all';
+let maxPriceFilter=600;
+let scoreFilterTiers=new Set([7,8,9]);
+let aiSelectedIds=null;
+let showLabels=true;
+function hotelScoreTier(score){ if(score>=9)return 9; if(score>=8)return 8; return 7; }
 
 // tiers mirror the map legend: 9.0+ accent, 8.5-9.0 gold, below that green
 function scoreTier(score){ if(score>=9)return 'tier-accent'; if(score>=8.5)return 'tier-gold'; return 'tier-green'; }
 
+function getFilteredHotels(){
+  return hotels.filter(h=>
+    h.price<=maxPriceFilter &&
+    scoreFilterTiers.has(hotelScoreTier(h.score)) &&
+    (aiSelectedIds===null || aiSelectedIds.includes(h.id))
+  );
+}
+
 function renderHotels(){
-  const filtered=hotels.filter(h=>h.price<=maxPriceFilter&&(starFilter==='all'||h.stars===parseInt(starFilter)));
+  const filtered=getFilteredHotels();
   document.getElementById('res-count').textContent=filtered.length+' hotel'+(filtered.length!==1?'s':'');
   document.getElementById('hotels-list').innerHTML=filtered.map(h=>`
-  <div class="hotel-card${h.featured?' featured-card':''}" onclick="openDetail('${h.id}')">
+  <div class="hotel-card${h.featured?' featured-card':''}" id="${h.id}" onclick="openDetail('${h.id}')">
     <div class="hc-img">
       <img src="${h.imgs[0]}" alt="${h.name}" onerror="this.style.background='#E8E0D0'">
       ${h.featured?'<div class="hc-badge gold">✦ Featured</div>':'<div class="hc-badge">Singapore</div>'}
@@ -358,13 +381,10 @@ function renderHotels(){
       </div>
     </div>
   </div>`).join('')||'<div style="text-align:center;padding:3rem;color:var(--mist);">No hotels match your filters.</div>';
-  if(typeof renderMapDots === 'function') renderMapDots();
+  renderMapMarkers(filtered);
 }
 
 function setSort(el,type){document.querySelectorAll('.sort-pill').forEach(p=>p.classList.remove('active'));el.classList.add('active');if(type==='price')hotels.sort((a,b)=>a.price-b.price);else if(type==='score')hotels.sort((a,b)=>b.score-a.score);else if(type==='distance')hotels.sort((a,b)=>parseFloat(a.loc)-parseFloat(b.loc));else hotels.sort((a,b)=>b.featured-a.featured);renderHotels()}
-function setPriceFilter(v){maxPriceFilter=parseInt(v);document.getElementById('price-lbl').textContent='$'+v;renderHotels()}
-function toggleStar(el,v){document.querySelectorAll('.star-pill').forEach(p=>p.classList.remove('active'));el.classList.add('active');starFilter=v;renderHotels()}
-function resetFilters(){maxPriceFilter=600;starFilter='all';document.querySelector('input[type=range]').value=600;document.getElementById('price-lbl').textContent='$600';document.querySelectorAll('.star-pill').forEach((p,i)=>p.classList.toggle('active',i===0));renderHotels()}
 
 // ---- DETAIL MODAL ----
 let dmIdx=0,dmTotal=0,currentHotel=null;
@@ -397,176 +417,114 @@ function switchTab(el,id){document.querySelectorAll('.dm-tab').forEach(t=>t.clas
 function toggleDmFav(){const i=document.getElementById('dbs-fav-icon'),b=document.getElementById('dbs-fav');const saved=i.className.includes('regular');i.className=saved?'fa-solid fa-heart':'fa-regular fa-heart';i.style.color=saved?'var(--red)':'';b.innerHTML=(saved?'<i id="dbs-fav-icon" class="fa-solid fa-heart" style="color:var(--red)"></i> Saved':'<i id="dbs-fav-icon" class="fa-regular fa-heart"></i> Save')}
 document.getElementById('detail-overlay').addEventListener('click',function(e){if(e.target===this)closeDetail()});
 
-// ---- MAP ----
-let mapZoomLevel = 1, mapPanX = 0, mapPanY = 0;
-let pinnedHotel = null, quickViewHotel = null;
+// ---- MAP (Leaflet, real geodata) ----
+let map, mapMarkers=[], mapInitialized=false, mapExpanded=false;
+const PRICE_THRESHOLD=250; // >= this = "pricier" (green), below = "cheaper" (purple)
 
 function initMap(){
-  const area=document.getElementById('map-area');if(!area)return;
-  const canvas=document.getElementById('map-canvas');
-  canvas.width=area.offsetWidth;canvas.height=area.offsetHeight;
-  const ctx=canvas.getContext('2d'),w=canvas.width,h=canvas.height;
-  // bg
-  ctx.fillStyle='#1C2942';ctx.fillRect(0,0,w,h);
-  // water bodies
-  ctx.fillStyle='#223251';
-  ctx.beginPath();ctx.ellipse(w*.55,h*.6,w*.25,h*.2,0.2,0,Math.PI*2);ctx.fill();
-  ctx.beginPath();ctx.ellipse(w*.2,h*.7,w*.15,h*.15,-0.3,0,Math.PI*2);ctx.fill();
-  // land patches
-  ctx.fillStyle='#243756';
-  [[w*.1,h*.2,w*.4,h*.35],[w*.5,h*.1,w*.35,h*.45],[w*.3,h*.6,w*.2,h*.2]].forEach(([x,y,bw,bh])=>{ctx.beginPath();ctx.ellipse(x,y,bw,bh,0,0,Math.PI*2);ctx.fill()});
-  // grid
-  ctx.strokeStyle='rgba(255,255,255,0.06)';ctx.lineWidth=1;
-  for(let x=0;x<w;x+=w/8){ctx.beginPath();ctx.moveTo(x,0);ctx.lineTo(x,h);ctx.stroke()}
-  for(let y=0;y<h;y+=h/6){ctx.beginPath();ctx.moveTo(0,y);ctx.lineTo(w,y);ctx.stroke()}
-  // roads
-  ctx.strokeStyle='rgba(255,255,255,0.1)';ctx.lineWidth=2;ctx.setLineDash([]);
-  [[w*.1,h*.3,w*.9,h*.5],[w*.3,h*.1,w*.4,h*.9],[w*.5,h*.2,w*.6,h*.8]].forEach(([x1,y1,x2,y2])=>{ctx.beginPath();ctx.moveTo(x1,y1);ctx.lineTo(x2,y2);ctx.stroke()});
-
-  renderMapDots();
-  bindMapPanEvents();
+  if(mapInitialized) return;
+  mapInitialized=true;
+  map=L.map('destination-map',{zoomControl:false,attributionControl:false}).setView([1.2934,103.8558],13);
+  L.control.zoom({position:'topright'}).addTo(map);
+  L.tileLayer('https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png',{subdomains:'abcd',maxZoom:19}).addTo(map);
+  renderMapMarkers(getFilteredHotels());
+  bindMapUIEvents();
 }
 
-function lerpColor(hexA, hexB, t){
-  const a=parseInt(hexA.slice(1),16), b=parseInt(hexB.slice(1),16);
-  const ar=(a>>16)&255, ag=(a>>8)&255, ab=a&255;
-  const br=(b>>16)&255, bg=(b>>8)&255, bb=b&255;
-  return `rgb(${Math.round(ar+(br-ar)*t)},${Math.round(ag+(bg-ag)*t)},${Math.round(ab+(bb-ab)*t)})`;
-}
-
-// dots are derived from the SAME filtered list as the results column,
-// so the map always matches whatever sort/filter is currently active
-function renderMapDots(){
-  const surface=document.getElementById('map-surface');
-  if(!surface) return;
-  const visible=hotels.filter(h=>h.price<=maxPriceFilter&&(starFilter==='all'||h.stars===parseInt(starFilter)));
-  if(!visible.length){ surface.innerHTML=''; return; }
-
-  const scores=visible.map(h=>h.score), prices=visible.map(h=>h.price);
-  const minScore=Math.min(...scores), maxScore=Math.max(...scores);
-  const minPrice=Math.min(...prices), maxPrice=Math.max(...prices);
-  const CHEAP='#9B72CB', PRICEY='#22A05A'; // cheap -> purple, expensive -> green
-
-  surface.innerHTML=visible.map(h=>{
-    const scoreT = maxScore>minScore ? (h.score-minScore)/(maxScore-minScore) : 1;
-    const size = Math.round(14 + scoreT*16); // higher score = bigger dot
-    const priceT = maxPrice>minPrice ? (h.price-minPrice)/(maxPrice-minPrice) : 0.5;
-    const color = lerpColor(CHEAP, PRICEY, priceT); // pricier = greener
-    const pinned = pinnedHotel && pinnedHotel.id===h.id;
-    return `<div class="map-dest-dot${pinned?' pinned':''}" style="left:${h.mapX}%;top:${h.mapY}%;" data-hid="${h.id}">
-      <div class="dot-pulse" style="width:${size}px;height:${size}px;background:${color};"></div>
-      <div class="dot-circle" style="width:${size}px;height:${size}px;background:${color};"></div>
-      <div class="dot-price">$${h.price}</div>
-    </div>`;
-  }).join('');
-
-  // click = quick view (or compare, if something's pinned) · long-press = pin
-  surface.querySelectorAll('.map-dest-dot').forEach(dotEl=>{
-    const hid=dotEl.dataset.hid;
-    let timer=null, longFired=false;
-    const startPress=()=>{ longFired=false; timer=setTimeout(()=>{ longFired=true; onDotLongPress(hid); },480); };
-    const cancelPress=()=>{ if(timer) clearTimeout(timer); };
-    dotEl.addEventListener('pointerdown', startPress);
-    dotEl.addEventListener('pointerup', ()=>{ cancelPress(); if(!longFired) onDotClick(hid); });
-    dotEl.addEventListener('pointerleave', cancelPress);
+function renderMapMarkers(list){
+  if(!map) return;
+  mapMarkers.forEach(m=>map.removeLayer(m));
+  mapMarkers=[];
+  list.forEach(h=>{
+    const pricier = h.price>=PRICE_THRESHOLD;
+    const size = h.score>=9.0 ? 22 : 12;
+    const color = pricier ? 'var(--green)' : 'var(--hotels)';
+    const icon=L.divIcon({
+      html:`<div class="marker-dot" style="width:${size}px;height:${size}px;background:${color};"></div>`,
+      className:'', iconSize:[size,size], iconAnchor:[size/2,size/2]
+    });
+    const marker=L.marker([h.lat,h.lng],{icon});
+    const tooltipHtml=`<div class="map-tooltip-inner"><strong>${h.name}</strong><span>★ ${h.score.toFixed(1)} · $${h.price}/night</span></div>`;
+    marker.bindTooltip(tooltipHtml,{permanent:showLabels,direction:'top',className:'custom-tooltip',offset:[0,-(size/2+2)]});
+    marker.on('click',()=>{
+      if(!showLabels) marker.openTooltip();
+      const card=document.getElementById(h.id);
+      if(card){
+        card.scrollIntoView({behavior:'smooth',block:'center'});
+        card.classList.remove('card-highlight'); void card.offsetWidth; card.classList.add('card-highlight');
+      }
+    });
+    marker.addTo(map);
+    mapMarkers.push(marker);
   });
 }
 
-function onDotClick(hid){
-  const hotel=hotels.find(h=>h.id===hid); if(!hotel) return;
-  if(pinnedHotel && pinnedHotel.id!==hid) showCompare(pinnedHotel, hotel);
-  else if(pinnedHotel && pinnedHotel.id===hid){ pinnedHotel=null; showQuickView(hotel); }
-  else showQuickView(hotel);
-  renderMapDots();
-}
-function onDotLongPress(hid){
-  const hotel=hotels.find(h=>h.id===hid); if(!hotel) return;
-  pinnedHotel=hotel;
-  showQuickView(hotel);
-  renderMapDots();
-}
-
-function showQuickView(hotel){
-  quickViewHotel=hotel;
-  const panel=document.getElementById('mapDetailPanel');
-  panel.classList.add('active');
-  panel.innerHTML=`
-    <button class="map-panel-close" onclick="closeMapPanel()" aria-label="Close"><i class="fa-solid fa-xmark"></i></button>
-    <div class="map-qv">
-      <img src="${hotel.imgs[0]}" alt="${hotel.name}" onerror="this.style.background='var(--surface-3)'">
-      <div class="map-qv-info">
-        <div class="map-qv-name">${hotel.name}</div>
-        <div class="map-qv-meta">
-          <span class="hc-score ${scoreTier(hotel.score)}" style="width:26px;height:26px;font-size:.68rem;border-radius:8px;">${hotel.score}</span>
-          <strong>$${hotel.price}</strong><span style="color:var(--mist);font-weight:400;">/night</span>
-        </div>
-        <button class="map-qv-btn" onclick="openDetail('${hotel.id}')">View full details</button>
-      </div>
-    </div>`;
-  document.getElementById('mapHint').style.display='none';
-}
-
-function showCompare(hotelA, hotelB){
-  const panel=document.getElementById('mapDetailPanel');
-  panel.classList.add('active');
-  const facKeys=[['pool','Pool'],['spa','Spa'],['wifi','WiFi'],['parking','Parking'],['breakfast','Breakfast'],['gym','Gym']];
-  const ic=(ok)=> ok ? '<i class="fa-solid fa-check" style="color:var(--green)"></i>' : '<i class="fa-solid fa-xmark" style="color:var(--mist)"></i>';
-  panel.innerHTML=`
-    <button class="map-panel-close" onclick="closeMapPanel()" aria-label="Close"><i class="fa-solid fa-xmark"></i></button>
-    <div class="map-compare-title">Comparing 2 hotels</div>
-    <div class="map-compare-grid">
-      ${[hotelA,hotelB].map(h=>`
-        <div class="map-compare-col">
-          <img src="${h.imgs[0]}" alt="${h.name}" onerror="this.style.background='var(--surface-3)'">
-          <div class="map-compare-name">${h.name}</div>
-          <div class="map-compare-price">$${h.price}<span>/night</span></div>
-          <div class="map-compare-score"><span class="hc-score ${scoreTier(h.score)}" style="width:24px;height:24px;font-size:.64rem;border-radius:7px;">${h.score}</span> ${h.scoreLbl}</div>
-        </div>`).join('')}
-    </div>
-    <div class="map-compare-facilities">
-      ${facKeys.map(([key,label])=>`
-        <div class="map-compare-fac-row">
-          <span class="mcf-a">${ic(hotelA.facilities[key])}</span>
-          <span class="mcf-label">${label}</span>
-          <span class="mcf-b">${ic(hotelB.facilities[key])}</span>
-        </div>`).join('')}
-    </div>`;
-  document.getElementById('mapHint').style.display='none';
-}
-
-function closeMapPanel(){
-  pinnedHotel=null; quickViewHotel=null;
-  const panel=document.getElementById('mapDetailPanel');
-  panel.classList.remove('active'); panel.innerHTML='';
-  document.getElementById('mapHint').style.display='';
-  renderMapDots();
-}
-
-// ---- zoom / pan ----
-function applyMapTransform(){
-  const t=`scale(${mapZoomLevel}) translate(${mapPanX}px, ${mapPanY}px)`;
-  document.getElementById('map-surface').style.transform=t;
-  document.getElementById('map-canvas').style.transform=t;
-  document.getElementById('map-area').classList.toggle('zoomed-in', mapZoomLevel>=1.6);
-  document.getElementById('map-area').classList.toggle('can-pan', mapZoomLevel>1);
-}
-function mapZoom(dir){
-  mapZoomLevel=Math.min(3, Math.max(1, +(mapZoomLevel+dir*0.5).toFixed(1)));
-  if(mapZoomLevel===1){ mapPanX=0; mapPanY=0; }
-  applyMapTransform();
-}
-function bindMapPanEvents(){
-  const area=document.getElementById('map-area');
-  let dragging=false, lastX=0, lastY=0;
-  area.addEventListener('pointerdown',(e)=>{ if(mapZoomLevel<=1) return; dragging=true; lastX=e.clientX; lastY=e.clientY; });
-  area.addEventListener('pointermove',(e)=>{
-    if(!dragging) return;
-    mapPanX += (e.clientX-lastX)/mapZoomLevel;
-    mapPanY += (e.clientY-lastY)/mapZoomLevel;
-    lastX=e.clientX; lastY=e.clientY;
-    applyMapTransform();
+function bindMapUIEvents(){
+  const priceSlider=document.getElementById('mapPriceFilter');
+  priceSlider.addEventListener('input',(e)=>{
+    maxPriceFilter=parseInt(e.target.value);
+    document.getElementById('mapPriceDisplay').textContent = maxPriceFilter>=600 ? '$600+' : '$'+maxPriceFilter;
+    renderHotels();
   });
-  window.addEventListener('pointerup',()=>{ dragging=false; });
+
+  document.querySelectorAll('.map-score-cb').forEach(cb=>{
+    cb.addEventListener('change',()=>{
+      scoreFilterTiers=new Set(Array.from(document.querySelectorAll('.map-score-cb')).filter(c=>c.checked).map(c=>parseInt(c.value)));
+      renderHotels();
+    });
+  });
+
+  document.getElementById('mapLabelToggle').addEventListener('change',(e)=>{
+    showLabels=e.target.checked;
+    renderHotels();
+  });
+
+  document.getElementById('aiSearchForm').addEventListener('submit',(e)=>{
+    e.preventDefault();
+    const q=document.getElementById('aiSearchInput').value.toLowerCase().trim();
+    if(!q) return;
+    const loading=document.getElementById('aiLoading');
+    loading.classList.add('active');
+    setTimeout(()=>{
+      loading.classList.remove('active');
+      let matched=[], msg='';
+      if(q.includes('infinity') || q.includes('sands') || q.includes('casino')){
+        matched=['h1']; msg='Marina Bay Sands is famous for its rooftop infinity pool overlooking the skyline.';
+      } else if(q.includes('cheap') || q.includes('budget') || q.includes('afford') || q.includes('mrt')){
+        matched=['h5']; msg='Hotel Boss is the most affordable option here, and a short walk from Lavender MRT.';
+      } else if(q.includes('histor') || q.includes('colonial') || q.includes('heritage')){
+        matched=['h2','h3']; msg='Raffles and The Capitol Kempinski both lean into colonial-era architecture and heritage.';
+      } else if(q.includes('beach') || q.includes('resort') || q.includes('sentosa') || q.includes('quiet')){
+        matched=['h4']; msg='Capella Singapore is the beach-resort pick, tucked away on Sentosa Island.';
+      } else if(q.includes('luxury') || q.includes('best') || q.includes('top')){
+        matched=['h1','h2','h4']; msg='These three come out on top for a fully luxury stay.';
+      } else {
+        const words=q.split(/\s+/);
+        matched=hotels.filter(h=> words.some(w=>w.length>2 && (h.keywords.includes(w) || h.name.toLowerCase().includes(w)))).map(h=>h.id);
+        msg = matched.length ? "Here's what best matches that." : "Couldn't find an exact match for that — try something like \"beach resort\" or \"cheap near MRT\", or clear the filter.";
+      }
+      aiSelectedIds=matched;
+      document.getElementById('aiBannerText').textContent=msg;
+      document.getElementById('aiBanner').classList.add('active');
+      renderHotels();
+    },700);
+  });
+
+  document.getElementById('aiClearBtn').addEventListener('click',()=>{
+    aiSelectedIds=null;
+    document.getElementById('aiSearchInput').value='';
+    document.getElementById('aiBanner').classList.remove('active');
+    renderHotels();
+  });
+
+  document.getElementById('mapExpandBtn').addEventListener('click',()=>{
+    mapExpanded=!mapExpanded;
+    document.getElementById('mapWrapper').classList.toggle('expanded',mapExpanded);
+    document.getElementById('mapExpandLbl').textContent = mapExpanded ? 'Collapse map' : 'Expand map';
+    document.getElementById('mapExpandIcon').className = mapExpanded ? 'fa-solid fa-compress' : 'fa-solid fa-expand';
+    const iv=setInterval(()=>map.invalidateSize(),50);
+    setTimeout(()=>{ clearInterval(iv); map.invalidateSize(); },450);
+  });
 }
 
 renderHotels();
