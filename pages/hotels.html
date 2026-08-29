@@ -110,8 +110,11 @@
           </div>
         </div>
 
-        <!-- filter panel -->
-        <div class="map-filter-panel">
+        <!-- filter panel (collapsible on mobile) -->
+        <button class="map-filter-toggle" id="mapFilterToggle" type="button">
+          <i class="fa-solid fa-sliders"></i> Filters
+        </button>
+        <div class="map-filter-panel" id="mapFilterPanel">
           <div class="mfp-head">Filters</div>
           <div class="mfp-section">
             <div class="mfp-row"><label>Max price / night</label><span id="mapPriceDisplay">$600</span></div>
@@ -127,8 +130,8 @@
           <div class="mfp-legend">
             <div>
               <span class="mfp-leg-title">Price</span>
-              <div class="mfp-leg-row"><i style="background:var(--green)"></i>Pricier</div>
-              <div class="mfp-leg-row"><i style="background:var(--hotels)"></i>Cheaper</div>
+              <div class="mfp-leg-row"><i style="background:var(--price-high)"></i>Pricier</div>
+              <div class="mfp-leg-row"><i style="background:var(--price-low)"></i>Cheaper</div>
             </div>
             <div>
               <span class="mfp-leg-title">Score</span>
@@ -338,17 +341,23 @@ let maxPriceFilter=600;
 let scoreFilterTiers=new Set([7,8,9]);
 let aiSelectedIds=null;
 let showLabels=true;
+let pinnedToTopId=null; // hotel id most recently clicked on the map — rendered first
 function hotelScoreTier(score){ if(score>=9)return 9; if(score>=8)return 8; return 7; }
 
 // tiers mirror the map legend: 9.0+ accent, 8.5-9.0 gold, below that green
 function scoreTier(score){ if(score>=9)return 'tier-accent'; if(score>=8.5)return 'tier-gold'; return 'tier-green'; }
 
 function getFilteredHotels(){
-  return hotels.filter(h=>
+  const filtered = hotels.filter(h=>
     h.price<=maxPriceFilter &&
     scoreFilterTiers.has(hotelScoreTier(h.score)) &&
     (aiSelectedIds===null || aiSelectedIds.includes(h.id))
   );
+  if(pinnedToTopId){
+    const i = filtered.findIndex(h=>h.id===pinnedToTopId);
+    if(i>0){ const [h]=filtered.splice(i,1); filtered.unshift(h); }
+  }
+  return filtered;
 }
 
 function renderHotels(){
@@ -419,7 +428,7 @@ document.getElementById('detail-overlay').addEventListener('click',function(e){i
 
 // ---- MAP (Leaflet, real geodata) ----
 let map, mapMarkers=[], mapInitialized=false, mapExpanded=false;
-const PRICE_THRESHOLD=250; // >= this = "pricier" (green), below = "cheaper" (purple)
+const PRICE_THRESHOLD=250; // >= this = "pricier" (amber), below = "cheaper" (teal) — a dedicated scale, not the hotels brand purple
 
 function initMap(){
   if(mapInitialized) return;
@@ -429,6 +438,19 @@ function initMap(){
   L.tileLayer('https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png',{subdomains:'abcd',maxZoom:19}).addTo(map);
   renderMapMarkers(getFilteredHotels());
   bindMapUIEvents();
+  map.on('click dragstart',()=> document.getElementById('mapFilterPanel').classList.remove('open'));
+
+  // fix: on mobile the container isn't always at its final size when Leaflet
+  // first measures it (fonts/layout still settling), which can collapse all
+  // markers toward one point. Force a re-measure once things have settled,
+  // and again on resize/orientation change.
+  setTimeout(()=>map.invalidateSize(),250);
+  let resizeTimer;
+  window.addEventListener('resize',()=>{
+    clearTimeout(resizeTimer);
+    resizeTimer=setTimeout(()=>map.invalidateSize(),200);
+  });
+  window.addEventListener('orientationchange',()=>setTimeout(()=>map.invalidateSize(),300));
 }
 
 function renderMapMarkers(list){
@@ -438,7 +460,7 @@ function renderMapMarkers(list){
   list.forEach(h=>{
     const pricier = h.price>=PRICE_THRESHOLD;
     const size = h.score>=9.0 ? 22 : 12;
-    const color = pricier ? 'var(--green)' : 'var(--hotels)';
+    const color = pricier ? 'var(--price-high)' : 'var(--price-low)';
     const icon=L.divIcon({
       html:`<div class="marker-dot" style="width:${size}px;height:${size}px;background:${color};"></div>`,
       className:'', iconSize:[size,size], iconAnchor:[size/2,size/2]
@@ -448,11 +470,11 @@ function renderMapMarkers(list){
     marker.bindTooltip(tooltipHtml,{permanent:showLabels,direction:'top',className:'custom-tooltip',offset:[0,-(size/2+2)]});
     marker.on('click',()=>{
       if(!showLabels) marker.openTooltip();
+      pinnedToTopId=h.id;
+      renderHotels();
+      document.getElementById('hotels-list').scrollIntoView({behavior:'smooth',block:'start'});
       const card=document.getElementById(h.id);
-      if(card){
-        card.scrollIntoView({behavior:'smooth',block:'center'});
-        card.classList.remove('card-highlight'); void card.offsetWidth; card.classList.add('card-highlight');
-      }
+      if(card){ card.classList.remove('card-highlight'); void card.offsetWidth; card.classList.add('card-highlight'); }
     });
     marker.addTo(map);
     mapMarkers.push(marker);
@@ -515,6 +537,10 @@ function bindMapUIEvents(){
     document.getElementById('aiSearchInput').value='';
     document.getElementById('aiBanner').classList.remove('active');
     renderHotels();
+  });
+
+  document.getElementById('mapFilterToggle').addEventListener('click',()=>{
+    document.getElementById('mapFilterPanel').classList.toggle('open');
   });
 
   document.getElementById('mapExpandBtn').addEventListener('click',()=>{
