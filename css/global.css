@@ -30,6 +30,10 @@
   --green:         #22A05A;
   --red:           #E8536B;
 
+  /* --- dedicated price scale for maps (independent of section brand colors) --- */
+  --price-low:     #2DD4BF; /* teal — cheaper */
+  --price-high:    #F59E0B; /* amber — pricier */
+
   /* --- active accent, defaults to hotels on this page --- */
   --accent:        var(--hotels);
   --accent-dim:    rgba(155,114,203,0.16);
