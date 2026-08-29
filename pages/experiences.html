@@ -5,6 +5,8 @@
 <meta name="viewport" content="width=device-width,initial-scale=1.0,maximum-scale=1.0,user-scalable=no">
 <title>AeroFly — Experiences</title>
 <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+<link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" crossorigin="">
+<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js" crossorigin=""></script>
 <link rel="stylesheet" href="../css/global.css">
 <link rel="stylesheet" href="../css/experiences.css">
 </head>
@@ -70,6 +72,24 @@
         </div>
       </div>
       <button class="sb-search-btn"><i class="fa-solid fa-magnifying-glass"></i> Search Experiences</button>
+    </div>
+  </div>
+</div>
+
+<!-- DISCOVERY MAP -->
+<div class="map-section">
+  <div class="map-section-inner">
+    <div class="map-wrapper" id="xpMapWrapper">
+      <div id="xp-map"></div>
+      <div class="map-legend-mini">
+        <span><i class="fa-solid fa-landmark" style="color:var(--experiences)"></i> Culture</span>
+        <span><i class="fa-solid fa-utensils" style="color:var(--experiences)"></i> Food &amp; Drink</span>
+        <span><i class="fa-solid fa-person-hiking" style="color:var(--experiences)"></i> Outdoor</span>
+      </div>
+      <button class="map-expand-btn" id="xpMapExpandBtn" type="button">
+        <span id="xpMapExpandLbl">Expand map</span>
+        <i class="fa-solid fa-expand" id="xpMapExpandIcon"></i>
+      </button>
     </div>
   </div>
 </div>
@@ -170,6 +190,7 @@
       </div>
 
       <div class="dm-tc" id="dtc-itinerary">
+        <div id="xp-route-map"></div>
         <div class="fl-seg">
           <div class="fl-seg-dot"></div>
           <div class="fl-seg-body"><div class="fl-seg-time">6:30 PM · Meet at Bayfront gate</div><div class="fl-seg-sub">Guide briefing &amp; welcome drink</div></div>
@@ -257,11 +278,11 @@ document.addEventListener('click',()=>{document.querySelectorAll('.sb-popup').fo
 
 // ---- EXPERIENCES DATA ----
 const xps=[
-  {id:'x1',name:'Gardens by the Bay Night Tour',cat:'Culture',catLbl:'Culture · Tour',loc:'Marina Bay',duration:'2.5 hours',score:9.4,scoreLbl:'Excellent',reviews:1204,price:68,desc:'Wander the Supertree Grove as it lights up after dark, then step inside the Cloud Forest for a close-up of the indoor waterfall. A local guide covers the design story behind the gardens and the best photo spots along the way.',imgs:['https://images.unsplash.com/photo-1508964942454-1a56651d54ac?w=900&q=80','https://images.unsplash.com/photo-1533105079780-92b9be482077?w=900&q=80','https://images.unsplash.com/photo-1525625293386-3f8f99389edd?w=900&q=80']},
-  {id:'x2',name:'Singapore Street Food Trail',cat:'Food',catLbl:'Food & Drink · Walking tour',loc:'Chinatown & Tiong Bahru',duration:'3 hours',score:9.6,scoreLbl:'Exceptional',reviews:892,price:79,desc:'Hit six hawker stalls across two historic neighborhoods, tasting everything from chili crab to kaya toast, guided by someone who grew up eating this food.',imgs:['https://images.unsplash.com/photo-1559181567-c3190ca9959b?w=900&q=80','https://images.unsplash.com/photo-1512058564366-18510be2db19?w=900&q=80']},
-  {id:'x3',name:'Southern Islands Kayak & Snorkel',cat:'Outdoor',catLbl:'Outdoor · Half day',loc:'Sentosa Island',duration:'4 hours',score:8.9,scoreLbl:'Superb',reviews:341,price:95,desc:'Paddle out to the Southern Islands, snorkel a quiet reef away from the crowds, and stop for a beach picnic before heading back.',imgs:['https://images.unsplash.com/photo-1544551763-46a013bb70d5?w=900&q=80','https://images.unsplash.com/photo-1544551763-77ef2d0cfc6c?w=900&q=80']},
-  {id:'x4',name:'Peranakan Heritage Walk',cat:'Culture',catLbl:'Culture · Walking tour',loc:'Katong & Joo Chiat',duration:'2 hours',score:9.1,scoreLbl:'Excellent',reviews:203,price:45,desc:'Stroll past colorful shophouses and learn the Peranakan story through architecture, tile patterns and a stop for traditional kueh.',imgs:['https://images.unsplash.com/photo-1512453979798-5ea266f8880c?w=900&q=80','https://images.unsplash.com/photo-1533628635777-112b2239b1c7?w=900&q=80']},
-  {id:'x5',name:'Sunset Rooftop Bar Hop',cat:'Food',catLbl:'Food & Drink · Nightlife',loc:'Marina Bay & CBD',duration:'3 hours',score:8.7,scoreLbl:'Superb',reviews:156,price:120,desc:'Three rooftop bars, three signature cocktails, and the best skyline views in the city as the sun goes down.',imgs:['https://images.unsplash.com/photo-1470337458703-46ad1756a187?w=900&q=80','https://images.unsplash.com/photo-1470337458703-46ad1756a188?w=900&q=80']},
+  {id:'x1',name:'Gardens by the Bay Night Tour',cat:'Culture',catLbl:'Culture · Tour',icon:'fa-landmark',loc:'Marina Bay',duration:'2.5 hours',score:9.4,scoreLbl:'Excellent',reviews:1204,price:68,desc:'Wander the Supertree Grove as it lights up after dark, then step inside the Cloud Forest for a close-up of the indoor waterfall. A local guide covers the design story behind the gardens and the best photo spots along the way.',imgs:['https://images.unsplash.com/photo-1508964942454-1a56651d54ac?w=900&q=80','https://images.unsplash.com/photo-1533105079780-92b9be482077?w=900&q=80','https://images.unsplash.com/photo-1525625293386-3f8f99389edd?w=900&q=80'],lat:1.2816,lng:103.8636,route:[{lat:1.2816,lng:103.8636,label:'Bayfront Gate'},{lat:1.2815,lng:103.8636,label:'Supertree Grove'},{lat:1.2823,lng:103.8631,label:'Cloud Forest'},{lat:1.2816,lng:103.8636,label:'Bayfront Gate (end)'}]},
+  {id:'x2',name:'Singapore Street Food Trail',cat:'Food',catLbl:'Food & Drink · Walking tour',icon:'fa-utensils',loc:'Chinatown & Tiong Bahru',duration:'3 hours',score:9.6,scoreLbl:'Exceptional',reviews:892,price:79,desc:'Hit six hawker stalls across two historic neighborhoods, tasting everything from chili crab to kaya toast, guided by someone who grew up eating this food.',imgs:['https://images.unsplash.com/photo-1559181567-c3190ca9959b?w=900&q=80','https://images.unsplash.com/photo-1512058564366-18510be2db19?w=900&q=80'],lat:1.2838,lng:103.8434,route:[{lat:1.2838,lng:103.8434,label:'Chinatown Complex'},{lat:1.2802,lng:103.8447,label:'Maxwell Food Centre'},{lat:1.2853,lng:103.8267,label:'Tiong Bahru Market'}]},
+  {id:'x3',name:'Southern Islands Kayak & Snorkel',cat:'Outdoor',catLbl:'Outdoor · Half day',icon:'fa-person-hiking',loc:'Sentosa Island',duration:'4 hours',score:8.9,scoreLbl:'Superb',reviews:341,price:95,desc:'Paddle out to the Southern Islands, snorkel a quiet reef away from the crowds, and stop for a beach picnic before heading back.',imgs:['https://images.unsplash.com/photo-1544551763-46a013bb70d5?w=900&q=80','https://images.unsplash.com/photo-1544551763-77ef2d0cfc6c?w=900&q=80'],lat:1.2494,lng:103.8303,route:[{lat:1.2494,lng:103.8303,label:'Sentosa Jetty'},{lat:1.2231,lng:103.8481,label:"St John's Island"},{lat:1.2494,lng:103.8303,label:'Return to Jetty'}]},
+  {id:'x4',name:'Peranakan Heritage Walk',cat:'Culture',catLbl:'Culture · Walking tour',icon:'fa-landmark',loc:'Katong & Joo Chiat',duration:'2 hours',score:9.1,scoreLbl:'Excellent',reviews:203,price:45,desc:'Stroll past colorful shophouses and learn the Peranakan story through architecture, tile patterns and a stop for traditional kueh.',imgs:['https://images.unsplash.com/photo-1512453979798-5ea266f8880c?w=900&q=80','https://images.unsplash.com/photo-1533628635777-112b2239b1c7?w=900&q=80'],lat:1.3008,lng:103.9006,route:[{lat:1.3008,lng:103.9006,label:'Katong shophouses'},{lat:1.3068,lng:103.9027,label:'Joo Chiat heritage row'}]},
+  {id:'x5',name:'Sunset Rooftop Bar Hop',cat:'Food',catLbl:'Food & Drink · Nightlife',icon:'fa-utensils',loc:'Marina Bay & CBD',duration:'3 hours',score:8.7,scoreLbl:'Superb',reviews:156,price:120,desc:'Three rooftop bars, three signature cocktails, and the best skyline views in the city as the sun goes down.',imgs:['https://images.unsplash.com/photo-1470337458703-46ad1756a187?w=900&q=80','https://images.unsplash.com/photo-1470337458703-46ad1756a188?w=900&q=80'],lat:1.2838,lng:103.8591,route:[{lat:1.2838,lng:103.8591,label:'Marina Bay rooftop'},{lat:1.2789,lng:103.8514,label:'CBD rooftop'},{lat:1.2762,lng:103.8462,label:'Final rooftop'}]},
 ];
 
 let maxPriceFilter=150,catFilter='all';
@@ -272,7 +293,7 @@ function renderXps(){
   const filtered=xps.filter(x=>x.price<=maxPriceFilter&&(catFilter==='all'||x.cat===catFilter));
   document.getElementById('res-count').textContent=filtered.length+' experience'+(filtered.length!==1?'s':'');
   document.getElementById('xp-list').innerHTML=filtered.map(x=>`
-  <div class="xp-card" onclick="openDetail('${x.id}')">
+  <div class="xp-card" id="${x.id}" onclick="openDetail('${x.id}')">
     <div class="xp-img">
       <img src="${x.imgs[0]}" alt="${x.name}" onerror="this.style.background='#3A2A2E'">
       <div class="xp-badge">${x.catLbl.split(' ')[0]}</div>
@@ -294,6 +315,7 @@ function renderXps(){
       </div>
     </div>
   </div>`).join('')||'<div style="text-align:center;padding:3rem;color:var(--mist);">No experiences match your filters.</div>';
+  renderXpMarkers(filtered);
 }
 
 function setSort(el,type){document.querySelectorAll('.sort-pill').forEach(p=>p.classList.remove('active'));el.classList.add('active');if(type==='price')xps.sort((a,b)=>a.price-b.price);else if(type==='rating')xps.sort((a,b)=>b.score-a.score);renderXps()}
@@ -320,18 +342,96 @@ function openDetail(xid){
   document.querySelectorAll('.dm-tab').forEach((t,i)=>t.classList.toggle('active',i===0));
   document.querySelectorAll('.dm-tc').forEach((c,i)=>c.classList.toggle('active',i===0));
   document.getElementById('detail-overlay').classList.add('active');
+  if(routeMap){ routeMap.remove(); routeMap=null; } // reset — next itinerary tab open rebuilds for this experience
 }
 function closeDetail(){document.getElementById('detail-overlay').classList.remove('active')}
 function dmSlide(d){dmIdx=Math.max(0,Math.min(dmTotal-1,dmIdx+d));updateDmGallery();renderDmDots()}
 function updateDmGallery(){document.getElementById('dm-track').style.transform=`translateX(${-dmIdx*100}%)`;document.getElementById('dm-count').textContent=(dmIdx+1)+' / '+dmTotal}
 function renderDmDots(){document.getElementById('dm-dots').innerHTML=Array.from({length:dmTotal},(_,i)=>`<div class="dm-dot${i===dmIdx?' active':''}" onclick="dmIdx=${i};updateDmGallery();renderDmDots()"></div>`).join('')}
-function switchTab(el,id){document.querySelectorAll('.dm-tab').forEach(t=>t.classList.remove('active'));el.classList.add('active');document.querySelectorAll('.dm-tc').forEach(c=>c.classList.remove('active'));document.getElementById('dtc-'+id).classList.add('active')}
+function switchTab(el,id){
+  document.querySelectorAll('.dm-tab').forEach(t=>t.classList.remove('active'));el.classList.add('active');
+  document.querySelectorAll('.dm-tc').forEach(c=>c.classList.remove('active'));
+  document.getElementById('dtc-'+id).classList.add('active');
+  if(id==='itinerary') setTimeout(initRouteMap,50); // container must be visible before Leaflet sizes it
+}
 function toggleDmFav(){const i=document.getElementById('dbs-fav-icon'),b=document.getElementById('dbs-fav');const saved=i.className.includes('regular');i.className=saved?'fa-solid fa-heart':'fa-regular fa-heart';i.style.color=saved?'var(--red)':'';b.innerHTML=(saved?'<i id="dbs-fav-icon" class="fa-solid fa-heart" style="color:var(--red)"></i> Saved':'<i id="dbs-fav-icon" class="fa-regular fa-heart"></i> Save')}
 function goBook(){ if(currentXp){ window.location.href='booking.html?type=experiences&name='+encodeURIComponent(currentXp.name)+'&price='+currentXp.price; } }
 document.getElementById('detail-overlay').addEventListener('click',function(e){if(e.target===this)closeDetail()});
 
+// ---- DISCOVERY MAP (Leaflet, real geodata) ----
+let xpMap, xpMarkers=[], xpMapInitialized=false, xpMapExpanded=false, routeMap=null;
+
+function initXpMap(){
+  if(xpMapInitialized) return;
+  xpMapInitialized=true;
+  xpMap=L.map('xp-map',{zoomControl:false,attributionControl:false}).setView([1.2900,103.8500],12);
+  L.control.zoom({position:'topright'}).addTo(xpMap);
+  L.tileLayer('https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png',{subdomains:'abcd',maxZoom:19}).addTo(xpMap);
+  renderXpMarkers(xps);
+
+  document.getElementById('xpMapExpandBtn').addEventListener('click',()=>{
+    xpMapExpanded=!xpMapExpanded;
+    document.getElementById('xpMapWrapper').classList.toggle('expanded',xpMapExpanded);
+    document.getElementById('xpMapExpandLbl').textContent = xpMapExpanded ? 'Collapse map' : 'Expand map';
+    document.getElementById('xpMapExpandIcon').className = xpMapExpanded ? 'fa-solid fa-compress' : 'fa-solid fa-expand';
+    const iv=setInterval(()=>xpMap.invalidateSize(),50);
+    setTimeout(()=>{ clearInterval(iv); xpMap.invalidateSize(); },450);
+  });
+}
+
+function renderXpMarkers(list){
+  if(!xpMap) return;
+  xpMarkers.forEach(m=>xpMap.removeLayer(m));
+  xpMarkers=[];
+  list.forEach(x=>{
+    const icon=L.divIcon({
+      html:`<div class="xp-marker-pin"><i class="fa-solid ${x.icon}"></i></div>`,
+      className:'', iconSize:[30,30], iconAnchor:[15,30]
+    });
+    const marker=L.marker([x.lat,x.lng],{icon});
+    marker.bindTooltip(`<div class="map-tooltip-inner"><strong>${x.name}</strong><span>★ ${x.score.toFixed(1)} · $${x.price}/person</span></div>`,{direction:'top',className:'custom-tooltip',offset:[0,-30]});
+    marker.on('click',()=>{
+      const card=document.getElementById(x.id);
+      if(card){
+        card.scrollIntoView({behavior:'smooth',block:'center'});
+        card.classList.remove('card-highlight'); void card.offsetWidth; card.classList.add('card-highlight');
+      }
+    });
+    marker.addTo(xpMap);
+    xpMarkers.push(marker);
+  });
+}
+
+// ---- ITINERARY ROUTE MAP (mini map with numbered checkpoints, inside the detail modal) ----
+function initRouteMap(){
+  if(!currentXp || !currentXp.route) return;
+  const el=document.getElementById('xp-route-map');
+  if(!el) return;
+  if(routeMap){ routeMap.remove(); routeMap=null; }
+
+  routeMap=L.map('xp-route-map',{zoomControl:false,attributionControl:false,dragging:false,scrollWheelZoom:false,doubleClickZoom:false});
+  L.tileLayer('https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png',{subdomains:'abcd',maxZoom:19}).addTo(routeMap);
+
+  const pts=currentXp.route.map(p=>[p.lat,p.lng]);
+  L.polyline(pts,{color:'var(--experiences)',weight:3,dashArray:'6,8',opacity:.8}).addTo(routeMap);
+
+  currentXp.route.forEach((p,i)=>{
+    const isEnd = i===currentXp.route.length-1;
+    const icon=L.divIcon({
+      html:`<div class="route-checkpoint${isEnd?' end':''}">${isEnd?'<i class="fa-solid fa-flag-checkered"></i>':i+1}</div>`,
+      className:'', iconSize:[26,26], iconAnchor:[13,13]
+    });
+    L.marker([p.lat,p.lng],{icon}).bindTooltip(p.label,{direction:'top',className:'custom-tooltip',offset:[0,-14]}).addTo(routeMap);
+  });
+
+  routeMap.fitBounds(pts,{padding:[24,24]});
+  setTimeout(()=>routeMap.invalidateSize(),60);
+}
+
 renderXps();
 AeroUI.renderCrossSell('crosssell','experiences','Singapore');
+window.addEventListener('load',()=>{initXpMap();});
+setTimeout(initXpMap,100);
 
 </script>
 </body>
