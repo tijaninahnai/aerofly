@@ -16,6 +16,19 @@
 .fl-swap-btn:hover{ border-color: var(--accent); color: var(--accent); }
 .fl-swap-btn.spun{ transform: rotate(180deg); }
 
+@media (max-width:880px){
+  /* the search bar stacks into a column here, so the swap button sits
+     between two full-width fields instead of two side-by-side ones —
+     give it real breathing room and turn the icon vertical so the
+     "swap" affordance still makes sense pointing up/down, not left/right */
+  .fl-swap-btn{
+    margin: -8px auto; align-self:center;
+    background: var(--surface); border-color: var(--border);
+    position:relative; z-index:3;
+  }
+  .fl-swap-btn i{ display:inline-block; transform: rotate(90deg); }
+}
+
 /* ---------- FLIGHT LISTING CARDS ---------- */
 #flights-list{ display:flex; flex-direction:column; gap:14px; }
 
@@ -93,6 +106,13 @@
 .fl-route-hero-line span{ flex:1; height:1px; background: var(--border); }
 
 @media (max-width:480px){
+  .fl-route-hero{ height:150px; }
   .fl-route-hero-inner{ gap:14px; padding:0 16px; }
   .fl-route-hero-code{ font-size:1.5rem; }
+}
+
+@media (max-width:360px){
+  .fl-route-hero-inner{ gap:8px; padding:0 12px; }
+  .fl-route-hero-code{ font-size:1.25rem; }
+  .fl-route-hero-city div:last-child{ display:none; } /* keep the big BRU/SIN code, drop the city name below it */
 }
