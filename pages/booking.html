@@ -704,6 +704,13 @@ function showStep(i){
     if(phone) document.getElementById('deliverySmsSub').textContent = phone;
   }
   renderStepper();
+
+  // Smoothly scroll back to the top of the stepper area
+  const stepArea = document.getElementById('bkStepper');
+  if(stepArea && window.scrollY > stepArea.offsetTop) {
+    const y = stepArea.getBoundingClientRect().top + window.scrollY - 90;
+    window.scrollTo({top: y, behavior: 'smooth'});
+  }
 }
 
 function goNext(){
