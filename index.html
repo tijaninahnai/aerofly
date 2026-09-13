@@ -24,7 +24,7 @@
     <h1>Everything for the trip,<br><em>one place to plan it.</em></h1>
     <p>Flights, stays and things to do — search once, book it all.</p>
 
-    <!-- TRIP TYPE PICKER (search widget, not a nav — picks which mini-form shows below) -->
+    <!-- TRIP TYPE PICKER -->
     <div class="trip-picker">
       <div class="tp-tabs">
         <button class="tp-tab active" data-type="flights" onclick="setTripType(this,'flights')"><i class="fa-solid fa-plane"></i> <span>Flights</span></button>
@@ -72,16 +72,8 @@
 <!-- VALUE PROPS -->
 <section class="section alt">
   <div class="section-inner">
-    <!-- clickable journey nav: doubles as the accordion's "jump to" control -->
-    <div class="journey-path" id="journeyPath">
-      <button class="journey-node fl active" data-i="0" onclick="setFeature(0)" aria-label="Show flights"><i class="fa-solid fa-plane"></i></button>
-      <div class="journey-track"><div class="journey-traveler"><i class="fa-solid fa-plane"></i></div></div>
-      <button class="journey-node ht" data-i="1" onclick="setFeature(1)" aria-label="Show hotels"><i class="fa-solid fa-hotel"></i></button>
-      <div class="journey-track"><div class="journey-traveler"><i class="fa-solid fa-shoe-prints"></i></div></div>
-      <button class="journey-node xp" data-i="2" onclick="setFeature(2)" aria-label="Show experiences"><i class="fa-solid fa-ticket"></i></button>
-    </div>
-
-    <!-- desktop: plain 3-up grid. mobile: swipeable scroll-snap carousel (see home.css) -->
+    
+    <!-- desktop: plain 3-up grid. mobile: swipeable scroll-snap carousel -->
     <div class="value-carousel" id="valueCarousel">
       <div class="value-card">
         <div class="value-icon fl"><i class="fa-solid fa-plane"></i></div>
@@ -103,12 +95,16 @@
       </div>
     </div>
 
-    <!-- dots only render on mobile widths, via CSS -->
-    <div class="value-dots" id="valueDots">
-      <button class="value-dot fl active" data-i="0" onclick="setFeature(0)" aria-label="Show flights"></button>
-      <button class="value-dot ht" data-i="1" onclick="setFeature(1)" aria-label="Show hotels"></button>
-      <button class="value-dot xp" data-i="2" onclick="setFeature(2)" aria-label="Show experiences"></button>
+    <!-- JOURNEY PATH PAGINATION 
+         Positioned below the carousel to act as an interactive dotted indicator -->
+    <div class="journey-path" id="journeyPath">
+      <button class="journey-node fl active" data-i="0" onclick="setFeature(0)" aria-label="Show flights"><i class="fa-solid fa-plane"></i></button>
+      <div class="journey-track"><div class="journey-traveler"><i class="fa-solid fa-plane"></i></div></div>
+      <button class="journey-node ht" data-i="1" onclick="setFeature(1)" aria-label="Show hotels"><i class="fa-solid fa-hotel"></i></button>
+      <div class="journey-track"><div class="journey-traveler"><i class="fa-solid fa-shoe-prints"></i></div></div>
+      <button class="journey-node xp" data-i="2" onclick="setFeature(2)" aria-label="Show experiences"><i class="fa-solid fa-ticket"></i></button>
     </div>
+
   </div>
 </section>
 
@@ -151,9 +147,9 @@ document.getElementById('dest-grid').innerHTML = destinations.map(d=>`
       <div class="dest-name">${d.name}</div>
       <div class="dest-country">${d.country}</div>
       <div class="dest-pills">
-        <div class="dest-pill fl"><i class="fa-solid fa-plane"></i><span class="dp-label">Flight</span><strong>${d.flightPrice}</strong></div>
-        <div class="dest-pill ht"><i class="fa-solid fa-hotel"></i><span class="dp-label">Hotel</span><strong>${d.hotelPrice}<em>/night</em></strong></div>
-        <div class="dest-pill xp"><i class="fa-solid fa-ticket"></i><span class="dp-label">Activity</span><strong>${d.xpPrice}</strong></div>
+        <div class="dest-pill fl"><i class="fa-solid fa-plane"></i><strong>${d.flightPrice}</strong></div>
+        <div class="dest-pill ht"><i class="fa-solid fa-hotel"></i><strong>${d.hotelPrice}<em>/nt</em></strong></div>
+        <div class="dest-pill xp"><i class="fa-solid fa-ticket"></i><strong>${d.xpPrice}</strong></div>
       </div>
       <div class="dest-activity"><i class="fa-solid fa-sparkle"></i> ${d.activity}</div>
     </div>
@@ -173,25 +169,32 @@ function goSearch(){
   window.location.href = 'pages/' + type + '.html';
 }
 
-/* ---------- VALUE ACCORDION: journey-nodes + dots both jump to a card;
-   swiping the carousel on mobile keeps them in sync the other way. ---------- */
+/* ---------- VALUE ACCORDION: sync journey-nodes, carousel & dots ---------- */
 const valueCarousel = document.getElementById('valueCarousel');
+
 function setFeature(i){
-  document.querySelectorAll('.journey-node').forEach(n=>n.classList.toggle('active', +n.dataset.i===i));
-  document.querySelectorAll('.value-dot').forEach(d=>d.classList.toggle('active', +d.dataset.i===i));
+  document.querySelectorAll('.journey-node').forEach(n => n.classList.toggle('active', +n.dataset.i === i));
+  document.querySelectorAll('.value-dot').forEach(d => d.classList.toggle('active', +d.dataset.i === i));
+  
   const card = valueCarousel.children[i];
-  if(card) valueCarousel.scrollTo({ left: card.offsetLeft - valueCarousel.offsetLeft, behavior:'smooth' });
+  if(card){
+    const targetLeft = card.offsetLeft - valueCarousel.offsetLeft;
+    valueCarousel.scrollTo({ left: targetLeft, behavior: 'smooth' });
+  }
 }
-let valueScrollT;
-valueCarousel.addEventListener('scroll', ()=>{
-  clearTimeout(valueScrollT);
-  valueScrollT = setTimeout(()=>{
-    // only meaningful once the carousel is actually scrollable (mobile layout)
-    if(valueCarousel.scrollWidth <= valueCarousel.clientWidth + 4) return;
-    const i = Math.round(valueCarousel.scrollLeft / valueCarousel.clientWidth);
-    document.querySelectorAll('.journey-node').forEach(n=>n.classList.toggle('active', +n.dataset.i===i));
-    document.querySelectorAll('.value-dot').forEach(d=>d.classList.toggle('active', +d.dataset.i===i));
-  }, 100);
+
+let valueScrollTimer;
+valueCarousel.addEventListener('scroll', () => {
+  clearTimeout(valueScrollTimer);
+  valueScrollTimer = setTimeout(() => {
+    if(valueCarousel.scrollWidth <= valueCarousel.clientWidth + 10) return;
+    const scrollPos = valueCarousel.scrollLeft;
+    const cardWidth = valueCarousel.clientWidth;
+    const activeIndex = Math.round(scrollPos / cardWidth);
+
+    document.querySelectorAll('.journey-node').forEach(n => n.classList.toggle('active', +n.dataset.i === activeIndex));
+    document.querySelectorAll('.value-dot').forEach(d => d.classList.toggle('active', +d.dataset.i === activeIndex));
+  }, 60);
 });
 </script>
 </body>
