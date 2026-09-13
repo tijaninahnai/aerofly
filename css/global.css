@@ -64,7 +64,7 @@ body[data-section="experiences"]{
 
 *{ box-sizing:border-box; margin:0; padding:0; }
 
-html{ scroll-behavior:smooth; overflow-x:hidden; max-width:100%; }
+html{ scroll-behavior:smooth; overflow-x:hidden; max-width:100%; scrollbar-gutter: stable; }
 
 body{
   background: var(--bg);
@@ -507,7 +507,9 @@ header{
 
 .sort-pill.active{ background: var(--accent); border-color:transparent; color:#fff; font-weight:600; }
 
-.sidebar{ display:flex; flex-direction:column; gap:20px; position:sticky; top:90px; }
+.results-col{ min-width:0; }
+
+.sidebar{ display:flex; flex-direction:column; gap:20px; position:sticky; top:90px; min-width:0; }
 
 .map-card, .filter-card{
   background: var(--surface);
