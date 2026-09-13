@@ -43,7 +43,8 @@
 }
 .bk-step-item{ display:flex; flex-direction:column; align-items:center; flex:1; position:relative; }
 .bk-step-line{
-  position:absolute; top:18px; left:-50%; width:100%; height:2px;
+  position:absolute; top:50%; left:-50%; width:100%; height:2px;
+  transform: translateY(-50%);
   background: var(--border); z-index:0;
 }
 .bk-step-item:first-child .bk-step-line{ display:none; }
@@ -126,7 +127,7 @@ body[data-section="hotels"] .bk-step.active{
 .booking-grid{ display:grid; grid-template-columns: minmax(0, 1.2fr) 340px; gap:50px; align-items:start; }
 @media (max-width:900px){ .booking-grid{ grid-template-columns:1fr; } }
 
-.booking-forms{ display:flex; flex-direction:column; gap:20px; }
+.booking-forms{ display:flex; flex-direction:column; gap:20px; min-width:0; }
 
 .bk-card{
   background: var(--surface); border:1px solid var(--border); border-radius: var(--radius-lg);
@@ -347,7 +348,7 @@ body[data-section="hotels"] .bk-step.active{
 /* ---------- ORDER SUMMARY ---------- */
 .bk-summary{
   background: var(--surface); border:1px solid var(--border); border-radius: var(--radius-lg);
-  padding:22px 24px; position:sticky; top:90px;
+  padding:22px 24px; position:sticky; top:90px; min-width:0;
 }
 .bk-summary-badge{
   display:inline-flex; align-items:center; gap:7px;
@@ -567,4 +568,4 @@ body[data-section="hotels"] .bk-step.active{
   header, .bk-stepper, .confirm-home-btn, #confirmCrosssell, .confirm-pdf-btn{ display:none !important; }
   body{ background:#fff; color:#000; }
   .confirm-card{ border:none; box-shadow:none; }
-}
+     }
