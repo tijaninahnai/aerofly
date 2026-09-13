@@ -72,21 +72,25 @@
 <!-- VALUE PROPS -->
 <section class="section alt">
   <div class="section-inner">
+    <div class="journey-path">
+      <div class="journey-node fl"><i class="fa-solid fa-plane"></i></div>
+      <div class="journey-track"><div class="journey-dot"></div></div>
+      <div class="journey-node ht"><i class="fa-solid fa-hotel"></i></div>
+      <div class="journey-track"><div class="journey-dot" style="animation-delay:1.4s"></div></div>
+      <div class="journey-node xp"><i class="fa-solid fa-ticket"></i></div>
+    </div>
     <div class="value-grid">
       <div class="value-card">
-        <div class="value-icon fl"><i class="fa-solid fa-plane"></i></div>
         <h3>Flights</h3>
         <p>Compare hundreds of routes and fare classes, then lock in the best price.</p>
         <a href="pages/flights.html" class="value-link">Search flights <i class="fa-solid fa-arrow-right"></i></a>
       </div>
       <div class="value-card">
-        <div class="value-icon ht"><i class="fa-solid fa-hotel"></i></div>
         <h3>Hotels</h3>
         <p>From boutique stays to five-star resorts, filtered exactly your way.</p>
         <a href="pages/hotels.html" class="value-link">Search hotels <i class="fa-solid fa-arrow-right"></i></a>
       </div>
       <div class="value-card">
-        <div class="value-icon xp"><i class="fa-solid fa-ticket"></i></div>
         <h3>Experiences</h3>
         <p>Tours, food, culture and nightlife — booked in seconds, skip the line.</p>
         <a href="pages/experiences.html" class="value-link">Find experiences <i class="fa-solid fa-arrow-right"></i></a>
@@ -122,17 +126,23 @@
 <script src="js/global.js"></script>
 <script>
 const destinations = [
-  {name:'Singapore', country:'Singapore', img:'https://images.unsplash.com/photo-1525625293386-3f8f99389edd?w=500&q=80', price:'from €489'},
-  {name:'Kyoto', country:'Japan', img:'https://images.unsplash.com/photo-1493976040374-85c8e12f0c0e?w=500&q=80', price:'from €612'},
-  {name:'Lisbon', country:'Portugal', img:'https://images.unsplash.com/photo-1548707309-dcebeab9ea9b?w=500&q=80', price:'from €89'},
-  {name:'Bali', country:'Indonesia', img:'https://images.unsplash.com/photo-1537996194471-e657df975ab4?w=500&q=80', price:'from €534'},
+  {name:'Singapore', country:'Singapore', img:'https://images.unsplash.com/photo-1525625293386-3f8f99389edd?w=500&q=80', flightPrice:'€489', hotelPrice:'€89', xpPrice:'€45', activity:'Gardens by the Bay'},
+  {name:'Kyoto', country:'Japan', img:'https://images.unsplash.com/photo-1493976040374-85c8e12f0c0e?w=500&q=80', flightPrice:'€612', hotelPrice:'€120', xpPrice:'€38', activity:'Bamboo Grove Walk'},
+  {name:'Lisbon', country:'Portugal', img:'https://images.unsplash.com/photo-1548707309-dcebeab9ea9b?w=500&q=80', flightPrice:'€89', hotelPrice:'€65', xpPrice:'€25', activity:'Tram 28 Ride'},
+  {name:'Bali', country:'Indonesia', img:'https://images.unsplash.com/photo-1537996194471-e657df975ab4?w=500&q=80', flightPrice:'€534', hotelPrice:'€55', xpPrice:'€30', activity:'Uluwatu Sunset Temple'},
 ];
 document.getElementById('dest-grid').innerHTML = destinations.map(d=>`
   <a class="dest-card" href="pages/hotels.html">
     <img src="${d.img}" alt="${d.name}" onerror="this.style.background='var(--surface-2)'">
     <div class="dest-overlay">
       <div class="dest-name">${d.name}</div>
-      <div class="dest-meta"><span>${d.country}</span><span>${d.price}</span></div>
+      <div class="dest-country">${d.country}</div>
+      <div class="dest-pills">
+        <span class="dest-pill fl"><i class="fa-solid fa-plane"></i> ${d.flightPrice}</span>
+        <span class="dest-pill ht"><i class="fa-solid fa-hotel"></i> ${d.hotelPrice}<em>/night</em></span>
+        <span class="dest-pill xp"><i class="fa-solid fa-ticket"></i> ${d.xpPrice}</span>
+      </div>
+      <div class="dest-activity"><i class="fa-solid fa-sparkle"></i> ${d.activity}</div>
     </div>
   </a>`).join('');
 
