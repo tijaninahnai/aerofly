@@ -4,7 +4,7 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width,initial-scale=1.0,maximum-scale=1.0,user-scalable=no">
 <title>AeroFly — Fly, stay, explore</title>
-<link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+<link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" rel="stylesheet">
 <link rel="stylesheet" href="css/global.css">
 <link rel="stylesheet" href="css/home.css">
 </head>
@@ -12,11 +12,6 @@
 
 <header>
   <a class="logo" href="index.html"><i class="fa-solid fa-sparkles"></i> Aero<span>Fly</span></a>
-  <nav class="hdr-nav">
-    <a href="pages/flights.html">Flights</a>
-    <a href="pages/hotels.html">Hotels</a>
-    <a href="pages/experiences.html">Experiences</a>
-  </nav>
   <div class="hdr-actions">
     <button class="hdr-btn">Log in</button>
     <button class="hdr-btn gold">Sign up</button>
@@ -32,9 +27,9 @@
     <!-- TRIP TYPE PICKER (search widget, not a nav — picks which mini-form shows below) -->
     <div class="trip-picker">
       <div class="tp-tabs">
-        <button class="tp-tab active" data-type="flights" onclick="setTripType(this,'flights')"><i class="fa-solid fa-plane"></i> Flights</button>
-        <button class="tp-tab" data-type="hotels" onclick="setTripType(this,'hotels')"><i class="fa-solid fa-hotel"></i> Hotels</button>
-        <button class="tp-tab" data-type="experiences" onclick="setTripType(this,'experiences')"><i class="fa-solid fa-ticket"></i> Experiences</button>
+        <button class="tp-tab active" data-type="flights" onclick="setTripType(this,'flights')"><i class="fa-solid fa-plane"></i> <span>Flights</span></button>
+        <button class="tp-tab" data-type="hotels" onclick="setTripType(this,'hotels')"><i class="fa-solid fa-hotel"></i> <span>Hotels</span></button>
+        <button class="tp-tab" data-type="experiences" onclick="setTripType(this,'experiences')"><i class="fa-solid fa-ticket"></i> <span>Experiences</span></button>
       </div>
       <div class="tp-form">
         <!-- flights form -->
@@ -77,7 +72,17 @@
 <!-- VALUE PROPS -->
 <section class="section alt">
   <div class="section-inner">
-    <div class="value-grid">
+    <!-- clickable journey nav: doubles as the accordion's "jump to" control -->
+    <div class="journey-path" id="journeyPath">
+      <button class="journey-node fl active" data-i="0" onclick="setFeature(0)" aria-label="Show flights"><i class="fa-solid fa-plane"></i></button>
+      <div class="journey-track"><div class="journey-traveler"><i class="fa-solid fa-plane"></i></div></div>
+      <button class="journey-node ht" data-i="1" onclick="setFeature(1)" aria-label="Show hotels"><i class="fa-solid fa-hotel"></i></button>
+      <div class="journey-track"><div class="journey-traveler"><i class="fa-solid fa-shoe-prints"></i></div></div>
+      <button class="journey-node xp" data-i="2" onclick="setFeature(2)" aria-label="Show experiences"><i class="fa-solid fa-ticket"></i></button>
+    </div>
+
+    <!-- desktop: plain 3-up grid. mobile: swipeable scroll-snap carousel (see home.css) -->
+    <div class="value-carousel" id="valueCarousel">
       <div class="value-card">
         <div class="value-icon fl"><i class="fa-solid fa-plane"></i></div>
         <h3>Flights</h3>
@@ -96,6 +101,13 @@
         <p>Tours, food, culture and nightlife — booked in seconds, skip the line.</p>
         <a href="pages/experiences.html" class="value-link">Find experiences <i class="fa-solid fa-arrow-right"></i></a>
       </div>
+    </div>
+
+    <!-- dots only render on mobile widths, via CSS -->
+    <div class="value-dots" id="valueDots">
+      <button class="value-dot fl active" data-i="0" onclick="setFeature(0)" aria-label="Show flights"></button>
+      <button class="value-dot ht" data-i="1" onclick="setFeature(1)" aria-label="Show hotels"></button>
+      <button class="value-dot xp" data-i="2" onclick="setFeature(2)" aria-label="Show experiences"></button>
     </div>
   </div>
 </section>
@@ -127,17 +139,23 @@
 <script src="js/global.js"></script>
 <script>
 const destinations = [
-  {name:'Singapore', country:'Singapore', img:'https://images.unsplash.com/photo-1525625293386-3f8f99389edd?w=500&q=80', price:'from €489'},
-  {name:'Kyoto', country:'Japan', img:'https://images.unsplash.com/photo-1493976040374-85c8e12f0c0e?w=500&q=80', price:'from €612'},
-  {name:'Lisbon', country:'Portugal', img:'https://images.unsplash.com/photo-1548707309-dcebeab9ea9b?w=500&q=80', price:'from €89'},
-  {name:'Bali', country:'Indonesia', img:'https://images.unsplash.com/photo-1537996194471-e657df975ab4?w=500&q=80', price:'from €534'},
+  {name:'Singapore', country:'Singapore', img:'https://images.unsplash.com/photo-1525625293386-3f8f99389edd?w=500&q=80', flightPrice:'€489', hotelPrice:'€89', xpPrice:'€45', activity:'Gardens by the Bay'},
+  {name:'Kyoto', country:'Japan', img:'https://images.unsplash.com/photo-1493976040374-85c8e12f0c0e?w=500&q=80', flightPrice:'€612', hotelPrice:'€120', xpPrice:'€38', activity:'Bamboo Grove Walk'},
+  {name:'Lisbon', country:'Portugal', img:'https://images.unsplash.com/photo-1548707309-dcebeab9ea9b?w=500&q=80', flightPrice:'€89', hotelPrice:'€65', xpPrice:'€25', activity:'Tram 28 Ride'},
+  {name:'Bali', country:'Indonesia', img:'https://images.unsplash.com/photo-1537996194471-e657df975ab4?w=500&q=80', flightPrice:'€534', hotelPrice:'€55', xpPrice:'€30', activity:'Uluwatu Sunset Temple'},
 ];
 document.getElementById('dest-grid').innerHTML = destinations.map(d=>`
   <a class="dest-card" href="pages/hotels.html">
     <img src="${d.img}" alt="${d.name}" onerror="this.style.background='var(--surface-2)'">
     <div class="dest-overlay">
       <div class="dest-name">${d.name}</div>
-      <div class="dest-meta"><span>${d.country}</span><span>${d.price}</span></div>
+      <div class="dest-country">${d.country}</div>
+      <div class="dest-pills">
+        <div class="dest-pill fl"><i class="fa-solid fa-plane"></i><span class="dp-label">Flight</span><strong>${d.flightPrice}</strong></div>
+        <div class="dest-pill ht"><i class="fa-solid fa-hotel"></i><span class="dp-label">Hotel</span><strong>${d.hotelPrice}<em>/night</em></strong></div>
+        <div class="dest-pill xp"><i class="fa-solid fa-ticket"></i><span class="dp-label">Activity</span><strong>${d.xpPrice}</strong></div>
+      </div>
+      <div class="dest-activity"><i class="fa-solid fa-sparkle"></i> ${d.activity}</div>
     </div>
   </a>`).join('');
 
@@ -154,6 +172,27 @@ function goSearch(){
   const type = document.body.dataset.tripType || 'flights';
   window.location.href = 'pages/' + type + '.html';
 }
+
+/* ---------- VALUE ACCORDION: journey-nodes + dots both jump to a card;
+   swiping the carousel on mobile keeps them in sync the other way. ---------- */
+const valueCarousel = document.getElementById('valueCarousel');
+function setFeature(i){
+  document.querySelectorAll('.journey-node').forEach(n=>n.classList.toggle('active', +n.dataset.i===i));
+  document.querySelectorAll('.value-dot').forEach(d=>d.classList.toggle('active', +d.dataset.i===i));
+  const card = valueCarousel.children[i];
+  if(card) valueCarousel.scrollTo({ left: card.offsetLeft - valueCarousel.offsetLeft, behavior:'smooth' });
+}
+let valueScrollT;
+valueCarousel.addEventListener('scroll', ()=>{
+  clearTimeout(valueScrollT);
+  valueScrollT = setTimeout(()=>{
+    // only meaningful once the carousel is actually scrollable (mobile layout)
+    if(valueCarousel.scrollWidth <= valueCarousel.clientWidth + 4) return;
+    const i = Math.round(valueCarousel.scrollLeft / valueCarousel.clientWidth);
+    document.querySelectorAll('.journey-node').forEach(n=>n.classList.toggle('active', +n.dataset.i===i));
+    document.querySelectorAll('.value-dot').forEach(d=>d.classList.toggle('active', +d.dataset.i===i));
+  }, 100);
+});
 </script>
 </body>
 </html>
