@@ -85,6 +85,12 @@
   .flight-card{ flex-wrap:wrap; }
   .fl-airline{ width:100%; }
   .fl-price-block{ width:100%; flex-direction:row; align-items:center; justify-content:space-between; }
+
+  /* belt-and-braces: fl-route wraps on its own, independent of the rules
+     above, so duration/plane-icon/stops can never overflow the card even
+     if something upstream stops fl-airline getting its own full row */
+  .fl-route{ flex-wrap:wrap; row-gap:8px; width:100%; justify-content:space-between; }
+  .fl-path{ flex-basis:100%; order:3; min-width:0; }
 }
 
 @media (max-width:420px){
