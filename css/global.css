@@ -499,7 +499,7 @@ header{
 .sort-bar{ display:flex; gap:6px; }
 
 .sort-pill{
-  padding:6px 14px; border-radius:999px; border:1px solid var(--border);
+  padding:7px 14px; border-radius:9px; border:1px solid var(--border);
   font-size:0.75rem; color: var(--mist); transition: all .15s ease;
 }
 
