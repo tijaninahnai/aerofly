@@ -53,16 +53,19 @@
 .fl-airline-name{ font-size:0.9rem; font-weight:600; line-height:1.2; }
 .fl-flight-no{ font-size:0.72rem; color: var(--mist); margin-top:2px; }
 
-/* fixed-width time columns + a flexible path in between = every card's
-   departure/arrival times line up in the same spot regardless of how
-   long "13h 15m" vs "17h 30m" is — scannable as a list, not just per-card */
-.fl-route{ display:flex; align-items:center; gap:16px; flex:1; min-width:0; }
-.fl-time-block{ text-align:center; flex:0 0 64px; }
+/* Grid, not flex+order: 3 fixed columns (dep-time | path | arr-time) that
+   can never wrap into each other or interleave with sibling blocks —
+   every card's times line up in exactly the same spot, always. */
+.fl-route{
+  display:grid; grid-template-columns: minmax(52px,64px) minmax(70px,1fr) minmax(52px,64px);
+  align-items:center; gap:10px; flex:1; min-width:0;
+}
+.fl-time-block{ text-align:center; min-width:0; }
 .fl-time{ font-family: var(--font-display); font-size:1.25rem; font-weight:700; }
 .fl-dayoff{ font-size:0.65rem; color: var(--accent); vertical-align:top; margin-left:2px; }
 .fl-code{ font-size:0.72rem; color: var(--mist); margin-top:2px; letter-spacing:.03em; }
 
-.fl-path{ flex:1; text-align:center; min-width:80px; max-width:240px; }
+.fl-path{ text-align:center; min-width:0; }
 .fl-duration{ font-size:0.74rem; color: var(--mist); margin-bottom:4px; }
 .fl-line{ display:flex; align-items:center; gap:4px; color: var(--accent); font-size:0.7rem; }
 .fl-track{ flex:1; height:1px; background: var(--border); }
@@ -81,23 +84,20 @@
 .fl-select-btn:hover{ filter:brightness(1.1); }
 
 @media (max-width:820px){
-  .flight-card{ flex-wrap:wrap; gap:16px; }
-  .fl-airline{ flex-basis:100%; }
+  .flight-card{
+    display:grid; grid-template-columns:1fr; row-gap:10px;
+    padding:14px 16px;
+  }
   .fl-price-block{ width:100%; flex-direction:row; align-items:center; justify-content:space-between; }
   .fl-select-btn{ margin-top:0; }
-
-  /* belt-and-braces: fl-route wraps on its own, independent of the rules
-     above, so duration/plane-icon/stops can never overflow the card even
-     if something upstream stops fl-airline getting its own full row */
-  .fl-route{ flex-wrap:wrap; row-gap:8px; width:100%; justify-content:space-between; }
-  .fl-path{ flex-basis:100%; max-width:none; order:3; min-width:0; }
 }
 
 @media (max-width:420px){
-  .flight-card{ padding:12px 16px; }
-  .fl-route{ gap:8px; }
-  .fl-time{ font-size:1.1rem; }
-  .fl-time-block{ flex-basis:56px; }
+  .flight-card{ padding:12px 14px; row-gap:8px; }
+  .fl-route{ gap:6px; }
+  .fl-time{ font-size:1.05rem; }
+  .fl-airline-name{ font-size:0.84rem; }
+  .fl-logo{ width:32px; height:32px; }
 }
 
 /* ---------- DETAIL MODAL: route hero (replaces the image gallery) ---------- */
