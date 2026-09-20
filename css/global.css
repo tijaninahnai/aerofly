@@ -206,6 +206,26 @@ header{
 }
 .nav-hamburger-btn:hover, .nav-hamburger-btn.active{ border-color: var(--accent); color:#fff; background: var(--accent-soft); }
 
+/* section tint — the hamburger stays lightly colored to match whichever
+   section you're currently on/switching to */
+.nav-hamburger-btn.fl{ border-color: var(--flights); color:#fff; background: color-mix(in srgb, var(--flights) 22%, transparent); }
+.nav-hamburger-btn.ht{ border-color: var(--hotels); color:#fff; background: color-mix(in srgb, var(--hotels) 22%, transparent); }
+.nav-hamburger-btn.xp{ border-color: var(--experiences); color:#fff; background: color-mix(in srgb, var(--experiences) 22%, transparent); }
+
+/* icon-morph: stacked icons, only .active visible. Picking a new section
+   sends the old icon out to the right and brings the new one in from the
+   left, so the hamburger itself previews the section you're headed to. */
+.nav-hb-icons{ position:relative; width:16px; height:16px; }
+.nav-hb-icon{
+  position:absolute; inset:0; display:flex; align-items:center; justify-content:center;
+  opacity:0; transform: translateX(0);
+  transition: transform .35s cubic-bezier(.4,0,.2,1), opacity .3s ease;
+  pointer-events:none;
+}
+.nav-hb-icon.active{ opacity:1; transform: translateX(0); }
+.nav-hb-icon.exit-right{ opacity:0; transform: translateX(16px); }
+.nav-hb-icon.enter-left{ opacity:0 !important; transform: translateX(-16px) !important; transition:none !important; }
+
 .nav-menu-popover{
   display:none;
   position:absolute; top:calc(100% + 12px); right:0;
@@ -499,8 +519,8 @@ header{
 .sort-bar{ display:flex; gap:6px; }
 
 .sort-pill{
-  padding:7px 14px; border-radius:9px; border:1px solid var(--border);
-  font-size:0.75rem; color: var(--mist); transition: all .15s ease;
+  padding:8px 16px; border-radius:999px; border:1px solid var(--border);
+  font-size:0.78rem; color: var(--mist); transition: all .15s ease;
 }
 
 .sort-pill:hover{ color: var(--text); }
