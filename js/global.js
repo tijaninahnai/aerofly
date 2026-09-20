@@ -19,6 +19,7 @@ const AeroUI = (() => {
     hotels:      { label: 'Hotels',      icon: 'fa-hotel',  accent: 'var(--hotels)' },
     experiences: { label: 'Experiences', icon: 'fa-ticket', accent: 'var(--experiences)' }
   };
+  const SECTION_TINT = { flights:'fl', hotels:'ht', experiences:'xp' };
 
   // ---------- hamburger section menu ----------
   function toggleNavMenu(e){
@@ -34,6 +35,41 @@ const AeroUI = (() => {
     const btn  = document.getElementById('navHamburgerBtn');
     if(menu) menu.classList.remove('active');
     if(btn) btn.classList.remove('active');
+  }
+
+  // ---------- section switch: icon-morph on the hamburger itself ----------
+  // Old section's icon flies out right & fades, the new section's icon
+  // flies in from the left & fades, the button tints to match — then,
+  // once that's played out, the actual navigation happens.
+  // Usage in markup: onclick="return switchSection(event,'hotels','hotels.html')"
+  function switchSection(e, key, url){
+    if(e) e.preventDefault();
+    closeNavMenu();
+    const btn = document.getElementById('navHamburgerBtn');
+    const current = document.querySelector('.nav-hb-icon.active');
+    const next = btn ? btn.querySelector(`.nav-hb-icon[data-section="${key}"]`) : null;
+
+    if(!btn || !next || current === next){
+      // already on this section, or the icon-morph markup isn't on this
+      // page — just navigate straight there, no animation to play
+      window.location.href = url;
+      return false;
+    }
+
+    if(current){
+      current.classList.remove('active');
+      current.classList.add('exit-right');
+    }
+    next.classList.add('enter-left');
+    void next.offsetWidth; // force reflow so the enter-left start position is committed
+    next.classList.remove('enter-left');
+    next.classList.add('active');
+
+    btn.classList.remove('fl','ht','xp');
+    btn.classList.add(SECTION_TINT[key] || 'fl');
+
+    setTimeout(()=>{ window.location.href = url; }, 380);
+    return false;
   }
 
   // ---------- generic "outside click closes it" registry ----------
@@ -93,8 +129,9 @@ const AeroUI = (() => {
       </div>`;
   }
 
-  return { toggleNavMenu, closeNavMenu, registerPopover, closeAllPopovers, renderCrossSell };
+  return { toggleNavMenu, closeNavMenu, switchSection, registerPopover, closeAllPopovers, renderCrossSell };
 })();
 
-// convenience wrapper so inline onclick="toggleNavMenu(event)" works directly
+// convenience wrappers so inline onclick="..." works directly
 function toggleNavMenu(e){ AeroUI.toggleNavMenu(e); }
+function switchSection(e, key, url){ return AeroUI.switchSection(e, key, url); }
