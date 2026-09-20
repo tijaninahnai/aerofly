@@ -4,7 +4,7 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width,initial-scale=1.0,maximum-scale=1.0,user-scalable=no">
 <title>AeroFly — Flights</title>
-<link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+<link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" rel="stylesheet">
 <link rel="stylesheet" href="../css/global.css">
 <link rel="stylesheet" href="../css/flights.css">
 </head>
@@ -18,14 +18,18 @@
   <div class="hdr-actions">
     <button class="hdr-btn">Log in</button>
     <button class="hdr-btn gold">Sign up</button>
-    <button class="nav-hamburger-btn" id="navHamburgerBtn" onclick="toggleNavMenu(event)" aria-label="Switch section">
-      <i class="fa-solid fa-bars"></i>
+    <button class="nav-hamburger-btn fl" id="navHamburgerBtn" onclick="toggleNavMenu(event)" aria-label="Switch section">
+      <span class="nav-hb-icons">
+        <i class="fa-solid fa-plane nav-hb-icon active" data-section="flights"></i>
+        <i class="fa-solid fa-hotel nav-hb-icon" data-section="hotels"></i>
+        <i class="fa-solid fa-ticket nav-hb-icon" data-section="experiences"></i>
+      </span>
     </button>
     <div class="nav-menu-popover" id="navMenuPopover">
       <div class="nav-menu-label">Switch section</div>
-      <a href="flights.html" class="nav-menu-item active"><i class="fa-solid fa-plane"></i> Flights</a>
-      <a href="hotels.html" class="nav-menu-item"><i class="fa-solid fa-hotel"></i> Hotels</a>
-      <a href="experiences.html" class="nav-menu-item"><i class="fa-solid fa-ticket"></i> Experiences</a>
+      <a href="flights.html" class="nav-menu-item active" onclick="return switchSection(event,'flights','flights.html')"><i class="fa-solid fa-plane"></i> Flights</a>
+      <a href="hotels.html" class="nav-menu-item" onclick="return switchSection(event,'hotels','hotels.html')"><i class="fa-solid fa-hotel"></i> Hotels</a>
+      <a href="experiences.html" class="nav-menu-item" onclick="return switchSection(event,'experiences','experiences.html')"><i class="fa-solid fa-ticket"></i> Experiences</a>
       <a href="../index.html" class="nav-menu-item home"><i class="fa-solid fa-house"></i> Home</a>
     </div>
   </div>
