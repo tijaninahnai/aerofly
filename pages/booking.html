@@ -44,6 +44,11 @@
     </div>
 
     <!-- STEPPER (built by JS — differs per type) -->
+    <div class="bk-elevator-display" id="bkElevatorDisplay" style="display:none">
+      <i class="fa-solid fa-elevator"></i>
+      <span class="bked-label" id="bkedFloorLabel">Floor 1</span>
+      <i class="fa-solid fa-chevron-up bked-arrow"></i>
+    </div>
     <div class="bk-stepper" id="bkStepper"></div>
 
     <div class="booking-grid">
@@ -515,6 +520,12 @@ function renderStepper(){
   document.getElementById('bkProgressFill').style.width = pct + '%';
   document.getElementById('bkProgressIcon').style.left = Math.max(pct, 3) + '%';
   document.getElementById('bkProgressIcon').innerHTML = `<i class="fa-solid ${meta.icon}"></i>`;
+
+  const elevDisplay = document.getElementById('bkElevatorDisplay');
+  if(isHotel){
+    elevDisplay.style.display = 'flex';
+    document.getElementById('bkedFloorLabel').textContent = `Floor ${currentIndex+1} of ${steps.length}`;
+  }
 }
 
 /* ---------- validation ---------- */
@@ -705,14 +716,12 @@ function showStep(i){
   }
   renderStepper();
 
-  // Always scroll back to the top of the stepper on every step change —
-  // unconditional on purpose: the loader animation briefly collapses the
-  // page height, which can already shift scrollY before this runs, so a
-  // "only if scrolled past X" check is unreliable. Always scrolling isn't.
+  // Jump straight to the top of the stepper on every step change — no
+  // smooth animation, just land there immediately when Continue is pressed.
   const stepArea = document.getElementById('bkStepper');
   if(stepArea){
     const y = stepArea.getBoundingClientRect().top + window.scrollY - 90;
-    window.scrollTo({top: Math.max(0, y), behavior: 'smooth'});
+    window.scrollTo({top: Math.max(0, y), behavior: 'auto'});
   }
 }
 
@@ -763,7 +772,13 @@ const CONFIRM_ANIM_HTML = {
     <div class="plane-wrapper" id="fcaPlaneWrapper"><i class="fa-solid fa-plane plane"></i></div>
   </div>`,
   hotels: `<div class="cha-doors-wrap" id="chaDoorsWrap">
-    <div class="cha-hallway"><div class="cha-hall-light"></div></div>
+    <div class="cha-hallway"></div>
+    <div class="cha-scene-cycle" id="chaSceneCycle">
+      <div class="cha-scene rain active"><i class="fa-solid fa-cloud-rain"></i><span>Grey skies back home…</span></div>
+      <div class="cha-scene snow"><i class="fa-solid fa-snowflake"></i><span>…or snowy peaks</span></div>
+      <div class="cha-scene beach"><i class="fa-solid fa-umbrella-beach"></i><span>Sun-drenched beaches</span></div>
+      <div class="cha-scene night"><i class="fa-solid fa-champagne-glasses"></i><span>Nights out waiting</span></div>
+    </div>
     <div class="cha-hall-check" id="chaHallCheck"><i class="fa-solid fa-check"></i></div>
     <div class="cha-door-panel left"><div class="cha-porthole"></div></div>
     <div class="cha-door-panel right"><div class="cha-porthole"></div></div>
@@ -786,7 +801,8 @@ function playConfirmAnimation(){
   } else if(type === 'hotels'){
     const wrap = document.getElementById('chaDoorsWrap');
     setTimeout(()=> wrap.classList.add('opening'), 350);
-    setTimeout(revealConfirmText, 2500);
+    playHotelSceneCycle();
+    setTimeout(revealConfirmText, 3400);
 
   } else {
     setTimeout(revealConfirmText, 1200);
@@ -795,6 +811,20 @@ function playConfirmAnimation(){
 
 function revealConfirmText(){
   document.getElementById('confirmTextBlock').classList.add('revealed');
+}
+
+// cycles the hotel confirmation's mood cards while the doors slide open —
+// starts once the doors have mostly cleared (~700ms in) so the scenes are
+// actually visible, then holds ~550ms on each before the checkmark caps it
+function playHotelSceneCycle(){
+  const order = ['rain','snow','beach','night'];
+  order.forEach((key,i)=>{
+    setTimeout(()=>{
+      document.querySelectorAll('.cha-scene').forEach(s=>s.classList.remove('active'));
+      const el = document.querySelector(`.cha-scene.${key}`);
+      if(el) el.classList.add('active');
+    }, 700 + i*550);
+  });
 }
 
 function submitBooking(){
