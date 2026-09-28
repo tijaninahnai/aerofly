@@ -186,7 +186,21 @@ body[data-section="hotels"] .bk-step.active{
 .bk-hint.show{ display:block; }
 
 /* ---------- STEP CONTENT VISIBILITY + TRANSITIONS ---------- */
-.bk-step-area{ position:relative; min-height:120px; }
+.bk-step-area{ position:relative; min-height:120px; overflow:hidden; border-radius: var(--radius-lg); }
+
+/* elevator doors — hotel-only step transition, see showStepLoader() */
+.bk-door{
+  position:absolute; top:0; bottom:0; width:51%; z-index:50;
+  background: var(--surface);
+  display:flex; align-items:center; justify-content:center;
+  transition: transform .6s cubic-bezier(.65,.05,.36,1);
+  pointer-events:none;
+}
+.bk-door i{ color: var(--hotels); font-size:1.2rem; opacity:.45; }
+.bk-door.left{ left:0; transform:translateX(-101%); border-right:2px solid var(--hotels); box-shadow:10px 0 30px rgba(0,0,0,.4); justify-content:flex-end; padding-right:16px; }
+.bk-door.right{ right:0; transform:translateX(101%); border-left:2px solid var(--hotels); box-shadow:-10px 0 30px rgba(0,0,0,.4); justify-content:flex-start; padding-left:16px; }
+#bkStepArea.doors-closed .bk-door.left,
+#bkStepArea.doors-closed .bk-door.right{ transform:translateX(0); }
 .bk-step{ display:none; }
 .bk-step.active{ display:block; animation: bkStepIn .3s ease; }
 @keyframes bkStepIn{ from{ opacity:0; transform: translateY(8px); } to{ opacity:1; transform:none; } }
@@ -601,4 +615,4 @@ body[data-section="hotels"] .bk-step.active{
   header, .bk-stepper, .confirm-home-btn, #confirmCrosssell, .confirm-pdf-btn{ display:none !important; }
   body{ background:#fff; color:#000; }
   .confirm-card{ border:none; box-shadow:none; }
-}
+   }
