@@ -58,7 +58,15 @@
 
         <div class="bk-step-area" id="bkStepArea">
 
-          <!-- transition loader (icon swapped per type) -->
+          <!-- hotel-only: full-cover elevator doors. These slide shut over
+               the whole step area, the content swaps behind them, then they
+               reopen — the transition itself IS the elevator, not a small
+               icon off to the side. No-ops for flights/experiences. -->
+          <div class="bk-door left"><i class="fa-solid fa-elevator"></i></div>
+          <div class="bk-door right"><i class="fa-solid fa-elevator"></i></div>
+
+          <!-- transition loader (icon swapped per type) — used for
+               flights/experiences; hotels use the doors above instead -->
           <div class="step-loader" id="stepLoader">
             <div class="step-loader-inner">
               <div id="stepLoaderIcon"></div>
@@ -689,6 +697,18 @@ const LOADER_HTML = {
   experiences: '<i class="fa-solid fa-ticket sl-xp"></i>',
 };
 function showStepLoader(cb){
+  if(type === 'hotels'){
+    // the doors ARE the transition: close over the whole step area,
+    // swap content behind them while hidden, then reopen — no separate
+    // loader box needed on top of that.
+    const area = document.getElementById('bkStepArea');
+    area.classList.add('doors-closed');
+    setTimeout(()=>{
+      cb();
+      setTimeout(()=> area.classList.remove('doors-closed'), 150);
+    }, 620);
+    return;
+  }
   const loader = document.getElementById('stepLoader');
   document.getElementById('stepLoaderIcon').innerHTML = LOADER_HTML[type] || LOADER_HTML.hotels;
   document.querySelectorAll('.bk-step').forEach(s=>s.classList.remove('active'));
