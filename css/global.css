@@ -3,7 +3,7 @@
    Shared across all pages. Page-specific accent is set via
    the [data-section] attribute on <body> (flights / hotels / experiences).
    ============================================================ */
-c
+
 @import url('https://fonts.googleapis.com/css2?family=Outfit:wght@400;500;600;700;800&family=Roboto:wght@300;400;500;700&display=swap');
 
 :root{
@@ -215,7 +215,7 @@ header{
 /* icon-morph: stacked icons, only .active visible. Picking a new section
    sends the old icon out to the right and brings the new one in from the
    left, so the hamburger itself previews the section you're headed to. */
-.nav-hb-icons{ position:relative; width:16px; height:16px; }
+.nav-hb-icons{ position:relative; display:inline-block; width:16px; height:16px; }
 .nav-hb-icon{
   position:absolute; inset:0; display:flex; align-items:center; justify-content:center;
   opacity:0; transform: translateX(0);
@@ -997,15 +997,72 @@ header{
   border-radius:8px; padding:6px 10px; box-shadow: var(--shadow-sm);
 }
 .leaflet-tooltip.custom-tooltip::before{ display:none; }
-.map-tooltip-inner strong{ display:block; font-size:0.76rem; font-weight:700; }
-.map-tooltip-inner span{ font-size:0.68rem; color: var(--mist); }
 
-.marker-dot{
-  border-radius:50%; border:2px solid #fff;
-  box-shadow: 0 2px 8px rgba(0,0,0,0.4);
-  transition: transform .15s ease;
+/* small permanent name label under a pin, toggled via "Show hotel names" */
+.leaflet-tooltip.pin-name-label{
+  background: rgba(15,23,42,0.85); backdrop-filter: blur(4px);
+  border:1px solid var(--border); color:#fff; border-radius:999px;
+  padding:3px 9px; font-size:0.68rem; font-weight:600; box-shadow: var(--shadow-sm);
 }
-.marker-dot:hover{ transform: scale(1.2); }
+.leaflet-tooltip.pin-name-label::before{ display:none; }
+
+/* ---------- premium price-pill map marker ---------- */
+.price-pin{
+  position:relative;
+  padding:7px 12px; border-radius:999px;
+  background: var(--surface); color:#fff;
+  border:2px solid var(--pin-color, var(--accent));
+  font-family: var(--font-display); font-size:0.8rem; font-weight:700;
+  box-shadow: 0 4px 14px rgba(0,0,0,.45);
+  transition: transform .15s ease, box-shadow .15s ease;
+  white-space:nowrap;
+}
+.price-pin::after{
+  content:''; position:absolute; left:50%; bottom:-7px; transform:translateX(-50%);
+  border:7px solid transparent; border-top-color: var(--surface);
+}
+.price-pin:hover{ transform: scale(1.1); box-shadow: 0 6px 20px rgba(0,0,0,.55); z-index:20; }
+.price-pin.top{
+  border-width:2.5px;
+  box-shadow: 0 0 0 3px color-mix(in srgb, var(--gold) 35%, transparent), 0 4px 14px rgba(0,0,0,.45);
+}
+
+/* ---------- rich click-to-preview popup ---------- */
+.leaflet-popup.hotel-map-popup .leaflet-popup-content-wrapper{
+  background: var(--surface); border:1px solid var(--border); border-radius:14px;
+  padding:0; overflow:hidden; box-shadow: var(--shadow-lg);
+}
+.leaflet-popup.hotel-map-popup .leaflet-popup-content{ margin:0; width:auto !important; }
+.leaflet-popup.hotel-map-popup .leaflet-popup-tip{ background: var(--surface); border:1px solid var(--border); }
+.leaflet-popup.hotel-map-popup .leaflet-popup-close-button{
+  color:#fff !important; opacity:.8; top:6px !important; right:6px !important;
+  background: rgba(0,0,0,.35); border-radius:50%; width:20px !important; height:20px !important;
+  line-height:18px !important; text-align:center;
+}
+.hmp-card{ display:flex; flex-direction:column; width:200px; }
+.hmp-img{ width:100%; height:96px; object-fit:cover; display:block; }
+.hmp-body{ padding:10px 12px 12px; }
+.hmp-top{ display:flex; align-items:flex-start; justify-content:space-between; gap:8px; }
+.hmp-name{ font-family: var(--font-display); font-size:0.86rem; font-weight:700; line-height:1.25; }
+.hmp-score{
+  flex-shrink:0; background: var(--accent); color:#fff; border-radius:6px;
+  padding:2px 6px; font-size:0.72rem; font-weight:700;
+}
+.hmp-loc{ font-size:0.68rem; color: var(--mist); margin-top:4px; display:flex; align-items:center; gap:4px; }
+.hmp-loc i{ color: var(--accent); font-size:0.62rem; }
+.hmp-bottom{ display:flex; align-items:center; justify-content:space-between; gap:8px; margin-top:10px; }
+.hmp-price{ font-family: var(--font-display); font-size:0.95rem; font-weight:700; }
+.hmp-price span{ font-size:0.66rem; font-weight:400; color: var(--mist); }
+.hmp-view-btn{
+  padding:6px 12px; border:none; border-radius:7px; background: var(--accent); color:#fff;
+  font-size:0.72rem; font-weight:600; white-space:nowrap;
+}
+.hmp-view-btn:hover{ filter:brightness(1.1); }
+
+@media (max-width:600px){
+  .hmp-card{ width:168px; }
+  .hmp-img{ height:80px; }
+}
 
 /* card gets a brief highlight pulse when jumped to from a map marker */
 .card-highlight{ animation: cardHighlightPulse 1.4s ease; }
