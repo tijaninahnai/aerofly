@@ -179,6 +179,21 @@
   background: var(--accent); color:#fff; font-size:0.78rem; font-weight:600;
 }
 .map-ai-form button:hover{ filter:brightness(1.1); }
+
+/* staircase step 1: quick-intent chips, shown while the AI input is
+   focused and empty — pick one, or ignore them and just type */
+.map-ai-suggestions{
+  display:none; flex-wrap:wrap; gap:6px; width:100%;
+  margin-top:2px; padding-top:8px; border-top:1px solid var(--border-soft);
+}
+.map-ai-suggestions.active{ display:flex; }
+.ai-sugg-chip{
+  padding:6px 12px; border-radius:999px; border:1px solid var(--border);
+  background: var(--surface-2); color: var(--text-dim); font-size:0.72rem; font-weight:600;
+  display:flex; align-items:center; gap:5px; transition: all .15s ease;
+}
+.ai-sugg-chip:hover{ border-color: var(--accent); color: var(--accent); }
+.ai-sugg-chip i{ font-size:0.68rem; color: var(--accent); }
 .map-ai-loading{
   display:none; position:absolute; right:92px; width:16px; height:16px;
   border:2px solid var(--border); border-top-color: var(--accent); border-radius:50%;
@@ -216,7 +231,17 @@
 .mfp-check input{ accent-color: var(--accent); }
 .mfp-toggle{ display:flex; align-items:center; gap:8px; font-size:0.78rem; padding-top:4px; border-top:1px solid var(--border-soft); cursor:pointer; }
 .mfp-toggle input{ accent-color: var(--accent); }
-.mfp-legend{ display:flex; gap:16px; margin-top:12px; padding-top:10px; border-top:1px solid var(--border-soft); }
+.mfp-more-toggle{
+  display:flex; align-items:center; justify-content:space-between; width:100%;
+  background:none; border:none; padding-top:10px; margin-top:2px; border-top:1px solid var(--border-soft);
+  color: var(--text-dim); font-size:0.76rem; font-weight:600; cursor:pointer;
+}
+.mfp-more-toggle:hover{ color: var(--text); }
+.mfp-more-toggle i{ transition: transform .2s ease; font-size:0.68rem; }
+.mfp-more-toggle.open i{ transform: rotate(180deg); }
+
+.mfp-legend{ display:none; gap:16px; margin-top:12px; padding-top:10px; border-top:1px solid var(--border-soft); }
+.mfp-legend.open{ display:flex; }
 .mfp-leg-title{ display:block; font-size:0.7rem; font-weight:700; color: var(--mist); margin-bottom:5px; }
 .mfp-leg-row{ display:flex; align-items:center; gap:6px; font-size:0.72rem; color: var(--text-dim); margin-bottom:3px; }
 .mfp-leg-row i{ width:9px; height:9px; border-radius:50%; flex-shrink:0; }
