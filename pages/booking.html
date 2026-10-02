@@ -696,6 +696,16 @@ const LOADER_HTML = {
   hotels:  '<div class="sl-hotel"><div class="sl-shaft"></div><div class="sl-car"></div></div>',
   experiences: '<i class="fa-solid fa-ticket sl-xp"></i>',
 };
+// scrolls the stepper into view right now, synchronously — called while
+// something is already covering the screen (the loader or the doors) so
+// the jump itself is never something the customer actually sees happen
+function scrollToStepperNow(){
+  const stepArea = document.getElementById('bkStepper');
+  if(!stepArea) return;
+  const y = stepArea.getBoundingClientRect().top + window.scrollY - 90;
+  window.scrollTo({top: Math.max(0, y), behavior: 'auto'});
+}
+
 function showStepLoader(cb){
   if(type === 'hotels'){
     // the doors ARE the transition: close over the whole step area,
@@ -703,6 +713,7 @@ function showStepLoader(cb){
     // loader box needed on top of that.
     const area = document.getElementById('bkStepArea');
     area.classList.add('doors-closed');
+    scrollToStepperNow(); // hidden behind the closed doors
     setTimeout(()=>{
       cb();
       setTimeout(()=> area.classList.remove('doors-closed'), 150);
@@ -713,6 +724,7 @@ function showStepLoader(cb){
   document.getElementById('stepLoaderIcon').innerHTML = LOADER_HTML[type] || LOADER_HTML.hotels;
   document.querySelectorAll('.bk-step').forEach(s=>s.classList.remove('active'));
   loader.classList.add('active');
+  scrollToStepperNow(); // hidden behind the loader overlay, not a separate jump later
   setTimeout(()=>{
     loader.classList.remove('active');
     cb();
@@ -735,14 +747,8 @@ function showStep(i){
     if(phone) document.getElementById('deliverySmsSub').textContent = phone;
   }
   renderStepper();
-
-  // Jump straight to the top of the stepper on every step change — no
-  // smooth animation, just land there immediately when Continue is pressed.
-  const stepArea = document.getElementById('bkStepper');
-  if(stepArea){
-    const y = stepArea.getBoundingClientRect().top + window.scrollY - 90;
-    window.scrollTo({top: Math.max(0, y), behavior: 'auto'});
-  }
+  // (scroll position is already handled in showStepLoader, before this
+  // runs — see scrollToStepperNow — so the customer never sees it happen)
 }
 
 function goNext(){
