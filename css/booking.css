@@ -21,7 +21,7 @@
    PROGRESS BAR (riding icon — matches your original plane bar,
    themed per section: plane / hotel / ticket)
    ============================================================ */
-.bk-progress-bar{ position:relative; height:6px; background: var(--border); border-radius:3px; margin-bottom:22px; max-width:720px; }
+.bk-progress-bar{ position:relative; height:6px; background: var(--border); border-radius:3px; margin:14px 0 22px; max-width:720px; }
 .bk-progress-fill{
   height:100%; border-radius:3px; width:0%;
   background: linear-gradient(135deg, var(--flights), var(--hotels), var(--experiences));
@@ -439,7 +439,7 @@ body[data-section="hotels"] .bk-step.active{
 .fca-world{
   position:relative;
   width:calc(100% + 72px); margin:0 -36px;
-  height:120px; border-radius:16px;
+  height:130px; border-radius:16px;
   background:linear-gradient(to bottom,#0F172A,#1E293B);
   overflow:hidden;
 }
@@ -481,7 +481,7 @@ body[data-section="hotels"] .bk-step.active{
 .fca-world .p-start{ left:20px; } .fca-world .p-dest{ left:90px; }
 .fca-world .airport-code{ font-size:.8rem; font-weight:800; color:#fff; letter-spacing:1px; font-family: var(--font-display); }
 .fca-world .pad{ width:34px; height:3px; background:#fff; border-radius:2px; margin-top:2px; box-shadow:0 0 10px rgba(255,255,255,0.6); }
-.fca-world .plane-wrapper{ position:absolute; bottom:44px; left:35px; margin-left:-12px; z-index:20; opacity:0; transform:scale(0); }
+.fca-world .plane-wrapper{ position:absolute; bottom:24px; left:35px; margin-left:-12px; z-index:20; opacity:0; transform:scale(0); }
 .fca-world .plane{ font-size:1.5rem; color:#fff; filter:drop-shadow(0 8px 10px rgba(0,0,0,0.4)); }
 
 .fca-world.playing .world-scroll{ animation: panWorld 6s ease-in-out forwards; }
@@ -615,4 +615,4 @@ body[data-section="hotels"] .bk-step.active{
   header, .bk-stepper, .confirm-home-btn, #confirmCrosssell, .confirm-pdf-btn{ display:none !important; }
   body{ background:#fff; color:#000; }
   .confirm-card{ border:none; box-shadow:none; }
-   }
+}
