@@ -429,7 +429,7 @@ body[data-section="hotels"] .bk-step.active{
   .fca-world, .cha-doors-wrap{ margin:0 -20px; width:calc(100% + 40px); }
 }
 
-.confirm-anim{ min-height:110px; display:flex; flex-direction:column; align-items:center; justify-content:center; }
+.confirm-anim{ min-height:110px; display:flex; flex-direction:column; align-items:stretch; justify-content:center; }
 
 /* ---- flight cinematic: world-scroll takeoff-to-landing sequence ----
    Ported from the original single-file prototype, unscaled, so the
@@ -615,4 +615,4 @@ body[data-section="hotels"] .bk-step.active{
   header, .bk-stepper, .confirm-home-btn, #confirmCrosssell, .confirm-pdf-btn{ display:none !important; }
   body{ background:#fff; color:#000; }
   .confirm-card{ border:none; box-shadow:none; }
-}
+                          }
