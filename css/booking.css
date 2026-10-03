@@ -586,4 +586,4 @@ body[data-section="hotels"] .bk-step.active{
   header, .bk-stepper, .confirm-home-btn, #confirmCrosssell, .confirm-pdf-btn{ display:none !important; }
   body{ background:#fff; color:#000; }
   .confirm-card{ border:none; box-shadow:none; }
-}
+   }
