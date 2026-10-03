@@ -17,10 +17,6 @@
 .booking-title p{ color: var(--mist); margin-top:6px; }
 .booking-title p span{ color: var(--accent); font-weight:600; }
 
-/* ============================================================
-   PROGRESS BAR (riding icon — matches your original plane bar,
-   themed per section: plane / hotel / ticket)
-   ============================================================ */
 .bk-progress-bar{ position:relative; height:6px; background: var(--border); border-radius:3px; margin:14px 0 22px; max-width:720px; }
 .bk-progress-fill{
   height:100%; border-radius:3px; width:0%;
@@ -34,18 +30,11 @@
   transition: left .5s cubic-bezier(.34,1.56,.64,1);
 }
 
-/* ============================================================
-   STEPPER
-   ============================================================ */
 .bk-stepper{
   display:flex; align-items:flex-start; margin-bottom:30px;
   max-width:720px;
 }
 
-/* ---- hotel-only: literal floor-indicator display above the stepper,
-   like the number panel above a real elevator door — this is what
-   actually signals "elevator" instead of leaving it to the glowing
-   buttons alone, which read as generic steps without this anchor. ---- */
 body[data-section="hotels"] .bk-elevator-display{
   display:flex; align-items:center; gap:10px;
   margin-bottom:14px; padding:8px 14px;
@@ -78,7 +67,7 @@ body[data-section="hotels"] .bk-elevator-display{
   cursor:default;
 }
 .bk-step-circle i {
-  line-height: 1; /* Forces strict vertical centering for icons */
+  line-height: 1;
   display: block;
 }
 .bk-step-item.clickable .bk-step-circle{ cursor:pointer; }
@@ -110,9 +99,6 @@ body[data-section="hotels"] .bk-elevator-display{
   .bk-step-circle{ width:26px; height:26px; font-size:0.68rem; }
 }
 
-/* ---- hotel-only: elevator floor-button styling for the stepper ----
-   Circles show literal floor numbers and glow like a lit elevator
-   button panel, matching the elevator theme used throughout. */
 body[data-section="hotels"] .bk-step-circle{
   font-family: var(--font-display);
   box-shadow: inset 0 1px 3px rgba(0,0,0,.5);
@@ -131,8 +117,6 @@ body[data-section="hotels"] .bk-step-item.done .bk-step-circle{
   50%{ box-shadow: 0 0 15px 5px var(--accent-dim), 0 0 0 5px var(--accent-dim), inset 0 1px 3px rgba(255,255,255,.4); }
 }
 
-/* ---- hotel-only: step content "drops in" like an arriving floor,
-   instead of the default fade-up used by flights/experiences ---- */
 body[data-section="hotels"] .bk-step.active{
   animation: bkElevatorDrop .45s cubic-bezier(.2,.8,.3,1);
 }
@@ -185,10 +169,8 @@ body[data-section="hotels"] .bk-step.active{
 .bk-hint{ font-size:0.78rem; color: var(--red); margin-top:10px; display:none; }
 .bk-hint.show{ display:block; }
 
-/* ---------- STEP CONTENT VISIBILITY + TRANSITIONS ---------- */
 .bk-step-area{ position:relative; min-height:120px; overflow:hidden; border-radius: var(--radius-lg); }
 
-/* elevator doors — hotel-only step transition, see showStepLoader() */
 .bk-door{
   position:absolute; top:0; bottom:0; width:51%; z-index:50;
   background: var(--surface);
@@ -213,7 +195,6 @@ body[data-section="hotels"] .bk-step.active{
   40%,60%{ transform: translateX(7px); }
 }
 
-/* ---------- OPTION CARDS (baggage / meal / insurance / delivery) ---------- */
 .bk-option-grid{ display:grid; grid-template-columns: repeat(2,1fr); gap:12px; }
 @media (max-width:520px){ .bk-option-grid{ grid-template-columns:1fr; } }
 
@@ -241,7 +222,6 @@ body[data-section="hotels"] .bk-step.active{
   color:#fff; font-size:0.7rem;
 }
 
-/* ---------- AUTOFILL (traveler step) ---------- */
 .passenger-header{ display:flex; justify-content:space-between; align-items:center; }
 .autofill-btn{
   display:flex; align-items:center; gap:.4rem;
@@ -260,7 +240,6 @@ body[data-section="hotels"] .bk-step.active{
 }
 .bk-field input.filled{ border-color: var(--green); background: color-mix(in srgb, var(--green) 8%, var(--surface-2)); }
 
-/* ---------- SEAT & CLASS SELECTOR (flights) ---------- */
 .class-selector{ display:grid; grid-template-columns:1fr 1fr 1fr; gap:.6rem; margin-bottom:1.2rem; }
 .class-card{
   border:2px solid var(--border); border-radius:14px; padding:.8rem .5rem; text-align:center;
@@ -327,7 +306,6 @@ body[data-section="hotels"] .bk-step.active{
   .benefits-grid{ grid-template-columns:1fr; }
 }
 
-/* ---------- STEP NAV (back / continue) ---------- */
 .bk-step-nav{ display:flex; justify-content:space-between; gap:12px; margin-top:4px; }
 .bk-back-btn{
   padding:14px 22px; border-radius:12px; border:1px solid var(--border);
@@ -346,7 +324,6 @@ body[data-section="hotels"] .bk-step.active{
 .bk-continue-btn:hover{ filter:brightness(1.1); }
 .bk-continue-btn:disabled{ opacity:.75; cursor:wait; }
 
-/* ---------- THEMED STEP-TRANSITION LOADER ---------- */
 .step-loader{
   display:none;
   align-items:center; justify-content:center;
@@ -377,7 +354,6 @@ body[data-section="hotels"] .bk-step.active{
 .step-loader-lbl{ margin-left:16px; font-size:0.84rem; color: var(--mist); font-weight:500; }
 .step-loader-inner{ display:flex; align-items:center; }
 
-/* ---------- ORDER SUMMARY ---------- */
 .bk-summary{
   background: var(--surface); border:1px solid var(--border); border-radius: var(--radius-lg);
   padding:22px 24px; position:sticky; top:90px; min-width:0;
@@ -403,9 +379,6 @@ body[data-section="hotels"] .bk-step.active{
 }
 .bk-summary-badgebox i{ color: var(--green); }
 
-/* ============================================================
-   CONFIRMATION (cinematic, type-specific)
-   ============================================================ */
 .confirm-wrap{
   display:none;
   min-height:70vh;
@@ -426,19 +399,13 @@ body[data-section="hotels"] .bk-step.active{
 
 @media (max-width:480px){
   .confirm-card{ padding:32px 20px; }
-  .fca-world, .cha-doors-wrap{ margin:0 -20px; width:calc(100% + 40px); }
 }
 
 .confirm-anim{ min-height:110px; display:flex; flex-direction:column; align-items:stretch; justify-content:center; }
 
-/* ---- flight cinematic: world-scroll takeoff-to-landing sequence ----
-   Ported from the original single-file prototype, unscaled, so the
-   hand-tuned pixel choreography (world pan / plane keyframes) lines
-   up exactly like it did there. Sits full-width in the confirm-card
-   via the negative margin below. */
 .fca-world{
   position:relative;
-  width:calc(100% + 72px); margin:0 -36px;
+  width:100%;
   height:130px; border-radius:16px;
   background:linear-gradient(to bottom,#0F172A,#1E293B);
   overflow:hidden;
@@ -464,8 +431,6 @@ body[data-section="hotels"] .bk-step.active{
   position:absolute; bottom:35px;
   background:linear-gradient(to bottom,#2A3548,#1A2234);
   border-top:1px solid rgba(255,255,255,0.35); border-right:1px solid rgba(255,255,255,0.08);
-  /* lit windows: a repeating grid via box-shadow dots reads far better
-     at this scale than the old near-invisible flat gradient did */
   box-shadow:
     4px 8px 0 1px rgba(255,214,120,.65), 11px 8px 0 1px rgba(255,214,120,.4),
     4px 16px 0 1px rgba(255,214,120,.45), 11px 16px 0 1px rgba(255,214,120,.65),
@@ -474,8 +439,6 @@ body[data-section="hotels"] .bk-step.active{
 }
 .fca-world .b1{ left:80px; width:25px; height:40px; } .fca-world .b2{ left:110px; width:35px; height:55px; }
 
-/* SIN signature touch: three slim towers + a connecting sky-deck bar,
-   evoking Marina Bay Sands rather than three generic boxes */
 .fca-world .z-sin .b3, .fca-world .z-sin .b4, .fca-world .z-sin .b5{
   background:linear-gradient(to bottom,#33415C,#1E293B);
 }
@@ -521,22 +484,14 @@ body[data-section="hotels"] .bk-step.active{
   100%{ transform:translate(75px,0) scale(0); opacity:0; }
 }
 
-/* ---- hotel elevator-doors animation ----
-   Two doors with a round porthole window each, sliding apart from
-   the middle to reveal a (CSS-drawn) hotel corridor behind them. */
 .cha-doors-wrap{
-  position:relative; width:calc(100% + 72px); margin:0 -36px;
+  position:relative; width:100%;
   height:130px; border-radius:16px; overflow:hidden; background:#0b0e14;
 }
 .cha-hallway{
   position:absolute; inset:0;
   background: linear-gradient(to bottom, #232838 0%, #171a24 55%, #0b0d13 100%);
 }
-/* Mood-card cycle: plays behind the sliding doors as they open, so what
-   you're revealed isn't just an empty hallway — it's a quick flash through
-   the kinds of trips waiting (grey rain -> snow -> beach -> night out),
-   ending on the checkmark. Sequenced from JS (playHotelSceneCycle),
-   not CSS keyframes, so timing stays simple to reason about/adjust. */
 .cha-scene-cycle{ position:absolute; inset:0; z-index:1; }
 .cha-scene{
   position:absolute; inset:0;
@@ -582,7 +537,6 @@ body[data-section="hotels"] .bk-step.active{
   box-shadow: inset 0 0 8px rgba(0,0,0,.5);
 }
 
-/* ---- experience ticket-stamp animation ---- */
 .cxa{ position:relative; height:96px; display:flex; align-items:center; justify-content:center; }
 .cxa-ticket{ font-size:3.1rem; color: var(--experiences); opacity:.9; }
 .cxa-stamp{
@@ -594,7 +548,6 @@ body[data-section="hotels"] .bk-step.active{
 }
 @keyframes cxaStampIn{ to{ opacity:1; transform: scale(1) rotate(-12deg); } }
 
-/* ---- text block reveal (after the cinematic bit finishes) ---- */
 .confirm-text-block{ opacity:0; transform: translateY(10px); transition: opacity .5s ease, transform .5s ease; margin-top:10px; }
 .confirm-text-block.revealed{ opacity:1; transform:none; }
 
@@ -633,4 +586,4 @@ body[data-section="hotels"] .bk-step.active{
   header, .bk-stepper, .confirm-home-btn, #confirmCrosssell, .confirm-pdf-btn{ display:none !important; }
   body{ background:#fff; color:#000; }
   .confirm-card{ border:none; box-shadow:none; }
-                 }
+}
